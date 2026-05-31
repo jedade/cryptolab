@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chiffre de César — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">🏛️</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500" data-i18n="cesar.era">~50 av. J.-C. · Antiquité</div>
+        <h1 class="text-4xl md:text-5xl font-bold" data-i18n="cesar.title">Chiffre de César</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-i18n="cesar.tag1" data-en="Monoalphabetic substitution">Substitution mono-alphabétique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-i18n="cesar.tag2" data-en="Symmetric">Symétrique</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-i18n="cesar.tag3" data-en="Beginner level">Niveau débutant</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="text-xs text-slate-400 mb-1" data-i18n="detail.inventor" data-en="Inventor">Inventeur</div>
+          <div class="font-semibold" data-i18n="cesar.inventor">Jules César</div>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="text-xs text-slate-400 mb-1" data-i18n="cesar.era_label" data-en="Era">Époque</div>
+          <div class="font-semibold" data-i18n="cesar.era_value">~50 av. J.-C.</div>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="text-xs text-slate-400 mb-1" data-i18n="detail.type" data-en="Type">Type</div>
+          <div class="font-semibold" data-i18n="cesar.type_value">Symétrique · substitution</div>
+        </div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-i18n="cesar.intro1">
+        Le <strong>chiffre de César</strong> est l'un des plus anciens systèmes de chiffrement
+        documentés. Jules César l'utilisait pour ses correspondances militaires, avec un
+        décalage de 3 lettres.
+      </p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <p class="text-slate-300 mb-4" data-i18n="cesar.how1">Visualisons un décalage de <strong>k = 3</strong> :</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl font-mono text-sm overflow-x-auto">
+        <div class="mb-3 text-slate-400" data-i18n="cesar.alpha_clear">Alphabet clair :</div>
+        <div class="tracking-widest text-brand-500">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div>
+        <div class="my-2 text-slate-500 text-center" data-i18n="cesar.shift_arrow">↓ décalage de +3 ↓</div>
+        <div class="mb-3 text-slate-400" data-i18n="cesar.alpha_cipher">Alphabet chiffré :</div>
+        <div class="tracking-widest text-emerald-400">D E F G H I J K L M N O P Q R S T U V W X Y Z A B C</div>
+      </div>
+      <p class="text-slate-300 mt-4" data-i18n="cesar.how2">
+        Ainsi <code class="bg-white/5 px-2 py-0.5 rounded">HELLO</code> devient
+        <code class="bg-white/5 px-2 py-0.5 rounded text-emerald-400">KHOOR</code>.
+      </p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <p class="text-slate-300 mb-4" data-i18n="cesar.math1">Si on numérote A=0, B=1, ..., Z=25 :</p>
+      <div class="math-box text-center">
+        <div class="font-mono text-xl text-brand-500 mb-2">C(x) = (x + k) mod 26</div>
+        <div class="font-mono text-xl text-emerald-400">D(x) = (x − k) mod 26</div>
+      </div>
+      <ul class="mt-5 text-sm text-slate-400 space-y-2 list-disc list-inside">
+        <li data-i18n="cesar.math_x"><strong>x</strong> : position de la lettre claire dans l'alphabet</li>
+        <li data-i18n="cesar.math_k"><strong>k</strong> : valeur du décalage (la clé secrète)</li>
+        <li data-i18n="cesar.math_mod"><strong>mod 26</strong> : on "boucle" sur l'alphabet</li>
+      </ul>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.simulation">🔍 4. Simulation interactive</span></h2>
+      <p class="text-slate-400 text-sm mb-4" data-i18n="cesar.sim_intro" data-en="Type a message and drag the key to see the result in real time.">Tape un message et fais glisser la clé pour voir le résultat en temps réel.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div>
+          <label class="block text-sm font-medium mb-2"><span data-i18n="cesar.sim_msg" data-en="Plaintext message">Message clair</span></label>
+          <input id="cesar-input" type="text" value="ALEA JACTA EST"
+                 class="w-full px-4 py-3 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none uppercase" />
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <label class="text-sm font-medium"><span data-i18n="cesar.sim_key" data-en="Key (shift k)">Clé (décalage k)</span></label>
+            <span id="cesar-key-display" class="font-mono text-brand-500 text-lg font-bold">3</span>
+          </div>
+          <input id="cesar-key" type="range" min="0" max="25" value="3" class="w-full accent-brand-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2"><span data-i18n="detail.mode" data-en="Mode">Mode</span></label>
+          <div class="flex gap-2">
+            <button data-mode="encrypt" class="cesar-mode-btn px-4 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium"><span data-i18n="detail.encrypt" data-en="🔒 Encrypt">🔒 Chiffrer</span></button>
+            <button data-mode="decrypt" class="cesar-mode-btn px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm font-medium hover:bg-white/10"><span data-i18n="detail.decrypt" data-en="🔓 Decrypt">🔓 Déchiffrer</span></button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2"><span data-i18n="detail.result" data-en="Result">Résultat</span></label>
+          <div id="cesar-output" class="px-4 py-3 bg-ink-900 border border-emerald-500/30 rounded-lg font-mono min-h-[3rem] text-emerald-400 break-all"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>def caesar_encrypt(text, k):
+    result = []
+    for ch in text.upper():
+        if 'A' <= ch <= 'Z':
+            x = ord(ch) - ord('A')
+            result.append(chr((x + k) % 26 + ord('A')))
+        else:
+            result.append(ch)
+    return ''.join(result)
+
+def caesar_decrypt(text, k):
+    return caesar_encrypt(text, -k)
+
+print(caesar_encrypt("HELLO WORLD", 3))  # KHOOR ZRUOG</code></pre>
+      <pre id="code-js" class="hidden"><code>function caesarEncrypt(text, k) {
+  return [...text.toUpperCase()].map(ch => {
+    const code = ch.charCodeAt(0);
+    if (code >= 65 && code <= 90) {
+      return String.fromCharCode(((code - 65 + k) % 26 + 26) % 26 + 65);
+    }
+    return ch;
+  }).join('');
+}
+console.log(caesarEncrypt("HELLO WORLD", 3));  // KHOOR ZRUOG</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.realworld">🌍 6. Cas réel & limites</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-i18n="cesar.real_uses" data-en="✓ Historical &amp; playful uses">✓ Usages historiques & ludiques</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-i18n="cesar.real_u1">Correspondance militaire romaine</li>
+            <li data-i18n="cesar.real_u2">ROT13 sur forums Usenet (k=13)</li>
+            <li data-i18n="cesar.real_u3">Énigmes, escape games, jeux pour enfants</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-i18n="cesar.real_why">✗ Pourquoi c'est cassable en 2026</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-i18n="cesar.real_w1">Seulement 26 clés possibles → <strong>brute force instantané</strong></li>
+            <li data-i18n="cesar.real_w2">L'analyse fréquentielle (Al-Kindi, IXe s.) suffit</li>
+            <li data-i18n="cesar.real_w3">La fréquence des lettres est conservée</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Exhaustive brute force">Brute force exhaustif</div>
+          <p class="text-xs text-slate-300" data-en="25 possible keys → breakable in 26 attempts (instant).">25 clés possibles → cassable en 26 essais (instantané).</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Frequency analysis (Al-Kindi, 9th c.)">Analyse fréquentielle (Al-Kindi, IXe s.)</div>
+          <p class="text-xs text-slate-300" data-en="Letter frequency is preserved → a long enough ciphertext can be guessed without trying.">La fréquence des lettres est préservée → un texte chiffré assez long se devine sans tester.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Known plaintext attack">Attaque texte clair connu</div>
+          <p class="text-xs text-slate-300" data-en="A single (plain, cipher) pair is enough to deduce the key.">Un seul couple (clair, chiffré) suffit à déduire la clé.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <p class="text-slate-400 text-sm mb-4" data-i18n="cesar.quiz_intro" data-en="Answer the 4 questions to earn your badge.">Réponds aux 4 questions pour décrocher ton badge.</p>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    // ============================================================
+    // Page-local bilingual dictionary
+    // ============================================================
+    const PAGE_DICT = {
+      fr: {
+        'cesar.title':'Chiffre de César',
+        'cesar.era':'~50 av. J.-C. · Antiquité',
+        'cesar.tag1':'Substitution mono-alphabétique',
+        'cesar.tag2':'Symétrique',
+        'cesar.tag3':'Niveau débutant',
+        'cesar.inventor':'Jules César',
+        'cesar.era_label':'Époque',
+        'cesar.era_value':'~50 av. J.-C.',
+        'cesar.type_value':'Symétrique · substitution',
+        'cesar.intro1':'Le <strong>chiffre de César</strong> est l\'un des plus anciens systèmes de chiffrement documentés. Jules César l\'utilisait pour ses correspondances militaires, avec un décalage de 3 lettres. Le principe est d\'une simplicité élégante : chaque lettre du message clair est remplacée par celle située <em>k</em> positions plus loin dans l\'alphabet.',
+        'cesar.how1':'Visualisons un décalage de <strong>k = 3</strong> :',
+        'cesar.alpha_clear':'Alphabet clair :',
+        'cesar.alpha_cipher':'Alphabet chiffré :',
+        'cesar.shift_arrow':'↓ décalage de +3 ↓',
+        'cesar.how2':'Ainsi <code class="bg-white/5 px-2 py-0.5 rounded">HELLO</code> devient <code class="bg-white/5 px-2 py-0.5 rounded text-emerald-400">KHOOR</code>. La clé du système est simplement la valeur de <em>k</em> (0 à 25).',
+        'cesar.math1':'Si on numérote A=0, B=1, ..., Z=25, le chiffrement s\'exprime par une simple arithmétique modulaire :',
+        'cesar.math_x':'<strong>x</strong> : position de la lettre claire dans l\'alphabet',
+        'cesar.math_k':'<strong>k</strong> : valeur du décalage (la clé secrète)',
+        'cesar.math_mod':'<strong>mod 26</strong> : on "boucle" sur l\'alphabet (après Z, on revient à A)',
+        'cesar.sim_intro':'Tape un message et fais glisser la clé pour voir le résultat en temps réel.',
+        'cesar.sim_msg':'Message clair',
+        'cesar.sim_key':'Clé (décalage k)',
+        'cesar.real_uses':'✓ Usages historiques & ludiques',
+        'cesar.real_u1':'Correspondance militaire romaine',
+        'cesar.real_u2':'ROT13 sur forums Usenet (k=13)',
+        'cesar.real_u3':'Énigmes, escape games, jeux pour enfants',
+        'cesar.real_why':'✗ Pourquoi c\'est cassable en 2026',
+        'cesar.real_w1':'Seulement 26 clés possibles → <strong>brute force instantané</strong>',
+        'cesar.real_w2':'L\'analyse fréquentielle (Al-Kindi, IXe s.) suffit',
+        'cesar.real_w3':'La fréquence des lettres est conservée',
+        'cesar.quiz_intro':'Réponds aux 4 questions pour décrocher ton badge <span class="text-amber-400 font-semibold">Apprenti César</span>.',
+        'cesar.q1':'Avec un décalage k=3, que devient le mot \'CAT\' ?',
+        'cesar.q1e':'C→F, A→D, T→W. Chaque lettre avance de 3 positions.',
+        'cesar.q2':'Combien de clés différentes existe-t-il pour le chiffre de César (alphabet latin de 26 lettres) ?',
+        'cesar.q2e':'k=0 ne chiffre rien, on a donc 25 clés utiles (k=1 à k=25).',
+        'cesar.q3':'Quelle est la formule mathématique du chiffrement ?',
+        'cesar.q3e':'Addition modulo 26 — c\'est l\'essence du décalage.',
+        'cesar.q4':'Pourquoi le chiffre de César est-il considéré comme non sécurisé aujourd\'hui ?',
+        'cesar.q4c1':'Il est trop lent à calculer',
+        'cesar.q4c2':'Il nécessite un ordinateur quantique',
+        'cesar.q4c3':'Le nombre de clés est très faible et l\'analyse fréquentielle le casse',
+        'cesar.q4c4':'Il ne fonctionne pas sur les voyelles',
+        'cesar.q4e':'25 clés → brute force trivial. Et la fréquence des lettres est préservée.',
+      },
+      en: {
+        'cesar.title':'Caesar cipher',
+        'cesar.era':'~50 BC · Antiquity',
+        'cesar.tag1':'Monoalphabetic substitution',
+        'cesar.tag2':'Symmetric',
+        'cesar.tag3':'Beginner level',
+        'cesar.inventor':'Julius Caesar',
+        'cesar.era_label':'Era',
+        'cesar.era_value':'~50 BC',
+        'cesar.type_value':'Symmetric · substitution',
+        'cesar.intro1':'The <strong>Caesar cipher</strong> is one of the oldest documented encryption systems. Julius Caesar used it for his military correspondence with a shift of 3 letters. The principle is elegantly simple: each plaintext letter is replaced by the one located <em>k</em> positions later in the alphabet.',
+        'cesar.how1':'Let\'s visualize a shift of <strong>k = 3</strong>:',
+        'cesar.alpha_clear':'Plaintext alphabet:',
+        'cesar.alpha_cipher':'Ciphered alphabet:',
+        'cesar.shift_arrow':'↓ shift by +3 ↓',
+        'cesar.how2':'So <code class="bg-white/5 px-2 py-0.5 rounded">HELLO</code> becomes <code class="bg-white/5 px-2 py-0.5 rounded text-emerald-400">KHOOR</code>. The key is simply the value of <em>k</em> (0 to 25).',
+        'cesar.math1':'Numbering A=0, B=1, ..., Z=25, encryption reduces to simple modular arithmetic:',
+        'cesar.math_x':'<strong>x</strong>: position of the plaintext letter in the alphabet',
+        'cesar.math_k':'<strong>k</strong>: shift value (the secret key)',
+        'cesar.math_mod':'<strong>mod 26</strong>: we wrap around the alphabet (after Z, we cycle back to A)',
+        'cesar.sim_intro':'Type a message and drag the key to see the result in real time.',
+        'cesar.sim_msg':'Plaintext message',
+        'cesar.sim_key':'Key (shift k)',
+        'cesar.real_uses':'✓ Historical & playful uses',
+        'cesar.real_u1':'Roman military correspondence',
+        'cesar.real_u2':'ROT13 on Usenet forums (k=13)',
+        'cesar.real_u3':'Puzzles, escape games, kids\' games',
+        'cesar.real_why':'✗ Why it\'s breakable in 2026',
+        'cesar.real_w1':'Only 26 possible keys → <strong>instant brute force</strong>',
+        'cesar.real_w2':'Frequency analysis (Al-Kindi, 9th c.) is enough',
+        'cesar.real_w3':'Letter frequencies are preserved',
+        'cesar.quiz_intro':'Answer the 4 questions to earn your <span class="text-amber-400 font-semibold">Caesar Apprentice</span> badge.',
+        'cesar.q1':'With a shift k=3, what does the word \'CAT\' become?',
+        'cesar.q1e':'C→F, A→D, T→W. Each letter moves 3 positions forward.',
+        'cesar.q2':'How many distinct keys are there for the Caesar cipher (26-letter Latin alphabet)?',
+        'cesar.q2e':'k=0 doesn\'t encrypt anything, so there are 25 useful keys (k=1 to k=25).',
+        'cesar.q3':'What is the mathematical formula for encryption?',
+        'cesar.q3e':'Addition modulo 26 — the essence of the shift.',
+        'cesar.q4':'Why is the Caesar cipher considered insecure today?',
+        'cesar.q4c1':'It\'s too slow to compute',
+        'cesar.q4c2':'It requires a quantum computer',
+        'cesar.q4c3':'Tiny key space and frequency analysis breaks it',
+        'cesar.q4c4':'It doesn\'t work on vowels',
+        'cesar.q4e':'25 keys → trivial brute force. And letter frequencies are preserved.',
+      }
+    };
+
+    function pt(key) {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      if (PAGE_DICT[lang] && PAGE_DICT[lang][key] !== undefined) return PAGE_DICT[lang][key];
+      if (window.CryptoLabI18n) return window.CryptoLabI18n.t(key);
+      return key;
+    }
+
+    function applyPageDict() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+        if (PAGE_DICT[lang] && PAGE_DICT[lang][key] !== undefined) {
+          el.innerHTML = PAGE_DICT[lang][key];
+        }
+      });
+      renderQuiz();
+    }
+    document.addEventListener('lang-changed', applyPageDict);
+    setTimeout(applyPageDict, 10);
+
+    // ============================================================
+    // Caesar logic
+    // ============================================================
+    function caesar(text, k, decrypt = false) {
+      const shift = decrypt ? -k : k;
+      return [...text.toUpperCase()].map(ch => {
+        const code = ch.charCodeAt(0);
+        if (code >= 65 && code <= 90) return String.fromCharCode(((code - 65 + shift) % 26 + 26) % 26 + 65);
+        return ch;
+      }).join('');
+    }
+
+    const input  = document.getElementById('cesar-input');
+    const keySl  = document.getElementById('cesar-key');
+    const keyDsp = document.getElementById('cesar-key-display');
+    const output = document.getElementById('cesar-output');
+    let mode = 'encrypt';
+
+    function refresh() {
+      keyDsp.textContent = keySl.value;
+      output.textContent = caesar(input.value, parseInt(keySl.value, 10), mode === 'decrypt');
+    }
+    input.addEventListener('input', refresh);
+    keySl.addEventListener('input', refresh);
+    document.querySelectorAll('.cesar-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        mode = btn.dataset.mode;
+        document.querySelectorAll('.cesar-mode-btn').forEach(b => {
+          b.classList.remove('bg-brand-500','text-white');
+          b.classList.add('bg-white/5','border','border-white/10');
+        });
+        btn.classList.add('bg-brand-500','text-white');
+        btn.classList.remove('bg-white/5','border','border-white/10');
+        refresh();
+      });
+    });
+    refresh();
+
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const lang = tab.dataset.lang;
+        document.querySelectorAll('.code-tab').forEach(t => {
+          t.classList.remove('bg-brand-500','text-white');
+          t.classList.add('bg-white/5','border','border-white/10');
+        });
+        tab.classList.add('bg-brand-500','text-white');
+        tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', lang !== 'python');
+        document.getElementById('code-js').classList.toggle('hidden', lang !== 'js');
+      });
+    });
+
+    // Bilingual quiz
+    const QUIZ_DEFS = [
+      { qKey:'cesar.q1', answer:0, eKey:'cesar.q1e', choices: ['FDW','EAU','DAU','CAT'] },
+      { qKey:'cesar.q2', answer:1, eKey:'cesar.q2e', choices: ['26','25','13','2^26'] },
+      { qKey:'cesar.q3', answer:1, eKey:'cesar.q3e', choices: ['C(x) = x · k','C(x) = (x + k) mod 26','C(x) = x XOR k','C(x) = k mod x'] },
+      { qKey:'cesar.q4', answer:2, eKey:'cesar.q4e', cKeys: ['cesar.q4c1','cesar.q4c2','cesar.q4c3','cesar.q4c4'] },
+    ];
+
+    function renderQuiz() {
+      const quizDiv = document.getElementById('quiz');
+      quizDiv.innerHTML = '';
+      QUIZ_DEFS.forEach((q, i) => {
+        const choices = q.cKeys ? q.cKeys.map(k => pt(k)) : q.choices;
+        const block = document.createElement('div');
+        block.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+        block.innerHTML = `
+          <div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${pt(q.qKey)}</div>
+          <div class="space-y-2">
+            ${choices.map((c, j) => `
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition">
+                <input type="radio" name="q${i}" value="${j}" class="accent-brand-500" />
+                <span class="text-sm">${c}</span>
+              </label>
+            `).join('')}
+          </div>
+          <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>
+        `;
+        quizDiv.appendChild(block);
+      });
+    }
+
+    document.getElementById('quiz-submit').addEventListener('click', () => {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      let score = 0;
+      const quizDiv = document.getElementById('quiz');
+      QUIZ_DEFS.forEach((q, i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const block = quizDiv.children[i];
+        const labels = block.querySelectorAll('label');
+        labels.forEach(l => l.classList.remove('quiz-correct','quiz-wrong'));
+        const explainDiv = block.querySelector('.quiz-explain');
+        explainDiv.classList.remove('hidden');
+        explainDiv.innerHTML = `<strong class="text-brand-500">${window.CryptoLabI18n.t('quiz.explanation')} :</strong> ${pt(q.eKey)}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) {
+          const chosen = parseInt(sel.value, 10);
+          if (chosen === q.answer) score++;
+          else labels[chosen].classList.add('quiz-wrong');
+        }
+      });
+      const resultDiv = document.getElementById('quiz-result');
+      resultDiv.classList.remove('hidden');
+      const ok = score === QUIZ_DEFS.length;
+      const msg = ok ? window.CryptoLabI18n.t('quiz.perfect')
+                : score >= QUIZ_DEFS.length/2 ? window.CryptoLabI18n.t('quiz.ok')
+                : window.CryptoLabI18n.t('quiz.retry');
+      const cls = ok ? 'border-emerald-500/40 bg-emerald-500/10'
+                : score >= QUIZ_DEFS.length/2 ? 'border-amber-500/40 bg-amber-500/10'
+                : 'border-red-500/40 bg-red-500/10';
+      resultDiv.className = `mt-6 p-5 rounded-xl border ${cls}`;
+      resultDiv.innerHTML = `<div class="font-semibold text-lg mb-1">${window.CryptoLabI18n.t('quiz.score')} : ${score}/${QUIZ_DEFS.length}</div><div class="text-sm text-slate-300">${msg}</div>`;
+      CryptoLab.recordScore('cesar', score, QUIZ_DEFS.length);
+      if (ok && !CryptoLab.hasBadge('cesar-master')) {
+        const label = lang === 'en' ? 'Caesar Apprentice' : 'Apprenti César';
+        CryptoLab.earnBadge('cesar-master', label, '🏛️');
+        CryptoLab.showToast('🏛️ ' + window.CryptoLabI18n.t('quiz.badge.unlocked') + ' : <u>'+label+'</u> !');
+      } else if (score >= 3 && !CryptoLab.hasBadge('cesar-beginner')) {
+        const label = lang === 'en' ? 'Caesar Beginner' : 'Débutant César';
+        CryptoLab.earnBadge('cesar-beginner', label, '📜');
+        CryptoLab.showToast('📜 ' + window.CryptoLabI18n.t('quiz.badge.unlocked') + ' : <u>'+label+'</u> !');
+      }
+    });
+  </script>
+</body>
+</html>

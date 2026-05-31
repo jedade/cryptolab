@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSA — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🔑</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1977 · MIT</div>
+        <h1 class="text-4xl md:text-5xl font-bold">RSA</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Asymmetric">Asymétrique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Factorization">Factorisation</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Intermediate level">Niveau intermédiaire</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Inventors">Inventeurs</div><div class="font-semibold" data-en="Rivest, Shamir, Adleman">Rivest, Shamir, Adleman</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Year">Année</div><div class="font-semibold" data-en="1977 (MIT)">1977 (MIT)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Type">Type</div><div class="font-semibold" data-en="Public-key asymmetric">Asymétrique à clé publique</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>RSA</strong> is the first practical public-key algorithm and remains one of the most widely used worldwide (TLS, signatures, certificates). Its security rests on a simple mathematical fact: <em>multiplying two large primes is easy, but recovering those primes from the product is extremely hard</em>.">
+        <strong>RSA</strong> est le premier algorithme à clé publique opérationnel et reste l'un des
+        plus utilisés au monde (TLS, signatures, certificats). Sa sécurité repose sur un fait
+        mathématique simple : <em>multiplier deux grands nombres premiers est facile, mais
+        retrouver ces nombres premiers à partir du produit est extrêmement difficile</em>.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="Fun fact: Clifford Cocks (British GCHQ) discovered an equivalent scheme in 1973 — but it was classified and only revealed in 1997.">
+        Fait amusant : Clifford Cocks (GCHQ britannique) avait découvert un schéma équivalent
+        en 1973 — mais il était classifié et n'a été révélé qu'en 1997.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <p class="text-slate-300 mb-4" data-en="RSA follows three steps: <strong>key generation</strong>, <strong>encryption</strong>, <strong>decryption</strong>.">RSA suit trois étapes : <strong>génération des clés</strong>, <strong>chiffrement</strong>, <strong>déchiffrement</strong>.</p>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-brand-500 font-mono text-xs mb-2">1. Génération</div>
+          <ul class="text-sm space-y-1 text-slate-300">
+            <li>Choisir 2 grands premiers p, q</li>
+            <li>n = p · q</li>
+            <li>φ(n) = (p−1)(q−1)</li>
+            <li>e copremier avec φ(n)</li>
+            <li>d ≡ e⁻¹ (mod φ(n))</li>
+          </ul>
+          <div class="mt-3 text-xs text-slate-400">→ Clé pub : (n, e)<br>→ Clé priv : (n, d)</div>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-emerald-400 font-mono text-xs mb-2">2. Chiffrement</div>
+          <div class="text-sm text-slate-300">Avec la clé publique du destinataire :</div>
+          <div class="mt-3 text-center font-mono text-lg text-emerald-400">c = m<sup>e</sup> mod n</div>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-amber-400 font-mono text-xs mb-2">3. Déchiffrement</div>
+          <div class="text-sm text-slate-300">Avec sa propre clé privée :</div>
+          <div class="mt-3 text-center font-mono text-lg text-amber-400">m = c<sup>d</sup> mod n</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl space-y-2">
+        <div class="text-center font-mono text-brand-500">n = p · q</div>
+        <div class="text-center font-mono text-brand-500">φ(n) = (p−1)(q−1)</div>
+        <div class="text-center font-mono text-brand-500">e · d ≡ 1 (mod φ(n))</div>
+        <div class="text-center font-mono text-emerald-400 text-lg pt-2">c = m<sup>e</sup> mod n &nbsp;&nbsp;|&nbsp;&nbsp; m = c<sup>d</sup> mod n</div>
+      </div>
+      <p class="text-slate-300 mt-4" data-en="Why it works? Thanks to <strong>Euler's theorem</strong>: if gcd(m, n) = 1, then m<sup>φ(n)</sup> ≡ 1 (mod n). So m<sup>e·d</sup> = m<sup>1 + k·φ(n)</sup> ≡ m (mod n). Security rests on the difficulty of computing φ(n) without knowing p and q — which reduces to factoring n.">
+        Pourquoi ça marche ? Grâce au <strong>théorème d'Euler</strong> : si pgcd(m, n) = 1,
+        alors m<sup>φ(n)</sup> ≡ 1 (mod n). Donc m<sup>e·d</sup> = m<sup>1 + k·φ(n)</sup> ≡ m (mod n).
+        La sécurité repose sur la difficulté de calculer φ(n) sans connaître p et q —
+        ce qui revient à factoriser n.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.simulation">🔍 4. Simulation interactive</span></h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Pick two small primes and a numeric message. Every step is computed with <code>BigInt</code>.">Choisis deux petits premiers et un message numérique. Tous les calculs sont effectués pas à pas avec <code>BigInt</code>.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div class="grid md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-2">p (premier)</label>
+            <input id="rsa-p" type="text" value="61" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">q (premier)</label>
+            <input id="rsa-q" type="text" value="53" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">e (exposant public)</label>
+            <input id="rsa-e" type="text" value="17" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          </div>
+        </div>
+        <button id="gen" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="🔑 Generate keys">🔑 Générer les clés</button>
+        <div id="keys" class="hidden space-y-2 text-sm font-mono"></div>
+        <div class="border-t border-white/10 pt-5">
+          <label class="block text-sm font-medium mb-2">Message numérique m (entier &lt; n)</label>
+          <input id="rsa-m" type="text" value="65" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          <button id="enc" class="mt-3 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg">🔒 Chiffrer puis déchiffrer</button>
+          <div id="result" class="mt-4 hidden space-y-2 text-sm font-mono"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>from math import gcd
+
+def modinv(a, m):
+    # Inverse modulaire via Euclide étendu
+    g, x, _ = ext_gcd(a, m)
+    if g != 1: raise ValueError("Pas d'inverse")
+    return x % m
+
+def ext_gcd(a, b):
+    if a == 0: return b, 0, 1
+    g, x, y = ext_gcd(b % a, a)
+    return g, y - (b // a) * x, x
+
+# Génération
+p, q = 61, 53
+n = p * q              # 3233
+phi = (p-1) * (q-1)    # 3120
+e = 17
+d = modinv(e, phi)     # 2753
+
+# Chiffrement / déchiffrement (pow utilise l'exponentiation rapide)
+m = 65
+c = pow(m, e, n)       # m^e mod n  = 2790
+m2 = pow(c, d, n)      # c^d mod n  = 65
+print(c, m2)</code></pre>
+      <pre id="code-js" class="hidden"><code>function modpow(b, e, m) {
+  let r = 1n; b = b % m;
+  while (e > 0n) {
+    if (e &amp; 1n) r = (r * b) % m;
+    e >>= 1n;
+    b = (b * b) % m;
+  }
+  return r;
+}
+
+function modinv(a, m) {
+  let [old_r, r] = [a, m];
+  let [old_s, s] = [1n, 0n];
+  while (r !== 0n) {
+    const q = old_r / r;
+    [old_r, r] = [r, old_r - q * r];
+    [old_s, s] = [s, old_s - q * s];
+  }
+  return ((old_s % m) + m) % m;
+}
+
+const p = 61n, q = 53n;
+const n = p * q;                  // 3233n
+const phi = (p - 1n) * (q - 1n);  // 3120n
+const e = 17n;
+const d = modinv(e, phi);         // 2753n
+
+const m = 65n;
+const c = modpow(m, e, n);        // 2790n
+const m2 = modpow(c, d, n);       // 65n
+console.log(c, m2);</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.realworld">🌍 6. Cas réel & limites</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Current uses">✓ Utilisations actuelles</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="TLS / HTTPS (initial exchange, signatures)">TLS / HTTPS (échange initial, signatures)</li>
+            <li data-en="X.509 certificates (CAs, browsers)">Certificats X.509 (CA, navigateurs)</li>
+            <li data-en="Package / firmware signing">Signatures de paquets / firmware</li>
+            <li data-en="PGP / GnuPG (encrypted email)">PGP / GnuPG (e-mail chiffré)</li>
+            <li data-en="SSH (2048/4096-bit RSA keys)">SSH (clés RSA 2048/4096 bits)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Pitfalls & limits">✗ Pièges & limites</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="<strong>Slow</strong> → reserved for key exchange / signature"><strong>Lent</strong> → réservé à l'échange de clé / signature</li>
+            <li data-en="Keys &amp;lt; 2048 bits: not recommended (NIST)">Clés &lt; 2048 bits : déconseillées (NIST)</li>
+            <li data-en="Without padding (OAEP/PSS): vulnerable">Sans padding (OAEP/PSS) : vulnérable</li>
+            <li data-en="small e + same m sent: Håstad attack">e trop petit + même m envoyé : attaque de Håstad</li>
+            <li data-en="<strong>Broken by a quantum computer</strong> (Shor)"><strong>Cassé par un ordinateur quantique</strong> (Shor)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bleichenbacher (1998) / ROBOT (2017)">Bleichenbacher (1998) / ROBOT (2017)</div>
+          <p class="text-xs text-slate-300" data-en="PKCS#1 v1.5 padding oracle → server private key recovery. ROBOT hit F5, Citrix, Cisco.">Padding oracle PKCS#1 v1.5 → récupération de la clé privée serveur. ROBOT a touché F5, Citrix, Cisco.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Coppersmith (small e)">Coppersmith (e petit)</div>
+          <p class="text-xs text-slate-300" data-en="If you encrypt the same message m with e=3 to 3 recipients, m is recovered via CRT.">Si on chiffre le même message m avec e=3 vers 3 destinataires, m est récupéré via CRT.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Fermat (p, q close)">Fermat (p, q proches)</div>
+          <p class="text-xs text-slate-300" data-en="If |p − q| is small, n factors in seconds (2012 bug: 0.4% of TLS keys).">Si |p − q| est petit, on factorise n en quelques secondes (Bug 2012 : 0.4% des clés TLS).</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="ROCA (CVE-2017-15361)">ROCA (CVE-2017-15361)</div>
+          <p class="text-xs text-slate-300" data-en="Infineon RSALib bug: 760M card/TPM/eID keys factorable.">Bug Infineon RSALib : clés de 760 mio cartes/TPM/eID factorisables.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Manger attack (OAEP)">Manger attack (OAEP)</div>
+          <p class="text-xs text-slate-300" data-en="Timing on OAEP decryption leaks the plaintext.">Timing sur le déchiffrement OAEP révèle le plaintext.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Shor's algorithm (quantum)">Algorithme de Shor (quantique)</div>
+          <p class="text-xs text-slate-300" data-en="Factors n in polynomial time → any RSA key broken instantly.">Factorise n en temps polynomial → toute clé RSA cassée instantanément.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    // ===== RSA simulation =====
+    function modpow(b, e, m) { let r=1n; b=b%m; while(e>0n){ if(e&1n) r=(r*b)%m; e>>=1n; b=(b*b)%m;} return r; }
+    function modinv(a, m) {
+      let [old_r, r]=[a, m], [old_s, s]=[1n, 0n];
+      while (r !== 0n) { const q = old_r / r; [old_r,r]=[r,old_r-q*r]; [old_s,s]=[s,old_s-q*s]; }
+      if (old_r !== 1n) return null;
+      return ((old_s % m) + m) % m;
+    }
+    function isPrime(n) {
+      if (n < 2n) return false;
+      if (n < 4n) return true;
+      if (n % 2n === 0n) return false;
+      for (let i=3n; i*i <= n; i+=2n) if (n%i === 0n) return false;
+      return true;
+    }
+    function gcdB(a,b){ while(b){[a,b]=[b,a%b];} return a; }
+
+    let cur = null;
+    document.getElementById('gen').addEventListener('click', () => {
+      const k = document.getElementById('keys');
+      try {
+        const p = BigInt(document.getElementById('rsa-p').value);
+        const q = BigInt(document.getElementById('rsa-q').value);
+        const e = BigInt(document.getElementById('rsa-e').value);
+        if (!isPrime(p) || !isPrime(q)) throw new Error('p et q doivent être premiers');
+        if (p === q) throw new Error('p doit être différent de q');
+        const n = p*q;
+        const phi = (p-1n)*(q-1n);
+        if (gcdB(e, phi) !== 1n) throw new Error(`e=${e} doit être copremier avec φ(n)=${phi}`);
+        const d = modinv(e, phi);
+        if (d === null) throw new Error("Inverse modulaire introuvable");
+        cur = {p,q,n,phi,e,d};
+        k.classList.remove('hidden');
+        k.innerHTML = `
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">n = p × q = ${p} × ${q} = <span class="text-brand-500">${n}</span></div>
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">φ(n) = (p−1)(q−1) = ${p-1n} × ${q-1n} = <span class="text-brand-500">${phi}</span></div>
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">d ≡ e⁻¹ mod φ(n) = ${e}⁻¹ mod ${phi} = <span class="text-brand-500">${d}</span></div>
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded">🔓 Clé publique : (n=${n}, e=${e})</div>
+          <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded">🔐 Clé privée : (n=${n}, d=${d})</div>
+        `;
+      } catch (err) {
+        k.classList.remove('hidden');
+        k.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">❌ ${err.message}</div>`;
+        cur = null;
+      }
+    });
+
+    document.getElementById('enc').addEventListener('click', () => {
+      const r = document.getElementById('result');
+      r.classList.remove('hidden');
+      if (!cur) { r.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">Génère d'abord les clés.</div>`; return; }
+      try {
+        const m = BigInt(document.getElementById('rsa-m').value);
+        if (m >= cur.n) throw new Error(`m doit être < n (${cur.n})`);
+        const c = modpow(m, cur.e, cur.n);
+        const m2 = modpow(c, cur.d, cur.n);
+        r.innerHTML = `
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">c = m<sup>e</sup> mod n = ${m}<sup>${cur.e}</sup> mod ${cur.n} = <span class="text-emerald-400">${c}</span></div>
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">m = c<sup>d</sup> mod n = ${c}<sup>${cur.d}</sup> mod ${cur.n} = <span class="text-amber-400">${m2}</span></div>
+          <div class="p-3 ${m===m2?'bg-emerald-500/10 border-emerald-500/30':'bg-red-500/10 border-red-500/30'} border rounded">${m===m2?'✓ Le message original a été retrouvé.':'❌ Erreur'}</div>
+        `;
+      } catch (err) {
+        r.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">❌ ${err.message}</div>`;
+      }
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white'); tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden', tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Sur quel problème mathématique repose la sécurité de RSA ?", choices:["Le logarithme discret","La factorisation des grands nombres","Le voyageur de commerce","Les courbes elliptiques"], answer:1, explain:"Connaître n=p·q ne permet pas de retrouver p et q efficacement (avec un ordinateur classique)." },
+      { q:"Que contient la clé publique RSA ?", choices:["(n, d)","(p, q)","(n, e)","(φ(n), e)"], answer:2, explain:"Publique = (n, e). Privée = (n, d). φ(n) et p,q doivent rester secrets." },
+      { q:"Pourquoi RSA est-il rarement utilisé pour chiffrer de gros volumes ?", choices:["Il n'est pas sécurisé","Il est très lent","Les clés sont trop courtes","Il ne fonctionne que sur du texte"], answer:1, explain:"RSA est ~1000× plus lent qu'AES. On l'utilise pour échanger une clé AES (chiffrement hybride)." },
+      { q:"Quel algorithme casse RSA en temps polynomial sur un ordinateur quantique ?", choices:["Grover","Shor","BB84","AES"], answer:1, explain:"L'algorithme de Shor (1994) factorise n en temps polynomial sur un ordinateur quantique suffisamment grand." },
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click', ()=>{
+      let score = 0;
+      questions.forEach((q,i)=>{
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex = quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        ex.innerHTML = `<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) { const ch=+sel.value; if (ch===q.answer) score++; else labels[ch].classList.add('quiz-wrong'); }
+      });
+      const r = document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const ok = score===questions.length;
+      r.className = `mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML = `<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal — relis les sections ratées.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('rsa', score, questions.length);
+      if (ok && !CryptoLab.hasBadge('rsa-master')) { CryptoLab.earnBadge('rsa-master','Expert RSA','🔑'); CryptoLab.showToast('🔑 Badge débloqué : <u>Expert RSA</u> !'); }
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

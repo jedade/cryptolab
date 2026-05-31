@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Courbes de Montgomery & X25519 — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">🪜</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">2006 · D.J. Bernstein</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Montgomery, Curve25519 & X25519</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Elliptic curve">Courbe elliptique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10">ECDH</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="Signal · WireGuard · TLS 1.3">Signal · WireGuard · TLS 1.3</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">📖 1. Pourquoi une autre forme ?</h2>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Short Weierstrass</strong> curves (y² = x³ + ax + b) are the historical form of elliptic curves, but they have two practical drawbacks:">
+        Les courbes de <strong>Weierstrass courte</strong> (y² = x³ + ax + b) sont la forme historique
+        des courbes elliptiques, mais elles ont deux défauts en pratique :
+      </p>
+      <ul class="text-sm text-slate-300 mt-3 space-y-1 list-disc list-inside">
+        <li>Cas spéciaux (point à l'infini, doublement vs addition) ⇒ branches conditionnelles ⇒ side-channels</li>
+        <li>Multiplication scalaire coûteuse, validation du point obligatoire</li>
+      </ul>
+      <p class="text-slate-300 mt-3" data-en="<strong>Peter Montgomery (1987)</strong> introduces an alternative form: <em>By² = x³ + Ax² + x</em>. With it comes the <strong>Montgomery ladder</strong>, a scalar multiplication algorithm intrinsically resistant to side-channels (timing, cache, power) since the number of operations is constant regardless of the bit processed.">
+        <strong>Peter Montgomery (1987)</strong> introduit une forme alternative : <em>By² = x³ + Ax² + x</em>.
+        Avec elle vient la <strong>Montgomery ladder</strong>, un algorithme de multiplication scalaire
+        intrinsèquement résistant aux side-channels (timing, cache, power) car le nombre d'opérations est
+        constant indépendamment du bit traité.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="In 2006, <strong>Daniel J. Bernstein</strong> publishes <strong>Curve25519</strong>: a Montgomery curve carefully chosen for ECDH, with a public justification of each parameter ('nothing-up-my-sleeve'). The associated key exchange protocol is <strong>X25519</strong> (RFC 7748).">
+        En 2006, <strong>Daniel J. Bernstein</strong> publie <strong>Curve25519</strong> : une courbe de
+        Montgomery soigneusement choisie pour ECDH, accompagnée d'une justification publique de
+        chacun de ses paramètres (« nothing-up-my-sleeve »). Le protocole d'échange de clés associé est
+        <strong>X25519</strong> (RFC 7748).
+      </p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">⚙️ 2. Forme & paramètres de Curve25519</h2>
+      <div class="math-box text-center">
+        <div class="text-brand-500">y² = x³ + 486662·x² + x &nbsp;&nbsp;(mod 2²⁵⁵ − 19)</div>
+        <div class="text-emerald-400 mt-2">A = 486662 &nbsp;·&nbsp; B = 1 &nbsp;·&nbsp; p = 2²⁵⁵ − 19 (Mersenne-like)</div>
+        <div class="text-amber-400 mt-2">Generator x = 9 &nbsp;·&nbsp; Ordre = 8 · ℓ, ℓ = 2²⁵² + 27742317777372353535851937790883648493</div>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-4 mt-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-brand-500 font-semibold">Prime 2²⁵⁵ − 19</div><p class="text-xs text-slate-400 mt-1">Réduction modulaire très efficace (proche de 2^k).</p></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-brand-500 font-semibold">A = 486662</div><p class="text-xs text-slate-400 mt-1">Plus petit A > 2 tel que A² − 4 n'est pas un carré → empêche les attaques d'isogénie.</p></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-brand-500 font-semibold">Cofacteur 8</div><p class="text-xs text-slate-400 mt-1">Géré par le « clamping » → pas de petit sous-groupe exploitable.</p></div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🪜 3. La Montgomery ladder</h2>
+      <p class="text-slate-300 mb-4">Pour calculer k·P, on lit les bits de k du plus haut au plus bas. À chaque bit, on effectue <em>exactement les mêmes opérations</em> qu'on swap deux registres ou non :</p>
+      <pre><code>R0 = O (point à l'infini)
+R1 = P
+for bit in k (MSB → LSB):
+    if bit == 0:
+        R1 = R0 + R1      ; addition différentielle
+        R0 = 2 · R0       ; doublement
+    else:
+        R0 = R0 + R1
+        R1 = 2 · R1
+return R0</code></pre>
+      <div class="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-sm text-emerald-300 mt-3">
+        💡 <strong>Astuce-clé</strong> : les deux branches font 1 add + 1 double. Implémenté avec une
+        sélection conditionnelle (<code>cmov</code>) sans branchement, le temps d'exécution est <em>indépendant
+        de la clé</em> → résistance side-channel intrinsèque.
+      </div>
+      <div class="p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg text-sm text-amber-300 mt-3">
+        ⚙️ <strong>Spécificité Montgomery</strong> : on travaille sur la coordonnée x seulement (x-only ECDH).
+        On gagne en performance car y se retrouve modulo signe — non nécessaire pour ECDH.
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🧮 4. X25519 — protocole ECDH</h2>
+      <div class="math-box">
+        <div class="text-center text-brand-500">Alice : a aléatoire 32 octets → clamp → A = X25519(a, 9)</div>
+        <div class="text-center text-brand-500">Bob : b aléatoire 32 octets → clamp → B = X25519(b, 9)</div>
+        <div class="text-center text-emerald-400 text-lg mt-3">Clé partagée K = X25519(a, B) = X25519(b, A)</div>
+      </div>
+      <p class="text-slate-300 mt-4 text-sm">
+        Le « clamping » consiste à zéroter les 3 bits de poids faible (cofacteur 8) et fixer les bits 254-255.
+        Cela évite plusieurs classes d'attaques (small subgroup, top-bit timing).
+      </p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🔍 5. Simulation X25519 (Web Crypto)</h2>
+      <p class="text-slate-400 text-sm mb-4">Navigateur récent requis (X25519 dans Web Crypto depuis 2023-2024).</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-4">
+        <button id="x25519-run" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="🤝 Generate Alice + Bob and derive the key">🤝 Générer Alice + Bob et dériver la clé</button>
+        <div id="x25519-out" class="hidden text-sm font-mono space-y-2"></div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">💻 6. Code</h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># pip install cryptography
+from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives import hashes
+
+alice_priv = X25519PrivateKey.generate()
+bob_priv   = X25519PrivateKey.generate()
+
+shared_alice = alice_priv.exchange(bob_priv.public_key())
+shared_bob   = bob_priv.exchange(alice_priv.public_key())
+assert shared_alice == shared_bob   # ✓
+
+# TOUJOURS passer par un KDF avant utilisation
+key = HKDF(algorithm=hashes.SHA256(), length=32, salt=None, info=b'session').derive(shared_alice)
+
+# Signature : utiliser Ed25519 (forme Edwards de la même courbe)
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+sk = Ed25519PrivateKey.generate()
+sig = sk.sign(b"message")
+sk.public_key().verify(sig, b"message")</code></pre>
+      <pre id="code-js" class="hidden"><code>// Web Crypto (navigateur récent)
+const alice = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']);
+const bob   = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']);
+
+// Alice dérive avec la clé publique de Bob
+const sharedAlice = await crypto.subtle.deriveBits(
+  { name: 'X25519', public: bob.publicKey },
+  alice.privateKey,
+  256
+);
+
+// Bob dérive avec la clé publique d'Alice
+const sharedBob = await crypto.subtle.deriveBits(
+  { name: 'X25519', public: alice.publicKey },
+  bob.privateKey,
+  256
+);
+
+// Comparaison
+const a = new Uint8Array(sharedAlice);
+const b = new Uint8Array(sharedBob);
+console.log(a.every((v, i) => v === b[i]));  // true</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🌍 7. Adoption</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Everywhere">✓ Partout</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Signal Protocol (X3DH)">Signal Protocol (X3DH)</li>
+            <li data-en="WireGuard (identity + handshake)">WireGuard (identité + handshake)</li>
+            <li data-en="TLS 1.3 (X25519 group, hybrid with Kyber since 2024)">TLS 1.3 (group X25519, hybride avec Kyber depuis 2024)</li>
+            <li data-en="OpenSSH ed25519/x25519">OpenSSH ed25519/x25519</li>
+            <li data-en="Tor v3 onion services">Tor v3 onion services</li>
+            <li data-en="Age, Noise framework">Age, Noise framework</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-amber-500/5 border border-amber-500/20 rounded-xl">
+          <div class="text-amber-400 font-semibold mb-2" data-en="⚠️ Watch out">⚠️ Points d'attention</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="X25519 is NOT authenticated: combine with signature or PSK">X25519 n'est PAS authentifié : combiner avec signature ou PSK</li>
+            <li data-en="Always go through HKDF before encryption">Toujours passer par HKDF avant chiffrement</li>
+            <li data-en="Broken by Shor → hybrid X25519 + ML-KEM migration">Cassé par Shor → migration hybride X25519 + ML-KEM</li>
+            <li data-en="Distinguish X25519 (ECDH) and Ed25519 (signatures)">Distinguer X25519 (ECDH) et Ed25519 (signatures)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bad clamping implementation">Mauvaise implémentation du clamping</div>
+          <p class="text-xs text-slate-300" data-en="Without proper 3-bit-low clamping, small-subgroup attacks possible.">Sans clamping correct des 3 bits faibles, attaques small-subgroup possibles.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bad RNG for ephemeral keys">Mauvais RNG pour les clés éphémères</div>
+          <p class="text-xs text-slate-300" data-en="A predictable key breaks the exchange (and with it forward secrecy).">Une clé prévisible casse l'échange (et avec lui forward secrecy).</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Twist attack if point not validated">Twist attack si point non validé</div>
+          <p class="text-xs text-slate-300" data-en="Bernstein designed X25519 for robustness, but a bad reimplementation can break.">Bernstein conçoit X25519 pour être robuste, mais une mauvaise réimplémentation peut casser.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Shor's algorithm (quantum)">Algorithme de Shor (quantique)</div>
+          <p class="text-xs text-slate-300" data-en="Breaks Curve25519/Ed25519 → hybrid Kyber/Dilithium migration starting now.">Casse Curve25519/Ed25519 → migration hybride Kyber/Dilithium dès maintenant.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz">🧠 8. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    document.getElementById('x25519-run').addEventListener('click', async () => {
+      const out = document.getElementById('x25519-out');
+      out.classList.remove('hidden');
+      try {
+        const alice = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']);
+        const bob   = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']);
+        const aPub = new Uint8Array(await crypto.subtle.exportKey('raw', alice.publicKey));
+        const bPub = new Uint8Array(await crypto.subtle.exportKey('raw', bob.publicKey));
+        const sA = new Uint8Array(await crypto.subtle.deriveBits({ name:'X25519', public: bob.publicKey }, alice.privateKey, 256));
+        const sB = new Uint8Array(await crypto.subtle.deriveBits({ name:'X25519', public: alice.publicKey }, bob.privateKey, 256));
+        const toHex = u => [...u].map(b => b.toString(16).padStart(2,'0')).join('');
+        const same = sA.every((v, i) => v === sB[i]);
+        out.innerHTML = `
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded break-all"><span class="text-emerald-400">Alice pub :</span><br>${toHex(aPub)}</div>
+          <div class="p-3 bg-brand-500/10 border border-brand-500/30 rounded break-all"><span class="text-brand-500">Bob pub :</span><br>${toHex(bPub)}</div>
+          <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded break-all"><span class="text-amber-400">Shared (Alice) :</span><br>${toHex(sA)}</div>
+          <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded break-all"><span class="text-amber-400">Shared (Bob) :</span><br>${toHex(sB)}</div>
+          <div class="p-3 ${same?'bg-emerald-500/10 border-emerald-500/30':'bg-red-500/10 border-red-500/30'} border rounded">${same?'✓ Identiques.':'❌'}</div>
+        `;
+      } catch (e) {
+        out.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">❌ ${e.message}<br><span class="text-xs">Ton navigateur ne supporte peut-être pas encore X25519 dans Web Crypto. Essaie Chrome récent ou Firefox 130+.</span></div>`;
+      }
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Quelle est la forme d'une courbe de Montgomery ?", choices:["y² = x³ + ax + b","By² = x³ + Ax² + x","ax² + y² = 1 + dx²y²","y = mx + c"], answer:1, explain:"Forme By² = x³ + Ax² + x. Adaptée à la Montgomery ladder." },
+      { q:"Quel est l'atout principal de la Montgomery ladder ?", choices:["Plus rapide en absolu","Temps constant indépendant de la clé (anti side-channel)","Plus petite clé","Multi-platforme"], answer:1, explain:"Chaque bit traite exactement les mêmes opérations — le timing ne révèle rien." },
+      { q:"Sur quel premier opère Curve25519 ?", choices:["2²⁵⁶ − 1","2²⁵⁵ − 19","2²⁵² − 5","2²⁵⁶ − 189"], answer:1, explain:"Premier proche d'une puissance de 2 → réduction modulaire très rapide." },
+      { q:"Quel protocole utilise Curve25519 pour l'échange de clés ?", choices:["ECDSA","X25519","Ed25519","Ed448"], answer:1, explain:"X25519 = ECDH sur Curve25519 (RFC 7748). Ed25519 = signature, forme Edwards équivalente." },
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('montgomery',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('montgomery-master')){CryptoLab.earnBadge('montgomery-master','Grimpeur Montgomery','🪜');CryptoLab.showToast('🪜 Badge débloqué : <u>Grimpeur Montgomery</u> !');}
+    });
+  </script>
+</body>
+</html>

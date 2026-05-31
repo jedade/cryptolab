@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECIES — Integrated Encryption Scheme — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">📨</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500" data-en="2001 · ANSI X9.63">2001 · ANSI X9.63</div>
+        <h1 class="text-4xl md:text-5xl font-bold" data-en="ECIES — Integrated Encryption Scheme">ECIES — Integrated Encryption Scheme</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Hybrid asymmetric encryption">Chiffrement hybride asymétrique</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="Lightweight">Léger</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Bitcoin · Smart contracts">Bitcoin · Smart contracts</span>
+      
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Standardized">Normalisé</div><div class="font-semibold" data-en="ANSI X9.63, ISO/IEC 18033-2, IEEE 1363a, SECG SEC 1">ANSI X9.63, ISO/IEC 18033-2, IEEE 1363a, SECG SEC 1</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Family">Famille</div><div class="font-semibold" data-en="IES + elliptic variant = ECIES">IES + variante elliptique = ECIES</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Type">Type</div><div class="font-semibold" data-en="Lightweight asymmetric encryption">Chiffrement asymétrique léger</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>ECIES</strong> (Elliptic Curve Integrated Encryption Scheme) is a compact hybrid encryption scheme, standardized in the 2000s. Where you'd manually combine ECDH + KDF + AES + MAC, ECIES <em>wraps everything in one standardized primitive</em>. Heavily used in Bitcoin (encrypted node messages), Ethereum smart contracts, IoT (Hyperledger), and any situation where you encrypt for a recipient whose elliptic public key you know."><strong>ECIES</strong> (Elliptic Curve Integrated Encryption Scheme) est un schéma de chiffrement hybride compact, standardisé dans les années 2000. Là où on combinerait manuellement ECDH + KDF + AES + MAC, ECIES <em>encapsule tout dans une primitive normalisée</em>. Très utilisé dans Bitcoin (messages chiffrés entre nœuds), les smart contracts Ethereum, l'IoT (Hyperledger), et toute situation où l'on veut chiffrer pour un destinataire dont on connaît seulement la clé publique elliptique.</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <div data-en="<p class="text-slate-300 mb-4">ECIES has five <strong>encryption</strong> steps:</p>
+      <div class="p-5 bg-white/5 border border-white/10 rounded-xl space-y-2 text-sm">
+        <div>1. Bob generates an <strong>ephemeral pair</strong> (r, R = r·G) — basis of forward secrecy</div>
+        <div>2. Compute shared secret: <strong>S = r · pubAlice</strong> (ECDH)</div>
+        <div>3. Derive: <strong>(k_enc, k_mac) = KDF(S)</strong></div>
+        <div>4. Encrypt: <strong>c = AES(k_enc, message)</strong></div>
+        <div>5. Authenticate: <strong>tag = HMAC(k_mac, c)</strong></div>
+        <div class="pt-2 text-brand-500">→ Bob sends (R, c, tag) to Alice</div>
+      </div>
+      <p class="text-slate-300 mt-4 mb-3"><strong>Alice side (decryption)</strong>:</p>
+      <div class="p-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl space-y-2 text-sm">
+        <div>1. Alice computes <strong>S = privAlice · R</strong> (inverse ECDH)</div>
+        <div>2. Derives (k_enc, k_mac) with same KDF</div>
+        <div>3. Verifies <strong>HMAC(k_mac, c) == tag</strong>  &nbsp;— reject if mismatch</div>
+        <div>4. Decrypts <strong>m = AES⁻¹(k_enc, c)</strong></div>
+      </div>
+      <p class="text-slate-300 mt-4 text-sm">💡 ECIES is exactly the <em>"hybrid E2E encryption"</em> pattern documented in Implementations — except that pattern is <strong>standardized and named</strong>.</p>"><p class="text-slate-300 mb-4">ECIES suit cinq étapes côté <strong>chiffrement</strong> :</p>
+      <div class="p-5 bg-white/5 border border-white/10 rounded-xl space-y-2 text-sm">
+        <div>1. Bob génère une <strong>paire éphémère</strong> (r, R = r·G) — base de la forward secrecy</div>
+        <div>2. Calcul du secret partagé : <strong>S = r · pubAlice</strong> (ECDH)</div>
+        <div>3. Dérivation : <strong>(k_enc, k_mac) = KDF(S)</strong></div>
+        <div>4. Chiffrement : <strong>c = AES(k_enc, message)</strong></div>
+        <div>5. Authentification : <strong>tag = HMAC(k_mac, c)</strong></div>
+        <div class="pt-2 text-brand-500">→ Bob envoie (R, c, tag) à Alice</div>
+      </div>
+      <p class="text-slate-300 mt-4 mb-3"><strong>Côté Alice (déchiffrement)</strong> :</p>
+      <div class="p-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl space-y-2 text-sm">
+        <div>1. Alice calcule <strong>S = privAlice · R</strong> (ECDH inverse)</div>
+        <div>2. Dérive (k_enc, k_mac) avec le même KDF</div>
+        <div>3. Vérifie <strong>HMAC(k_mac, c) == tag</strong>  &nbsp;— rejette si KO</div>
+        <div>4. Déchiffre <strong>m = AES⁻¹(k_enc, c)</strong></div>
+      </div>
+      <p class="text-slate-300 mt-4 text-sm">💡 ECIES est exactement le pattern <em>"chiffrement hybride E2E"</em> documenté dans la page Implémentations — sauf que ce pattern est <strong>standardisé et nommé</strong>.</p></div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="math-box text-center" data-en="<div class="text-brand-500">S = r · pubAlice = r · (dA · G) = dA · (r · G) = dA · R</div><div class="text-emerald-400 mt-2">(k_enc, k_mac) = KDF(S ∥ optional_S2)</div><div class="text-amber-400 mt-2">Payload = R ∥ c ∥ HMAC(k_mac, c)</div>"><div class="text-brand-500">S = r · pubAlice = r · (dA · G) = dA · (r · G) = dA · R</div><div class="text-emerald-400 mt-2">(k_enc, k_mac) = KDF(S ∥ optional_S2)</div><div class="text-amber-400 mt-2">Payload = R ∥ c ∥ HMAC(k_mac, c)</div></div>
+      <p class="text-slate-300 mt-4 text-sm" data-en="Variants: <strong>ECIES-KEM</strong> (Key Encapsulation Mechanism — separates key/message encryption), <strong>ECIES-DEM</strong> (Data Encapsulation Mechanism). Typical curves: secp256k1 (Bitcoin), P-256 (web), Curve25519 (modern).">Variantes : <strong>ECIES-KEM</strong> (Key Encapsulation Mechanism — séparation du chiffrement clé / message), <strong>ECIES-DEM</strong> (Data Encapsulation Mechanism). Courbes typiques : secp256k1 (Bitcoin), P-256 (web), Curve25519 (moderne).</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.code">💻 4. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># pip install eciespy
+from ecies import encrypt, decrypt
+from ecies.utils import generate_eth_key
+
+# Génération d'une paire de clés (style Ethereum)
+sk = generate_eth_key()
+sk_hex = sk.to_hex()
+pk_hex = sk.public_key.to_hex()
+
+# Chiffrement avec la clé publique
+message = b"Message confidentiel pour Alice"
+ciphertext = encrypt(pk_hex, message)
+# Le ciphertext contient : R (clé publique éphémère) + IV + tag + chiffré
+
+# Déchiffrement avec la clé privée
+recovered = decrypt(sk_hex, ciphertext)
+print(recovered)  # b"Message confidentiel pour Alice"
+
+# Implémentation manuelle (pour comprendre — pas pour la prod)
+from cryptography.hazmat.primitives.asymmetric.ec import generate_private_key, SECP256K1
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from cryptography.hazmat.primitives import hashes, serialization
+import os
+
+alice_sk = generate_private_key(SECP256K1())
+alice_pk = alice_sk.public_key()
+
+# Bob chiffre pour Alice
+ephemeral = generate_private_key(SECP256K1())
+shared = ephemeral.exchange(SECP256K1(), alice_pk)
+key = HKDF(hashes.SHA256(), 32, None, b"ECIES").derive(shared)
+nonce = os.urandom(12)
+ct = AESGCM(key).encrypt(nonce, b"secret", None)
+payload = (ephemeral.public_key().public_bytes(
+    serialization.Encoding.X962,
+    serialization.PublicFormat.UncompressedPoint
+) + nonce + ct)</code></pre>
+      <pre id="code-js" class="hidden"><code>// eciesjs : alternative légère côté Node.js / navigateur
+import { encrypt, decrypt, PrivateKey } from 'eciesjs';
+
+const sk = new PrivateKey();
+const pkHex = sk.publicKey.toHex();
+
+const ciphertext = encrypt(pkHex, Buffer.from('Confidential message'));
+const plaintext  = decrypt(sk.toHex(), ciphertext);
+console.log(plaintext.toString());  // 'Confidential message'
+
+// Très utilisé dans :
+//  - Bitcoin BIP47 (payment codes)
+//  - Ethereum smart contracts pour échanges confidentiels
+//  - Brave Browser BAT
+//  - Lightning Network onion routing</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-en="🌍 5. Real-world: pros, cons, flaws">🌍 5. Cas réel : avantages, inconvénients, failles</span></h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-5 bg-emerald-500/5 border-emerald-500/20 border rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✅ Advantages">✅ Avantages</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Open standard (ANSI, ISO, IEEE, SECG)">Standard ouvert (ANSI, ISO, IEEE, SECG)</li>
+            <li data-en="Lightweight: single API call for encrypt/decrypt">Léger : un seul appel API pour chiffrer/déchiffrer</li>
+            <li data-en="Forward secrecy with ephemeral key">Forward secrecy avec clé éphémère</li>
+            <li data-en="Compact (~140 bytes overhead for secp256k1)">Compact (~140 octets overhead pour secp256k1)</li>
+            <li data-en="IoT / smart contract friendly">Compatible IoT / smart contracts</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-amber-500/5 border-amber-500/20 border rounded-xl">
+          <div class="text-amber-400 font-semibold mb-2" data-en="⚠️ Disadvantages">⚠️ Inconvénients</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Implementations diverge (KDF, MAC, AES mode parameters)">Implémentations divergent (paramètres KDF, MAC, AES mode)</li>
+            <li data-en="Not IND-CCA2 without ECIES-KEM variant">Pas IND-CCA2 sans variante ECIES-KEM</li>
+            <li data-en="Sometimes lacks the addable AAD of plain AES-GCM">Manque parfois de l'AAD ajoutable d'AES-GCM seul</li>
+            <li data-en="Less widespread than ad-hoc patterns (PGP, age)">Moins répandu que les patterns ad-hoc (PGP, age)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border-red-500/30 border rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="💥 Known flaws">💥 Failles connues</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Implementation interop differences (curve, KDF, MAC) → errors">Diff. interop entre implémentations (curve, KDF, MAC) → erreurs</li>
+            <li data-en="Bad KDF (ANSI X9.63 KDF) historically weak vs HKDF">Mauvais KDF (ANSI X9.63 KDF) historiquement faible vs HKDF</li>
+            <li data-en="Without MAC, total malleability → always use standard ECIES">Sans MAC, malléabilité totale → toujours utiliser ECIES standard</li>
+            <li data-en="Side-channel on ECDH if non-constant implementation">Side-channel sur ECDH si implémentation non constante</li>
+            <li data-en="Shor (quantum): breaks ECDH → hybrid Kyber migration">Shor (quantique) : casse ECDH → migration hybride avec Kyber</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🧠 Quiz -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz" data-en="🧠 Quiz">🧠 Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+
+    <script>
+      const QUIZ_DATA = [
+      {q_fr:"Que signifie le "I" dans ECIES ?", q_en:"What does "I" mean in ECIES?", choices_fr:["Inversible", "Integrated (intégré : ECDH + KDF + AES + MAC en un)", "Irréversible", "International"], choices_en:["Invertible", "Integrated (ECDH + KDF + AES + MAC bundled)", "Irreversible", "International"], answer:1, e_fr:"Integrated = tout le pattern hybride encapsulé dans une primitive standardisée.", e_en:"Integrated = the whole hybrid pattern wrapped in a standardized primitive."},
+      {q_fr:"À quoi sert la clé éphémère R dans ECIES ?", q_en:"What is the ephemeral key R for in ECIES?", choices_fr:["Vérifier la signature", "Établir le secret partagé S et donner la forward secrecy", "Compresser le message", "Ralentir le brute force"], choices_en:["Verify signature", "Establish shared secret S and provide forward secrecy", "Compress the message", "Slow brute force"], answer:1, e_fr:"Une nouvelle paire éphémère par message → forward secrecy. S = r · pubAlice.", e_en:"A fresh ephemeral pair per message → forward secrecy. S = r · pubAlice."},
+      {q_fr:"Pourquoi ECIES inclut-il un HMAC en plus du chiffrement ?", q_en:"Why does ECIES include HMAC besides encryption?", choices_fr:["Pour signer le message", "Pour authentifier le chiffré (intégrité) et empêcher la malléabilité", "Pour compresser", "Pour le hachage du mot de passe"], choices_en:["To sign the message", "To authenticate the ciphertext (integrity) and prevent malleability", "To compress", "For password hashing"], answer:1, e_fr:"Sans MAC, un attaquant pourrait modifier le chiffré sans être détecté.", e_en:"Without MAC, an attacker could modify the ciphertext undetected."},
+      {q_fr:"Où ECIES est-il utilisé en production ?", q_en:"Where is ECIES used in production?", choices_fr:["Nulle part", "Bitcoin BIP47, Ethereum, Brave BAT, Lightning, IoT", "Seulement en académie", "Seulement TLS"], choices_en:["Nowhere", "Bitcoin BIP47, Ethereum, Brave BAT, Lightning, IoT", "Only academic", "Only TLS"], answer:1, e_fr:"Massivement dans l"écosystème blockchain et les communications IoT.", e_en:"Massively in blockchain and IoT communications."}
+    ];
+    </script>
+
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab').forEach(t => {
+          t.classList.remove('bg-brand-500','text-white');
+          t.classList.add('bg-white/5','border','border-white/10');
+        });
+        tab.classList.add('bg-brand-500','text-white');
+        tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden', tab.dataset.lang!=='js');
+      });
+    });
+
+    // Quiz logic
+    const Q = QUIZ_DATA;
+    const quizDiv = document.getElementById('quiz');
+    function renderQuiz() {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      quizDiv.innerHTML = '';
+      Q.forEach((q,i) => {
+        const b = document.createElement('div');
+        b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+        const question = lang==='en' ? q.q_en : q.q_fr;
+        const choices = lang==='en' ? q.choices_en : q.choices_fr;
+        b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${question}</div>
+          <div class="space-y-2">${choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+          <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+        quizDiv.appendChild(b);
+      });
+    }
+    renderQuiz();
+    document.addEventListener('lang-changed', renderQuiz);
+
+    document.getElementById('quiz-submit').addEventListener('click', () => {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      let score = 0;
+      Q.forEach((q,i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l => l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex = quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        const explainLabel = lang==='en' ? 'Explanation' : 'Explication';
+        ex.innerHTML = `<strong class="text-brand-500">${explainLabel} :</strong> ${lang==='en' ? q.e_en : q.e_fr}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) { const ch = +sel.value; if (ch === q.answer) score++; else labels[ch].classList.add('quiz-wrong'); }
+      });
+      const r = document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const ok = score === Q.length;
+      const msg = ok ? (lang==='en'?'🎉 Flawless!':'🎉 Sans-faute !')
+                : score >= Q.length/2 ? (lang==='en'?'👍 Not bad.':'👍 Pas mal.')
+                : (lang==='en'?'📚 Retry.':'📚 Réessaie.');
+      const cls = ok ? 'border-emerald-500/40 bg-emerald-500/10'
+                : score >= Q.length/2 ? 'border-amber-500/40 bg-amber-500/10'
+                : 'border-red-500/40 bg-red-500/10';
+      r.className = `mt-6 p-5 rounded-xl border ${cls}`;
+      r.innerHTML = `<div class="font-semibold text-lg mb-1">${lang==='en'?'Score':'Score'} : ${score}/${Q.length}</div><div class="text-sm text-slate-300">${msg}</div>`;
+      CryptoLab.recordScore('ies', score, Q.length);
+      if (ok && !CryptoLab.hasBadge('ies-master')) {
+        const label = lang==='en' ? 'ECIES Expert' : 'Expert ECIES';
+        CryptoLab.earnBadge('ies-master', label, '📨');
+        CryptoLab.showToast('📨 ' + (lang==='en'?'Badge unlocked':'Badge débloqué') + ' : <u>'+label+'</u> !');
+      }
+    });
+  </script>
+</body>
+</html>

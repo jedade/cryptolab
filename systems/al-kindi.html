@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analyse fréquentielle (Al-Kindi) — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: {
+      colors: { brand: { 500:'#3aa0ff',600:'#1f7fe0' }, ink: { 900:'#0b0f17', 800:'#111827' } }
+    }}}
+  </script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">📜</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">IXe siècle · Bagdad</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Al-Kindi & l'analyse fréquentielle</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Cryptanalysis">Cryptanalyse</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Statistical">Statistique</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="Beginner level">Niveau débutant</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Author">Auteur</div><div class="font-semibold">Al-Kindi (801–873)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Location">Lieu</div><div class="font-semibold">Bagdad, califat abbasside</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Type">Type</div><div class="font-semibold">Cryptanalyse statistique</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="In the 9th century, the Arab scholar <strong>Abū Yūsuf Al-Kindi</strong> wrote <em>Risāla fī Istikhrāj al-Mu'amma</em> — the first known treatise on breaking ciphers. His major contribution: <strong>frequency analysis</strong>, which exploits the fact that in any language, some letters appear more often than others ('E' in French, 'E' in English, 'A' in Arabic…).">
+        Au IXe siècle, le savant arabe <strong>Abū Yūsuf Al-Kindi</strong> rédige
+        <em>Risāla fī Istikhrāj al-Mu'amma</em> — le premier traité connu sur le cassage
+        de chiffres. Sa contribution majeure : l'<strong>analyse fréquentielle</strong>,
+        qui exploite le fait que dans toute langue, certaines lettres apparaissent plus
+        souvent que d'autres (le 'E' en français, le 'E' en anglais, le 'A' en arabe…).
+      </p>
+      <p class="text-slate-300 mt-3" data-en="This simple statistical observation is enough to break centuries of substitution ciphers — including the Caesar cipher.">
+        Ce simple constat statistique suffit à briser des siècles de chiffres par
+        substitution — y compris le chiffre de César.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.howitworks">⚙️ 2. Principe</span></h2>
+      <p class="text-slate-300 mb-4" data-en="In a standard French text, here are the expected frequencies:">Dans un texte français standard, voici les fréquences attendues :</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl font-mono text-sm">
+        <div class="space-y-1">
+          <div class="flex items-center gap-3"><span class="w-6 text-brand-500">E</span><div class="flex-1 bg-white/5 rounded h-3 overflow-hidden"><div class="bg-brand-500 h-full" style="width:90%"></div></div><span class="w-12 text-right text-slate-400">14.7%</span></div>
+          <div class="flex items-center gap-3"><span class="w-6 text-brand-500">A</span><div class="flex-1 bg-white/5 rounded h-3 overflow-hidden"><div class="bg-brand-500 h-full" style="width:48%"></div></div><span class="w-12 text-right text-slate-400">7.6%</span></div>
+          <div class="flex items-center gap-3"><span class="w-6 text-brand-500">S</span><div class="flex-1 bg-white/5 rounded h-3 overflow-hidden"><div class="bg-brand-500 h-full" style="width:48%"></div></div><span class="w-12 text-right text-slate-400">7.9%</span></div>
+          <div class="flex items-center gap-3"><span class="w-6 text-brand-500">I</span><div class="flex-1 bg-white/5 rounded h-3 overflow-hidden"><div class="bg-brand-500 h-full" style="width:46%"></div></div><span class="w-12 text-right text-slate-400">7.5%</span></div>
+          <div class="flex items-center gap-3"><span class="w-6 text-brand-500">T</span><div class="flex-1 bg-white/5 rounded h-3 overflow-hidden"><div class="bg-brand-500 h-full" style="width:45%"></div></div><span class="w-12 text-right text-slate-400">7.2%</span></div>
+        </div>
+      </div>
+      <p class="text-slate-300 mt-4">
+        Si on chiffre un texte avec César (k=3), la lettre la plus fréquente du chiffré
+        sera très probablement 'H' (E + 3). On en déduit la clé sans même tester
+        toutes les possibilités.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <p class="text-slate-300 mb-3" data-en="We compare the observed distribution with the expected one using <strong>chi-squared (χ²)</strong>:">On compare la distribution observée à la distribution attendue avec le <strong>chi-carré (χ²)</strong> :</p>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl">
+        <div class="text-center font-mono text-xl text-brand-500">χ² = Σ (O<sub>i</sub> − E<sub>i</sub>)² / E<sub>i</sub></div>
+      </div>
+      <ul class="mt-5 text-sm text-slate-400 space-y-2 list-disc list-inside">
+        <li><strong>O<sub>i</sub></strong> : fréquence observée de la lettre i dans le texte</li>
+        <li><strong>E<sub>i</sub></strong> : fréquence attendue (référence française)</li>
+        <li>Plus χ² est <em>petit</em>, plus la distribution colle au français : on a trouvé la bonne clé</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.simulation">🔍 4. Outil de cassage automatique</span></h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Paste a Caesar-encrypted text: we try all 26 shifts and pick the best by χ².">Colle un texte chiffré par César : on teste les 26 décalages et on choisit le meilleur via χ².</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Ciphertext">Texte chiffré</label>
+          <textarea id="cipher" rows="3" class="w-full px-4 py-3 bg-ink-900 border border-white/10 rounded-lg font-mono text-sm focus:border-brand-500 focus:outline-none">OHV PDWKVRQW XQ DXWUH ODQJDJH</textarea>
+        </div>
+        <button id="crack" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="🔎 Crack">🔎 Casser</button>
+        <div id="result" class="hidden space-y-4">
+          <div class="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
+            <div class="text-xs text-emerald-400 mb-1" data-en="Likely key">Clé probable</div>
+            <div id="best-key" class="font-mono text-3xl text-emerald-400"></div>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400 mb-1" data-en="Decrypted">Déchiffré</div>
+            <div id="best-plain" class="px-4 py-3 bg-ink-900 border border-white/10 rounded-lg font-mono"></div>
+          </div>
+          <details class="text-sm">
+            <summary class="cursor-pointer text-slate-400 hover:text-white" data-en="Show all 26 attempts sorted by χ²">Voir les 26 tentatives triées par χ²</summary>
+            <div id="all-tries" class="mt-3 space-y-1 font-mono text-xs max-h-60 overflow-y-auto"></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>FRENCH_FREQ = {
+    'A':7.64,'B':0.90,'C':3.26,'D':3.67,'E':14.72,'F':1.06,'G':0.87,
+    'H':0.74,'I':7.53,'J':0.61,'K':0.05,'L':5.46,'M':2.97,'N':7.10,
+    'O':5.80,'P':2.52,'Q':1.36,'R':6.69,'S':7.95,'T':7.24,'U':6.31,
+    'V':1.84,'W':0.04,'X':0.43,'Y':0.13,'Z':0.13,
+}
+
+def chi_squared(text):
+    text = [c for c in text.upper() if c.isalpha()]
+    n = len(text)
+    if n == 0: return float('inf')
+    chi = 0
+    for letter, exp_pct in FRENCH_FREQ.items():
+        obs = text.count(letter)
+        exp = exp_pct * n / 100
+        if exp > 0:
+            chi += (obs - exp) ** 2 / exp
+    return chi
+
+def break_caesar(cipher):
+    best_k, best_chi, best_plain = 0, float('inf'), ''
+    for k in range(26):
+        plain = ''.join(
+            chr((ord(c) - 65 - k) % 26 + 65) if c.isalpha() else c
+            for c in cipher.upper()
+        )
+        c = chi_squared(plain)
+        if c &lt; best_chi:
+            best_k, best_chi, best_plain = k, c, plain
+    return best_k, best_plain
+
+print(break_caesar("OHV PDWKVRQW XQ DXWUH ODQJDJH"))</code></pre>
+      <pre id="code-js" class="hidden"><code>const FRENCH = {A:7.64,B:0.90,C:3.26,D:3.67,E:14.72,F:1.06,G:0.87,H:0.74,
+  I:7.53,J:0.61,K:0.05,L:5.46,M:2.97,N:7.10,O:5.80,P:2.52,Q:1.36,
+  R:6.69,S:7.95,T:7.24,U:6.31,V:1.84,W:0.04,X:0.43,Y:0.13,Z:0.13};
+
+function chiSquared(text) {
+  const letters = [...text.toUpperCase()].filter(c => /[A-Z]/.test(c));
+  if (!letters.length) return Infinity;
+  return Object.entries(FRENCH).reduce((sum, [l, pct]) => {
+    const obs = letters.filter(c => c === l).length;
+    const exp = pct * letters.length / 100;
+    return exp > 0 ? sum + (obs - exp) ** 2 / exp : sum;
+  }, 0);
+}
+
+function breakCaesar(cipher) {
+  let best = {k: 0, chi: Infinity, plain: ''};
+  for (let k = 0; k &lt; 26; k++) {
+    const plain = [...cipher.toUpperCase()].map(c => {
+      const code = c.charCodeAt(0);
+      return code >= 65 && code &lt;= 90
+        ? String.fromCharCode((code - 65 - k + 26) % 26 + 65)
+        : c;
+    }).join('');
+    const chi = chiSquared(plain);
+    if (chi &lt; best.chi) best = {k, chi, plain};
+  }
+  return best;
+}</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.realworld">🌍 6. Pourquoi c'est révolutionnaire</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Historical impact">✓ Impact historique</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="World's first cryptanalysis treatise">Premier traité de cryptanalyse au monde</li>
+            <li data-en="Inspired cryptanalysts for 1000 years">A inspiré les cryptanalystes pendant 1000 ans</li>
+            <li data-en="Still used to break all simple ciphers">Encore utilisé pour casser tous les chiffres simples</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ What it doesn't break">✗ Ce qu'elle ne casse pas</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Polyalphabetic ciphers (Vigenère)">Chiffres polyalphabétiques (Vigenère)</li>
+            <li data-en="Modern block ciphers (AES)">Chiffrement par blocs modernes (AES)</li>
+            <li data-en="Texts too short (unreliable statistics)">Textes trop courts (statistiques peu fiables)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Texts too short">Textes trop courts</div>
+          <p class="text-xs text-slate-300" data-en="Less than ~200 characters → unreliable statistics, the method fails.">Moins de ~200 caractères → statistiques peu fiables, la méthode échoue.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Mixed languages">Mélange de langues</div>
+          <p class="text-xs text-slate-300" data-en="Text in multiple languages scrambles the expected frequency distribution.">Texte en plusieurs langues brouille la distribution fréquentielle attendue.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Technical text / code">Texte technique / code</div>
+          <p class="text-xs text-slate-300" data-en="Non-standard distribution (programming, lists) → frequency analysis unreliable.">Distribution non-standard (programmation, listes) → analyse fréquentielle peu fiable.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Polyalphabetic ciphers">Chiffres polyalphabétiques</div>
+          <p class="text-xs text-slate-300" data-en="Vigenère defeats simple analysis — you must first detect the key length.">Vigenère neutralise l'analyse simple — il faut d'abord détecter la longueur de clé.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    const FRENCH = {A:7.64,B:0.90,C:3.26,D:3.67,E:14.72,F:1.06,G:0.87,H:0.74,I:7.53,J:0.61,K:0.05,L:5.46,M:2.97,N:7.10,O:5.80,P:2.52,Q:1.36,R:6.69,S:7.95,T:7.24,U:6.31,V:1.84,W:0.04,X:0.43,Y:0.13,Z:0.13};
+
+    function chiSquared(text) {
+      const letters = [...text.toUpperCase()].filter(c => /[A-Z]/.test(c));
+      if (!letters.length) return Infinity;
+      return Object.entries(FRENCH).reduce((s,[l,pct])=>{
+        const obs = letters.filter(c=>c===l).length;
+        const exp = pct * letters.length / 100;
+        return exp>0 ? s + (obs-exp)**2/exp : s;
+      }, 0);
+    }
+    function shift(text, k) {
+      return [...text.toUpperCase()].map(c=>{
+        const code = c.charCodeAt(0);
+        return code>=65 && code<=90 ? String.fromCharCode((code-65-k+26)%26+65) : c;
+      }).join('');
+    }
+
+    document.getElementById('crack').addEventListener('click', () => {
+      const cipher = document.getElementById('cipher').value;
+      const tries = [];
+      for (let k=0; k<26; k++) tries.push({k, plain: shift(cipher,k), chi: chiSquared(shift(cipher,k))});
+      tries.sort((a,b)=>a.chi-b.chi);
+      document.getElementById('result').classList.remove('hidden');
+      document.getElementById('best-key').textContent = 'k = ' + tries[0].k;
+      document.getElementById('best-plain').textContent = tries[0].plain;
+      document.getElementById('all-tries').innerHTML = tries.map(t =>
+        `<div class="flex gap-3"><span class="text-brand-500 w-10">k=${t.k}</span><span class="text-slate-500 w-16">χ²=${t.chi.toFixed(1)}</span><span class="text-slate-300">${t.plain}</span></div>`
+      ).join('');
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white'); tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden', tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Quelle lettre est la plus fréquente en français ?", choices:['A','E','S','T'], answer:1, explain:"Le 'E' représente près de 14.7% des lettres en français." },
+      { q:"Sur quoi repose l'analyse fréquentielle ?", choices:['La longueur de la clé','La distribution non-uniforme des lettres','La taille du chiffré','Le temps de calcul'], answer:1, explain:"Toutes les langues ont une distribution caractéristique de leurs lettres." },
+      { q:"Pourquoi χ² nous aide à trouver la bonne clé ?", choices:["Il mesure l'écart entre observé et attendu","Il calcule un hash","Il chiffre le texte","Il décale les lettres"], answer:0, explain:"Le plus petit χ² correspond à la distribution la plus proche du français." },
+      { q:"Contre quel chiffre l'analyse fréquentielle simple est-elle INEFFICACE ?", choices:['César','Substitution mono-alphabétique','Vigenère','ROT13'], answer:2, explain:"Vigenère utilise plusieurs alphabets — il faut d'abord deviner la longueur de clé (Kasiski)." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i) => {
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`
+          <label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition">
+            <input type="radio" name="q${i}" value="${j}" class="accent-brand-500" /><span class="text-sm">${c}</span>
+          </label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+
+    document.getElementById('quiz-submit').addEventListener('click', () => {
+      let score = 0;
+      questions.forEach((q,i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex = quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        ex.innerHTML = `<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) { const ch = +sel.value; if (ch === q.answer) score++; else labels[ch].classList.add('quiz-wrong'); }
+      });
+      const r = document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const pct = Math.round(score/questions.length*100);
+      const ok = score === questions.length;
+      r.className = `mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML = `<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length} (${pct}%)</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal — relis les sections ratées.":"📚 Réessaie après avoir revu la théorie."}</div>`;
+      CryptoLab.recordScore('al-kindi', score, questions.length);
+      if (ok && !CryptoLab.hasBadge('cryptanalyst')) { CryptoLab.earnBadge('cryptanalyst','Cryptanalyste','🔍'); CryptoLab.showToast('🔍 Badge débloqué : <u>Cryptanalyste</u> !'); }
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElGamal — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">🔡</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500" data-en="1985 · Taher Elgamal">1985 · Taher Elgamal</div>
+        <h1 class="text-4xl md:text-5xl font-bold" data-en="ElGamal">ElGamal</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Asymmetric">Asymétrique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Discrete log">Log discret</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Intermediate level">Niveau intermédiaire</span>
+      
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Inventor">Inventeur</div><div class="font-semibold" data-en="Taher Elgamal">Taher Elgamal</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Year">Année</div><div class="font-semibold" data-en="1985">1985</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Type">Type</div><div class="font-semibold" data-en="Asymmetric · DLP">Asymétrique · DLP</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="The <strong>ElGamal cryptosystem</strong> is an asymmetric scheme based on the hardness of the <strong>discrete logarithm</strong> (DLP) in a cyclic group. Invented by Taher Elgamal in 1985, it exists in two variants: <strong>encryption</strong> (rarely used as-is) and <strong>signature</strong> (basis of DSA, the NIST standard). It birthed the whole DSA / ECDSA / Schnorr family.">Le <strong>cryptosystème ElGamal</strong> est un schéma asymétrique basé sur la difficulté du <strong>logarithme discret</strong> (DLP) dans un groupe cyclique. Inventé par Taher Elgamal en 1985, il existe en deux variantes : <strong>chiffrement</strong> (rarement utilisé tel quel) et <strong>signature</strong> (base de DSA, le standard NIST). Il a donné naissance à toute la famille DSA / ECDSA / Schnorr.</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <div data-en="<p class="text-slate-300 mb-4">For <strong>ElGamal encryption</strong>, a public group (G, q, g) is fixed. Alice publishes her public key h = g^x mod p (x = private key). Bob encrypts m in two steps:</p>
+      <div class="p-5 bg-white/5 border border-white/10 rounded-xl space-y-2">
+        <div class="text-sm">1. Bob picks random y and computes <code>c₁ = g^y mod p</code></div>
+        <div class="text-sm">2. Bob computes <code>c₂ = m · h^y mod p</code></div>
+        <div class="text-sm">3. He sends (c₁, c₂) to Alice</div>
+        <div class="text-sm">4. Alice decrypts: <code>m = c₂ · c₁^(−x) mod p</code></div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4">Encryption is <strong>probabilistic</strong> (random y): the same m encrypted twice gives 2 different ciphertexts — crucial property (IND-CPA).</p>"><p class="text-slate-300 mb-4">Pour le <strong>chiffrement ElGamal</strong>, on fixe un groupe public (G, q, g). Alice publie sa clé publique h = g^x mod p (x = clé privée). Bob chiffre m en deux temps :</p>
+      <div class="p-5 bg-white/5 border border-white/10 rounded-xl space-y-2">
+        <div class="text-sm">1. Bob choisit y aléatoire et calcule <code>c₁ = g^y mod p</code></div>
+        <div class="text-sm">2. Bob calcule <code>c₂ = m · h^y mod p</code></div>
+        <div class="text-sm">3. Il envoie (c₁, c₂) à Alice</div>
+        <div class="text-sm">4. Alice déchiffre : <code>m = c₂ · c₁^(−x) mod p</code></div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4">Le chiffrement est <strong>probabiliste</strong> (y aléatoire) : un même m chiffré 2 fois donne 2 chiffrés différents — propriété cruciale (IND-CPA).</p></div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="math-box text-center" data-en="<div class="text-brand-500">h = g^x mod p &nbsp; (public key)</div><div class="text-emerald-400 mt-2">c₁ = g^y mod p &nbsp;·&nbsp; c₂ = m · h^y mod p</div><div class="text-amber-400 mt-2">m = c₂ / c₁^x = c₂ · g^(−xy) mod p</div>"><div class="text-brand-500">h = g^x mod p &nbsp; (clé publique)</div><div class="text-emerald-400 mt-2">c₁ = g^y mod p &nbsp;·&nbsp; c₂ = m · h^y mod p</div><div class="text-amber-400 mt-2">m = c₂ / c₁^x = c₂ · g^(−xy) mod p</div></div>
+      <p class="text-slate-300 mt-4 text-sm" data-en="Security rests on <strong>Decisional Diffie-Hellman</strong> (DDH) — distinguishing (g, g^a, g^b, g^ab) from (g, g^a, g^b, g^r) is conjectured hard.">La sécurité repose sur la <strong>Decisional Diffie-Hellman</strong> (DDH) — distinguer (g, g^a, g^b, g^ab) de (g, g^a, g^b, g^r) est conjecturé difficile.</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.code">💻 4. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># Démo ElGamal (petits paramètres, à but pédagogique)
+import secrets
+
+p = 467   # premier
+g = 2     # générateur
+x = 153   # clé privée Alice
+h = pow(g, x, p)   # clé publique : h = g^x mod p
+
+# Chiffrement de m=331 par Bob
+m = 331
+y = secrets.randbelow(p-2) + 1
+c1 = pow(g, y, p)
+c2 = (m * pow(h, y, p)) % p
+print(f"Chiffré: ({c1}, {c2})")
+
+# Déchiffrement par Alice
+s = pow(c1, x, p)
+s_inv = pow(s, -1, p)        # inverse modulaire
+m_back = (c2 * s_inv) % p
+print(f"Déchiffré: {m_back}")  # 331</code></pre>
+      <pre id="code-js" class="hidden"><code>function modpow(b,e,m){let r=1n;b=((b%m)+m)%m;while(e>0n){if(e&1n)r=(r*b)%m;e>>=1n;b=(b*b)%m;}return r;}
+function modinv(a,m){let[or,r]=[((a%m)+m)%m,m],[os,s]=[1n,0n];while(r){const q=or/r;[or,r]=[r,or-q*r];[os,s]=[s,os-q*s];}return((os%m)+m)%m;}
+
+const p = 467n, g = 2n;
+const x = 153n;
+const h = modpow(g, x, p);
+
+const m = 331n;
+const y = 47n;
+const c1 = modpow(g, y, p);
+const c2 = (m * modpow(h, y, p)) % p;
+
+const s = modpow(c1, x, p);
+const m_back = (c2 * modinv(s, p)) % p;
+console.log(m_back);  // 331n</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-en="🌍 5. Real-world: pros, cons, flaws">🌍 5. Cas réel : avantages, inconvénients, failles</span></h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-5 bg-emerald-500/5 border-emerald-500/20 border rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✅ Advantages">✅ Avantages</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Probabilistic (IND-CPA)">Probabiliste (IND-CPA)</li>
+            <li data-en="Well-understood security (DDH)">Sécurité bien comprise (DDH)</li>
+            <li data-en="Basis of DSA, Schnorr, ECDSA">Base de DSA, Schnorr, ECDSA</li>
+            <li data-en="Multiplicatively homomorphic">Homomorphe multiplicatif</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-amber-500/5 border-amber-500/20 border rounded-xl">
+          <div class="text-amber-400 font-semibold mb-2" data-en="⚠️ Disadvantages">⚠️ Inconvénients</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Ciphertext 2× larger than plaintext">Chiffré 2× plus grand que le clair</li>
+            <li data-en="Slow (two modular exponentiations)">Lent (deux exponentiations modulaires)</li>
+            <li data-en="Rarely used directly (signature variant preferred)">Rarement utilisé directement (variante signature préférée)</li>
+            <li data-en="Encryption randomness critical: a weak y breaks everything">Aléa de chiffrement critique : un y faible casse tout</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border-red-500/30 border rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="💥 Known flaws">💥 Failles connues</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="y reuse → recovery of private key x">Réutilisation de y → récupération de la clé privée x</li>
+            <li data-en="Malleability attack (unwanted multiplicative homomorphism)">Attaque par malléabilité (homomorphisme multiplicatif non désiré)</li>
+            <li data-en="Small groups < 2048 bits breakable (Logjam)">Petits groupes < 2048 bits cassables (Logjam)</li>
+            <li data-en="Shor (quantum): breaks DLP in polynomial time">Shor (quantique) : casse le DLP en temps polynomial</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🧠 Quiz -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz" data-en="🧠 Quiz">🧠 Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+
+    <script>
+      const QUIZ_DATA = [
+      {q_fr:"Sur quel problème ElGamal repose-t-il ?", q_en:"What problem does ElGamal rely on?", choices_fr:["Factorisation", "Logarithme discret", "TSP", "Hash"], choices_en:["Factorization", "Discrete logarithm", "TSP", "Hash"], answer:1, e_fr:"DLP dans un groupe cyclique (ℤ/pℤ)*.", e_en:"DLP in a cyclic group (ℤ/pℤ)*."},
+      {q_fr:"ElGamal est-il déterministe ?", q_en:"Is ElGamal deterministic?", choices_fr:["Oui", "Non, il est probabiliste (aléa y)", "Seulement pour la signature", "Cela dépend du groupe"], choices_en:["Yes", "No, it is probabilistic (randomness y)", "Only for signature", "Depends on the group"], answer:1, e_fr:"Un même message chiffré 2 fois donne 2 chiffrés distincts grâce à y aléatoire.", e_en:"Same message encrypted twice gives 2 distinct ciphertexts thanks to random y."},
+      {q_fr:"Quelle taille a le chiffré par rapport au clair ?", q_en:"What size is the ciphertext compared to plaintext?", choices_fr:["Identique", "Moitié", "Deux fois plus grand (c1, c2)", "Variable"], choices_en:["Same", "Half", "Twice as large (c1, c2)", "Variable"], answer:2, e_fr:"Le chiffré est la paire (c1, c2) — donc 2× la taille de m.", e_en:"The ciphertext is the pair (c1, c2) — so 2× the size of m."},
+      {q_fr:"Qui a inventé ElGamal ?", q_en:"Who invented ElGamal?", choices_fr:["Diffie & Hellman", "Taher Elgamal", "Rivest", "Schnorr"], choices_en:["Diffie & Hellman", "Taher Elgamal", "Rivest", "Schnorr"], answer:1, e_fr:"Taher Elgamal en 1985, dans son doctorat à Stanford.", e_en:"Taher Elgamal in 1985, in his Stanford PhD."}
+    ];
+    </script>
+
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab').forEach(t => {
+          t.classList.remove('bg-brand-500','text-white');
+          t.classList.add('bg-white/5','border','border-white/10');
+        });
+        tab.classList.add('bg-brand-500','text-white');
+        tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden', tab.dataset.lang!=='js');
+      });
+    });
+
+    // Quiz logic
+    const Q = QUIZ_DATA;
+    const quizDiv = document.getElementById('quiz');
+    function renderQuiz() {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      quizDiv.innerHTML = '';
+      Q.forEach((q,i) => {
+        const b = document.createElement('div');
+        b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+        const question = lang==='en' ? q.q_en : q.q_fr;
+        const choices = lang==='en' ? q.choices_en : q.choices_fr;
+        b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${question}</div>
+          <div class="space-y-2">${choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+          <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+        quizDiv.appendChild(b);
+      });
+    }
+    renderQuiz();
+    document.addEventListener('lang-changed', renderQuiz);
+
+    document.getElementById('quiz-submit').addEventListener('click', () => {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      let score = 0;
+      Q.forEach((q,i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l => l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex = quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        const explainLabel = lang==='en' ? 'Explanation' : 'Explication';
+        ex.innerHTML = `<strong class="text-brand-500">${explainLabel} :</strong> ${lang==='en' ? q.e_en : q.e_fr}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) { const ch = +sel.value; if (ch === q.answer) score++; else labels[ch].classList.add('quiz-wrong'); }
+      });
+      const r = document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const ok = score === Q.length;
+      const msg = ok ? (lang==='en'?'🎉 Flawless!':'🎉 Sans-faute !')
+                : score >= Q.length/2 ? (lang==='en'?'👍 Not bad.':'👍 Pas mal.')
+                : (lang==='en'?'📚 Retry.':'📚 Réessaie.');
+      const cls = ok ? 'border-emerald-500/40 bg-emerald-500/10'
+                : score >= Q.length/2 ? 'border-amber-500/40 bg-amber-500/10'
+                : 'border-red-500/40 bg-red-500/10';
+      r.className = `mt-6 p-5 rounded-xl border ${cls}`;
+      r.innerHTML = `<div class="font-semibold text-lg mb-1">${lang==='en'?'Score':'Score'} : ${score}/${Q.length}</div><div class="text-sm text-slate-300">${msg}</div>`;
+      CryptoLab.recordScore('elgamal', score, Q.length);
+      if (ok && !CryptoLab.hasBadge('elgamal-master')) {
+        const label = lang==='en' ? 'ElGamal Master' : 'Maître ElGamal';
+        CryptoLab.earnBadge('elgamal-master', label, '🔡');
+        CryptoLab.showToast('🔡 ' + (lang==='en'?'Badge unlocked':'Badge débloqué') + ' : <u>'+label+'</u> !');
+      }
+    });
+  </script>
+</body>
+</html>

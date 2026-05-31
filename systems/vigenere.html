@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chiffre de Vigenère — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>
+    tailwind.config = { darkMode:'class', theme:{ extend:{
+      colors:{ brand:{500:'#3aa0ff',600:'#1f7fe0'}, ink:{900:'#0b0f17',800:'#111827'} }
+    }}}
+  </script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🗝️</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1553 · Renaissance italienne</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Chiffre de Vigenère</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Polyalphabetic">Polyalphabétique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Symmetric">Symétrique</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Intermediate level">Niveau intermédiaire</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Real inventor">Inventeur réel</div><div class="font-semibold">Giovan Battista Bellaso</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Attributed to">Attribué à</div><div class="font-semibold">Blaise de Vigenère (1586)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Nickname">Surnom</div><div class="font-semibold" data-en="&quot;The undecipherable cipher&quot;">"Le chiffre indéchiffrable"</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="The Vigenère cipher is a <strong>generalization of the Caesar cipher</strong>: instead of a fixed shift, a <em>keyword</em> varies the shift at each letter. This brilliant idea defeats Al-Kindi's frequency analysis — it took <strong>300 years</strong> to be officially broken (by Babbage and Kasiski in the 19th century).">
+        Le chiffre de Vigenère est une <strong>généralisation du chiffre de César</strong> :
+        au lieu d'un décalage fixe, on utilise un <em>mot-clé</em> qui fait varier le
+        décalage à chaque lettre. Cette idée brillante neutralise l'analyse fréquentielle
+        d'Al-Kindi — il a fallu <strong>300 ans</strong> pour qu'il soit officiellement
+        cassé (par Babbage et Kasiski au XIXe siècle).
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <p class="text-slate-300 mb-4" data-en="We repeat the key above the message; each letter of the message is shifted by the corresponding key letter (A=0, B=1, …, Z=25).">On répète la clé au-dessus du message ; chaque lettre du message est décalée selon la lettre de clé correspondante (A=0, B=1, …, Z=25).</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl font-mono text-sm overflow-x-auto">
+        <div class="text-slate-400 mb-1">Clé répétée :</div>
+        <div class="tracking-widest text-amber-400">L E M O N L E M O N L E M O N</div>
+        <div class="text-slate-400 mb-1 mt-3">Message clair :</div>
+        <div class="tracking-widest text-brand-500">A T T A C K A T D A W N</div>
+        <div class="text-slate-500 text-center my-2">↓</div>
+        <div class="text-slate-400 mb-1">Message chiffré :</div>
+        <div class="tracking-widest text-emerald-400">L X F O P V E F R N H R</div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl">
+        <div class="text-center font-mono text-xl text-brand-500 mb-2">C<sub>i</sub> = (M<sub>i</sub> + K<sub>i mod L</sub>) mod 26</div>
+        <div class="text-center font-mono text-xl text-emerald-400">M<sub>i</sub> = (C<sub>i</sub> − K<sub>i mod L</sub>) mod 26</div>
+      </div>
+      <ul class="mt-5 text-sm text-slate-400 space-y-2 list-disc list-inside">
+        <li><strong>M<sub>i</sub></strong> : i-ème lettre du message (A=0…Z=25)</li>
+        <li><strong>K</strong> : clé de longueur <em>L</em>, répétée cycliquement</li>
+        <li>Une même lettre claire peut être chiffrée différemment selon sa position → analyse fréquentielle simple échoue</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.simulation">🔍 4. Simulation interactive</span></h2>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Plaintext message">Message clair</label>
+          <input id="vig-msg" type="text" value="ATTACK AT DAWN" class="w-full px-4 py-3 bg-ink-900 border border-white/10 rounded-lg font-mono uppercase focus:border-brand-500 focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Key (word)">Clé (mot)</label>
+          <input id="vig-key" type="text" value="LEMON" class="w-full px-4 py-3 bg-ink-900 border border-white/10 rounded-lg font-mono uppercase focus:border-brand-500 focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Mode">Mode</label>
+          <div class="flex gap-2">
+            <button data-mode="encrypt" class="vig-mode-btn px-4 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium"><span data-i18n="detail.encrypt" data-en="🔒 Encrypt">🔒 Chiffrer</span></button>
+            <button data-mode="decrypt" class="vig-mode-btn px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm font-medium hover:bg-white/10"><span data-i18n="detail.decrypt" data-en="🔓 Decrypt">🔓 Déchiffrer</span></button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Result">Résultat</label>
+          <div id="vig-out" class="px-4 py-3 bg-ink-900 border border-emerald-500/30 rounded-lg font-mono min-h-[3rem] text-emerald-400 break-all"></div>
+        </div>
+        <details>
+          <summary class="cursor-pointer text-slate-400 text-sm hover:text-white" data-en="Show key/message alignment">Voir l'alignement clé / message</summary>
+          <div id="vig-align" class="mt-3 font-mono text-xs overflow-x-auto whitespace-pre"></div>
+        </details>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>def vigenere(text, key, decrypt=False):
+    key = [ord(k) - 65 for k in key.upper() if k.isalpha()]
+    if not key: return text
+    out, j = [], 0
+    for ch in text.upper():
+        if 'A' &lt;= ch &lt;= 'Z':
+            shift = -key[j % len(key)] if decrypt else key[j % len(key)]
+            out.append(chr((ord(ch) - 65 + shift) % 26 + 65))
+            j += 1
+        else:
+            out.append(ch)
+    return ''.join(out)
+
+print(vigenere("ATTACK AT DAWN", "LEMON"))           # LXFOPV EF RNHR
+print(vigenere("LXFOPV EF RNHR", "LEMON", True))     # ATTACK AT DAWN</code></pre>
+      <pre id="code-js" class="hidden"><code>function vigenere(text, key, decrypt = false) {
+  const k = [...key.toUpperCase()].filter(c => /[A-Z]/.test(c)).map(c => c.charCodeAt(0) - 65);
+  if (!k.length) return text;
+  let j = 0;
+  return [...text.toUpperCase()].map(ch => {
+    const code = ch.charCodeAt(0);
+    if (code &lt; 65 || code > 90) return ch;
+    const shift = decrypt ? -k[j % k.length] : k[j % k.length];
+    j++;
+    return String.fromCharCode((code - 65 + shift + 26) % 26 + 65);
+  }).join('');
+}
+
+console.log(vigenere("ATTACK AT DAWN", "LEMON"));         // LXFOPV EF RNHR
+console.log(vigenere("LXFOPV EF RNHR", "LEMON", true));   // ATTACK AT DAWN</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.realworld">🌍 6. Cas réel & limites</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Historical uses">✓ Usages historiques</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="European diplomacy 16th–19th centuries">Diplomatie européenne XVIe–XIXe siècles</li>
+            <li data-en="Confederates during the American Civil War">Confédérés durant la guerre de Sécession</li>
+            <li data-en="Conceptual basis of modern stream ciphers">Base conceptuelle de chiffrements stream modernes</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2">✗ Cassé par Kasiski (1863)</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Find the key length via repetitions (Kasiski test)">Trouver la longueur de clé via les répétitions (test de Kasiski)</li>
+            <li data-en="Split the ciphertext into columns → each column = Caesar">Diviser le chiffré en colonnes → chaque colonne = César</li>
+            <li data-en="Frequency analysis on each column">Analyse fréquentielle sur chaque colonne</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Kasiski examination (1863)">Test de Kasiski (1863)</div>
+          <p class="text-xs text-slate-300" data-en="Ciphertext repetitions reveal the key length via the GCD of distances between repetitions.">Les répétitions du chiffré révèlent la longueur de clé via le PGCD des distances entre répétitions.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Index of coincidence (Friedman, 1922)">Indice de coïncidence (Friedman, 1922)</div>
+          <p class="text-xs text-slate-300" data-en="Statistical measure that determines key length even without obvious repetitions.">Mesure statistique qui détermine la longueur de clé même sans répétitions évidentes.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Per-column frequency analysis">Analyse fréquentielle par colonne</div>
+          <p class="text-xs text-slate-300" data-en="Once key length is known, each column is an independent Caesar → broken.">Une fois la longueur de clé connue, chaque colonne est un César indépendant → cassé.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Short or dictionary key">Mot-clé court ou dictionnaire</div>
+          <p class="text-xs text-slate-300" data-en="A key < 10 chars or a dictionary word is trivial to attack.">Une clé < 10 caractères ou un mot de dictionnaire est triviale à attaquer.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    function vigenere(text, key, decrypt=false) {
+      const k = [...key.toUpperCase()].filter(c=>/[A-Z]/.test(c)).map(c=>c.charCodeAt(0)-65);
+      if (!k.length) return text;
+      let j = 0;
+      return [...text.toUpperCase()].map(ch=>{
+        const code = ch.charCodeAt(0);
+        if (code<65||code>90) return ch;
+        const sh = decrypt ? -k[j%k.length] : k[j%k.length];
+        j++;
+        return String.fromCharCode((code-65+sh+26)%26+65);
+      }).join('');
+    }
+
+    let vigMode = 'encrypt';
+    const msg = document.getElementById('vig-msg');
+    const key = document.getElementById('vig-key');
+    const out = document.getElementById('vig-out');
+    const align = document.getElementById('vig-align');
+
+    function refresh() {
+      const result = vigenere(msg.value, key.value, vigMode==='decrypt');
+      out.textContent = result;
+      const cleanKey = [...key.value.toUpperCase()].filter(c=>/[A-Z]/.test(c));
+      if (!cleanKey.length) { align.textContent=''; return; }
+      let j = 0;
+      const klineArr = [], mlineArr = [], clineArr = [];
+      [...msg.value.toUpperCase()].forEach(ch=>{
+        if (/[A-Z]/.test(ch)) {
+          klineArr.push(cleanKey[j%cleanKey.length]);
+          mlineArr.push(ch);
+          j++;
+        } else { klineArr.push(' '); mlineArr.push(ch); }
+      });
+      let k2 = 0;
+      [...result].forEach(ch=>{ clineArr.push(ch); });
+      align.textContent =
+        'Clé    : ' + klineArr.join(' ') + '\n' +
+        'Clair  : ' + mlineArr.join(' ') + '\n' +
+        'Chiffré: ' + clineArr.join(' ');
+    }
+    msg.addEventListener('input', refresh);
+    key.addEventListener('input', refresh);
+    document.querySelectorAll('.vig-mode-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        vigMode = btn.dataset.mode;
+        document.querySelectorAll('.vig-mode-btn').forEach(b=>{b.classList.remove('bg-brand-500','text-white');b.classList.add('bg-white/5','border','border-white/10');});
+        btn.classList.add('bg-brand-500','text-white'); btn.classList.remove('bg-white/5','border','border-white/10');
+        refresh();
+      });
+    });
+    refresh();
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click', ()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white'); tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden', tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Qu'est-ce qui distingue Vigenère de César ?", choices:["La clé est plus longue","Le décalage varie selon la position","Il chiffre les voyelles","Il utilise la multiplication"], answer:1, explain:"Vigenère utilise plusieurs alphabets de César, alternés cycliquement par la clé." },
+      { q:"Si la clé est 'AB', quelle lettre claire 'C' devient à la position 0 ?", choices:['C','D','B','A'], answer:0, explain:"À la position 0, la clé est 'A' (décalage 0). Donc C reste C." },
+      { q:"Pourquoi Vigenère est dit 'indéchiffrable' pendant 3 siècles ?", choices:["Personne ne l'utilisait","L'analyse fréquentielle simple échoue","Il est mathématiquement parfait","Il utilise des nombres premiers"], answer:1, explain:"Une même lettre claire devient des lettres différentes selon sa position, brouillant les fréquences." },
+      { q:"Quelle technique a fini par casser Vigenère ?", choices:["Brute force exhaustif","Test de Kasiski + fréquentielle par colonne","Ordinateur quantique","Réseaux de neurones"], answer:1, explain:"Kasiski (1863) : trouver la longueur de clé via les répétitions, puis casser chaque colonne comme un César." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click', ()=>{
+      let score = 0;
+      questions.forEach((q,i)=>{
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex = quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        ex.innerHTML = `<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) { const ch=+sel.value; if (ch===q.answer) score++; else labels[ch].classList.add('quiz-wrong'); }
+      });
+      const r = document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const pct = Math.round(score/questions.length*100);
+      const ok = score===questions.length;
+      r.className = `mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML = `<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length} (${pct}%)</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal — relis les sections ratées.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('vigenere', score, questions.length);
+      if (ok && !CryptoLab.hasBadge('vigenere-master')) { CryptoLab.earnBadge('vigenere-master','Expert Vigenère','🗝️'); CryptoLab.showToast('🗝️ Badge débloqué : <u>Expert Vigenère</u> !'); }
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

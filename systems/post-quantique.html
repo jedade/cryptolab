@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cryptographie post-quantique — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">⚛️</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">2024 · NIST standardisation</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Cryptographie post-quantique</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Lattices (LWE)">Réseaux euclidiens (LWE)</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Kyber · Dilithium · FALCON">Kyber · Dilithium · FALCON</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Very advanced">Très avancé</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4">📖 1. Pourquoi maintenant ?</h2>
+      <p class="text-slate-300 leading-relaxed" data-en="In 1994, Peter <strong>Shor</strong> publishes an algorithm that, on a sufficiently powerful quantum computer, <em>factors an integer in polynomial time</em>. Direct consequence: <strong>RSA, ECC, DH instantly broken</strong>. Even though such machines don't yet exist, attackers can already harvest encrypted traffic to decrypt later (<em>'harvest now, decrypt later'</em>).">
+        En 1994, Peter <strong>Shor</strong> publie un algorithme qui, sur un ordinateur
+        quantique suffisamment puissant, <em>factorise un entier en temps polynomial</em>.
+        Conséquence directe : <strong>RSA, ECC, DH cassés instantanément</strong>. Même si
+        ces machines n'existent pas encore, les attaquants peuvent dès aujourd'hui collecter
+        du trafic chiffré pour le déchiffrer plus tard (<em>« harvest now, decrypt later »</em>).
+      </p>
+      <p class="text-slate-300 mt-3" data-en="NIST launched a call for candidates in 2016. In <strong>August 2024</strong>, it published the first standards: <strong>ML-KEM</strong> (FIPS 203, formerly Kyber) for key exchange, <strong>ML-DSA</strong> (FIPS 204, formerly Dilithium) and <strong>SLH-DSA</strong> (FIPS 205, formerly SPHINCS+) for signatures.">
+        Le NIST a lancé en 2016 un appel à candidats. En <strong>août 2024</strong>, il a publié
+        les premiers standards : <strong>ML-KEM</strong> (FIPS 203, ex-Kyber) pour l'échange
+        de clés, <strong>ML-DSA</strong> (FIPS 204, ex-Dilithium) et <strong>SLH-DSA</strong>
+        (FIPS 205, ex-SPHINCS+) pour les signatures.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">⚙️ 2. Les familles candidates</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="p-4 bg-emerald-500/5 border border-emerald-500/30 rounded-lg"><div class="font-semibold text-emerald-400">Réseaux</div><div class="text-xs text-slate-400 mt-1">LWE, NTRU, Module-LWE</div><div class="text-xs mt-1">→ Kyber, Dilithium, FALCON</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="font-semibold">Codes correcteurs</div><div class="text-xs text-slate-400 mt-1">McEliece, BIKE, HQC</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="font-semibold" data-en="Hash">Hash</div><div class="text-xs text-slate-400 mt-1">SPHINCS+, XMSS</div></div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg"><div class="font-semibold text-red-400">Isogénies ⚠️</div><div class="text-xs text-slate-400 mt-1">SIDH/SIKE — cassé 2022</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🧮 3. LWE — Learning With Errors</h2>
+      <p class="text-slate-300 mb-3" data-en="Founding problem behind Kyber and Dilithium. Given:">Problème fondateur derrière Kyber et Dilithium. Données :</p>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl space-y-2">
+        <div class="font-mono text-brand-500 text-center">A ∈ ℤ<sub>q</sub><sup>m×n</sup>, &nbsp; s ∈ ℤ<sub>q</sub><sup>n</sup> (secret), &nbsp; e ∈ ℤ<sub>q</sub><sup>m</sup> (petit bruit)</div>
+        <div class="font-mono text-emerald-400 text-center text-lg pt-2">b = A·s + e (mod q)</div>
+      </div>
+      <p class="text-slate-300 mt-4 text-sm">
+        Étant donné (A, b), retrouver s est <em>facile sans bruit</em> (Gauss) mais
+        <strong>conjecturé difficile avec bruit</strong> — y compris pour un ordinateur
+        quantique. C'est sur ce problème que repose toute la confiance en Kyber.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🔍 4. Simulation LWE jouet</h2>
+      <p class="text-slate-400 text-sm mb-4">Petite dimension pour visualisation. Démontre la croissance du bruit et la difficulté de retrouver s sans la clé.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-4">
+        <div class="grid md:grid-cols-3 gap-3 text-sm">
+          <div><label class="block text-xs mb-1">n (dimension)</label><input id="lwe-n" type="number" value="4" min="2" max="8" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+          <div><label class="block text-xs mb-1">q (modulus)</label><input id="lwe-q" type="number" value="97" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+          <div><label class="block text-xs mb-1">|e| max</label><input id="lwe-eb" type="number" value="3" min="0" max="10" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+        </div>
+        <button id="lwe-gen" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="Generate A, s, e">Générer A, s, e</button>
+        <div id="lwe-out" class="hidden font-mono text-xs space-y-2"></div>
+      </div>
+    </section>
+
+    <section id="dilithium">
+      <h2 class="text-2xl font-bold mb-4">✍️ 5. Dilithium — signatures sur réseaux</h2>
+      <p class="text-slate-300">
+        <strong>Dilithium (ML-DSA)</strong> est le standard NIST de signature post-quantique
+        construit via la transformation <em>Fiat-Shamir avec abandon</em> sur Module-LWE.
+        Les signatures sont de l'ordre de 2 à 4 Ko (vs ~64 octets en ECDSA), ce qui pose
+        un défi pour les certificats TLS et les blockchains. FALCON est plus compact
+        (~1 Ko) mais plus complexe à implémenter de manière sûre.
+      </p>
+      <div class="mt-4 grid sm:grid-cols-3 gap-3">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="font-semibold">ML-KEM-768</div><div class="text-xs text-slate-400">Clé publique : 1184 octets · Chiffré : 1088 octets</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="font-semibold">ML-DSA-65</div><div class="text-xs text-slate-400">Clé pub : 1952 · Signature : 3293 octets</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="font-semibold">SLH-DSA-128f</div><div class="text-xs text-slate-400">Très conservateur · Sig : ~17 Ko</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">💻 6. Code (LWE jouet)</h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>import numpy as np
+
+n, m, q, eb = 4, 6, 97, 3
+s = np.random.randint(0, q, n)              # secret
+A = np.random.randint(0, q, (m, n))         # matrice publique
+e = np.random.randint(-eb, eb+1, m)         # petit bruit
+b = (A @ s + e) % q                         # observation publique
+
+# Chiffrer 1 bit msg ∈ {0,1}
+def encrypt_bit(A, b, msg, q):
+    r = np.random.randint(0, 2, A.shape[0])
+    u = (r @ A) % q
+    v = (r @ b + msg * (q // 2)) % q
+    return u, v
+
+# Déchiffrer
+def decrypt_bit(s, u, v, q):
+    diff = (v - u @ s) % q
+    return 1 if abs(diff - q/2) &lt; q/4 else 0</code></pre>
+      <pre id="code-js" class="hidden"><code>// LWE jouet
+function lweKeygen(n, m, q, eb) {
+  const s = Array.from({length:n}, ()=> Math.floor(Math.random()*q));
+  const A = Array.from({length:m}, ()=> Array.from({length:n}, ()=> Math.floor(Math.random()*q)));
+  const e = Array.from({length:m}, ()=> Math.floor(Math.random()*(2*eb+1)) - eb);
+  const b = A.map((row, i) => (row.reduce((acc,v,k)=> acc + v*s[k], 0) + e[i]) % q);
+  return { s, A, b: b.map(v => ((v % q) + q) % q) };
+}</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🌍 7. Adoption</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Already deployed">✓ Déjà déployé</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Apple iMessage PQ3 (2024)">Apple iMessage PQ3 (2024)</li>
+            <li data-en="Signal PQXDH (2024) — X25519 + Kyber hybrid">Signal PQXDH (2024) — hybride X25519 + Kyber</li>
+            <li data-en="Cloudflare TLS post-quantum hybrid">Cloudflare TLS hybride post-quantique</li>
+            <li data-en="Chrome ML-KEM in TLS 1.3">Chrome ML-KEM dans TLS 1.3</li>
+            <li data-en="OpenSSH ed25519 + Kyber">OpenSSH ed25519 + Kyber</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-amber-500/5 border border-amber-500/20 rounded-xl">
+          <div class="text-amber-400 font-semibold mb-2" data-en="⚠️ Open challenges">⚠️ Défis ouverts</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Larger key/signature sizes">Tailles de clés/signatures plus grandes</li>
+            <li data-en="Performance on constrained IoT / mobile">Performance dans IoT / mobile contraints</li>
+            <li data-en="Hybrid recommended while trust builds">Hybride recommandé tant que la confiance s'établit</li>
+            <li data-en="X.509 certificate migration">Migration des certificats X.509</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Castryck-Decru (2022)">Castryck-Decru (2022)</div>
+          <p class="text-xs text-slate-300" data-en="Breaks SIDH/SIKE in 1h on a laptop. NEVER implement SIDH.">Casse SIDH/SIKE en 1h sur un laptop. Ne JAMAIS implémenter SIDH.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Side-channel on Kyber/Dilithium">Side-channel sur Kyber/Dilithium</div>
+          <p class="text-xs text-slate-300" data-en="Timing, cache, EM attack naive implementations. Constant-time implementations required.">Timing, cache, EM attaquent les implémentations naïves. Implémentations en temps constant requises.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Rainbow signature (broken 2022)">Rainbow signature (cassé 2022)</div>
+          <p class="text-xs text-slate-300" data-en="NIST 3rd-round finalist → broken by Beullens in a laptop weekend. Multivariate polynomials fragile.">Finaliste NIST 3e round → cassé par Beullens en weekend laptop. Polynômes multivariés fragiles.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Harvest now, decrypt later">Harvest now, decrypt later</div>
+          <p class="text-xs text-slate-300" data-en="Today's encrypted traffic will be decrypted when the quantum computer arrives. Urgent migration.">Trafic chiffré aujourd'hui sera déchiffré quand l'ordinateur quantique arrive. Migration urgente.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Sizes: legacy challenge">Tailles : un défi pour le legacy</div>
+          <p class="text-xs text-slate-300" data-en="Larger keys/signatures → impact on certificates, blockchain, constrained IoT.">Clés/signatures plus grosses → impact certificats, blockchain, IoT contraints.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 8. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    document.getElementById('lwe-gen').addEventListener('click', () => {
+      const n = +document.getElementById('lwe-n').value;
+      const q = +document.getElementById('lwe-q').value;
+      const eb = +document.getElementById('lwe-eb').value;
+      const m = n + 2;
+      const s = Array.from({length:n}, ()=> Math.floor(Math.random()*q));
+      const A = Array.from({length:m}, ()=> Array.from({length:n}, ()=> Math.floor(Math.random()*q)));
+      const e = Array.from({length:m}, ()=> Math.floor(Math.random()*(2*eb+1)) - eb);
+      const b = A.map((row, i) => {
+        let v = e[i];
+        for (let k=0; k<n; k++) v += row[k]*s[k];
+        return ((v % q) + q) % q;
+      });
+      // Compare to "ideal" no-error As
+      const bIdeal = A.map(row => {
+        let v = 0;
+        for (let k=0; k<n; k++) v += row[k]*s[k];
+        return ((v % q) + q) % q;
+      });
+      const out = document.getElementById('lwe-out');
+      out.classList.remove('hidden');
+      out.innerHTML = `
+        <div><span class="text-slate-400">Secret s (privé) :</span> [${s.join(', ')}]</div>
+        <div><span class="text-slate-400">A (m×n) :</span><br>${A.map(r=>'['+r.join(', ')+']').join('<br>')}</div>
+        <div><span class="text-slate-400">Bruit e :</span> [${e.join(', ')}]</div>
+        <div class="text-emerald-400">b = A·s + e mod q : [${b.join(', ')}]</div>
+        <div class="text-slate-500">Sans bruit, on aurait : [${bIdeal.join(', ')}] → s récupérable. Avec bruit, c'est LWE.</div>
+      `;
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Quel algorithme quantique menace directement RSA et ECC ?", choices:["Grover","Shor","Deutsch","Quantum Walk"], answer:1, explain:"Shor (1994) factorise en temps polynomial, ce qui casse RSA, ECC et DH." },
+      { q:"Sur quel problème mathématique repose Kyber (ML-KEM) ?", choices:["Factorisation","Log discret","Module-LWE (réseaux euclidiens)","SAT"], answer:2, explain:"Module Learning With Errors — conjecturé difficile même pour un ordinateur quantique." },
+      { q:"Kyber est-il une signature ou un KEM ?", choices:["Signature","KEM (Key Encapsulation Mechanism)","Hash","MAC"], answer:1, explain:"Kyber encapsule une clé symétrique. Pour signer, on utilise Dilithium (ML-DSA)." },
+      { q:"En quelle année le NIST a-t-il publié les premiers standards PQC ?", choices:["2016","2020","2022","2024"], answer:3, explain:"FIPS 203 (ML-KEM), 204 (ML-DSA), 205 (SLH-DSA) publiés en août 2024." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('pqc',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('pqc-master')){CryptoLab.earnBadge('pqc-master','Pionnier Post-Quantique','⚛️');CryptoLab.showToast('⚛️ Badge débloqué : <u>Pionnier Post-Quantique</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

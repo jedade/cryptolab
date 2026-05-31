@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Courbes d'Edwards — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">🌀</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500" data-en="2007 · Harold Edwards">2007 · Harold Edwards</div>
+        <h1 class="text-4xl md:text-5xl font-bold" data-en="Edwards curves">Courbes d'Edwards</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Elliptic curve">Courbe elliptique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Twisted form">Forme tordue (twisted)</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="Ed25519 · Ed448">Ed25519 · Ed448</span>
+      
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Inventor (math form)">Inventeur (forme mathématique)</div><div class="font-semibold" data-en="Harold Edwards (2007)">Harold Edwards (2007)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Crypto adaptation by">Adapté en crypto par</div><div class="font-semibold" data-en="Bernstein, Lange (2007)">Bernstein, Lange (2007)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Standardized">Standardisé</div><div class="font-semibold" data-en="Ed25519 (2011) · EdDSA RFC 8032">Ed25519 (2011) · EdDSA RFC 8032</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Edwards curves</strong> are an alternative representation of elliptic curves, discovered by Harold Edwards in 2007. Adapted in cryptography almost immediately by Bernstein and Lange, their twisted form (<em>twisted Edwards</em>) has two decisive advantages: <strong>complete, unified addition law</strong> (no special cases like with Weierstrass) and <strong>intrinsic side-channel resistance</strong>. It is on this form that <strong>Ed25519</strong>, the modern signature standard, is built.">Les <strong>courbes d'Edwards</strong> sont une représentation alternative des courbes elliptiques, découverte par Harold Edwards en 2007. Adaptées en cryptographie quasi-immédiatement par Bernstein et Lange, leur forme tordue (<em>twisted Edwards</em>) a deux atouts décisifs : <strong>loi d'addition complète et unifiée</strong> (pas de cas spéciaux comme avec Weierstrass) et <strong>résistance side-channel intrinsèque</strong>. C'est sur cette forme qu'est bâtie <strong>Ed25519</strong>, le standard de signature moderne.</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <div data-en="<p class="text-slate-300 mb-4">A <strong>twisted Edwards curve</strong> has the form:</p>
+      <div class="math-box text-center">
+        <div class="text-brand-500 text-xl">a·x² + y² = 1 + d·x²·y²</div>
+        <div class="text-emerald-400 mt-2 text-sm">with a, d ≠ 0 and a ≠ d, over a finite field 𝔽<sub>p</sub></div>
+      </div>
+      <p class="text-slate-300 mt-4 mb-3"><strong>Unified, complete addition law</strong>:</p>
+      <div class="math-box text-center">
+        <div class="text-emerald-400">(x₁, y₁) + (x₂, y₂) = ( (x₁y₂ + y₁x₂) / (1 + d·x₁x₂y₁y₂), &nbsp; (y₁y₂ − a·x₁x₂) / (1 − d·x₁x₂y₁y₂) )</div>
+      </div>
+      <div class="mt-4 grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2">✓ SINGLE law</div>
+          <p class="text-xs text-slate-300">One formula for P+Q, P+P (doubling), and P+0 (identity). No conditional branch → natural constant time.</p>
+        </div>
+        <div class="p-5 bg-brand-500/10 border border-brand-500/30 rounded-xl">
+          <div class="text-brand-500 font-semibold mb-2">✓ No "point at infinity"</div>
+          <p class="text-xs text-slate-300">Identity is (0, 1), an ordinary point. Easier to implement, fewer bugs.</p>
+        </div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4">Curve25519 (Montgomery form) and Edwards25519 (Edwards form) are <strong>birationally equivalent</strong> — same curve from two angles. X25519 uses Montgomery (for x-only ECDH), Ed25519 uses Edwards (for EdDSA signatures).</p>"><p class="text-slate-300 mb-4">Une <strong>courbe d'Edwards tordue</strong> a la forme :</p>
+      <div class="math-box text-center">
+        <div class="text-brand-500 text-xl">a·x² + y² = 1 + d·x²·y²</div>
+        <div class="text-emerald-400 mt-2 text-sm">avec a, d ≠ 0 et a ≠ d, sur un corps fini 𝔽<sub>p</sub></div>
+      </div>
+      <p class="text-slate-300 mt-4 mb-3"><strong>Loi d'addition unifiée et complète</strong> :</p>
+      <div class="math-box text-center">
+        <div class="text-emerald-400">(x₁, y₁) + (x₂, y₂) = ( (x₁y₂ + y₁x₂) / (1 + d·x₁x₂y₁y₂), &nbsp; (y₁y₂ − a·x₁x₂) / (1 − d·x₁x₂y₁y₂) )</div>
+      </div>
+      <div class="mt-4 grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2">✓ Loi UNIQUE</div>
+          <p class="text-xs text-slate-300">Une seule formule pour P+Q, P+P (doublement), et P+0 (élément neutre). Pas de branche conditionnelle → temps constant naturel.</p>
+        </div>
+        <div class="p-5 bg-brand-500/10 border border-brand-500/30 rounded-xl">
+          <div class="text-brand-500 font-semibold mb-2">✓ Pas de "point à l'infini"</div>
+          <p class="text-xs text-slate-300">Le neutre est (0, 1), un point ordinaire. Plus simple à implémenter, moins de bugs.</p>
+        </div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4">Curve25519 (forme Montgomery) et Edwards25519 (forme Edwards) sont <strong>birationnellement équivalentes</strong> — c'est la même courbe sous deux angles. X25519 utilise la forme Montgomery (pour ECDH x-only), Ed25519 utilise la forme Edwards (pour les signatures EdDSA).</p></div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="math-box text-center" data-en="<div class='text-brand-500'>Edwards25519: −x² + y² = 1 + (−121665/121666)·x²·y² &nbsp; (mod 2²⁵⁵−19)</div><div class='text-emerald-400 mt-2'>Edwards448 (Goldilocks): x² + y² = 1 − 39081·x²·y² &nbsp; (mod 2⁴⁴⁸ − 2²²⁴ − 1)</div>"><div class='text-brand-500'>Edwards25519 : −x² + y² = 1 + (−121665/121666)·x²·y² &nbsp; (mod 2²⁵⁵−19)</div><div class='text-emerald-400 mt-2'>Edwards448 (Goldilocks) : x² + y² = 1 − 39081·x²·y² &nbsp; (mod 2⁴⁴⁸ − 2²²⁴ − 1)</div></div>
+      <p class="text-slate-300 mt-4 text-sm" data-en="Coefficient a=−1 in Ed25519 minimizes addition cost. Edwards448 is designed for ~224 bits security (vs 128 for Ed25519) — used when overkill is desired.">Le coefficient a=−1 dans Ed25519 minimise le coût de l'addition. Edwards448 est conçu pour ~224 bits de sécurité (vs 128 pour Ed25519) — utilisé quand on veut overkill.</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.code">💻 4. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># Ed25519 en pratique
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives import serialization
+
+# Génération de clé
+sk = Ed25519PrivateKey.generate()
+pk = sk.public_key()
+
+# Signature (déterministe — même clé + même message ⇒ même signature)
+signature = sk.sign(b"Hello, Edwards!")
+print(len(signature))    # 64 octets — clé publique 32 octets
+
+# Vérification
+pk.verify(signature, b"Hello, Edwards!")
+
+# Sérialisation : format Raw (32 octets) ou PEM (PKCS#8)
+pub_raw = pk.public_bytes(
+    serialization.Encoding.Raw,
+    serialization.PublicFormat.Raw)
+print(pub_raw.hex())   # 64 chars hex
+
+# Ed448 quand on veut 224 bits de sécurité (paranoïaque ou réglementaire)
+from cryptography.hazmat.primitives.asymmetric.ed448 import Ed448PrivateKey
+sk448 = Ed448PrivateKey.generate()
+sig448 = sk448.sign(b"long-term archive")
+# 114 octets pour Ed448</code></pre>
+      <pre id="code-js" class="hidden"><code>// Ed25519 dans Web Crypto API (support 2023+)
+const kp = await crypto.subtle.generateKey(
+  { name: 'Ed25519' }, true, ['sign', 'verify']
+);
+
+const msg = new TextEncoder().encode('Hello, Edwards!');
+const sig = new Uint8Array(await crypto.subtle.sign('Ed25519', kp.privateKey, msg));
+
+// La signature est toujours de 64 octets
+console.log(sig.length);   // 64
+
+const ok = await crypto.subtle.verify('Ed25519', kp.publicKey, sig, msg);
+console.log(ok);           // true
+
+// Export de la clé publique brute (32 octets)
+const rawPub = new Uint8Array(await crypto.subtle.exportKey('raw', kp.publicKey));
+console.log(rawPub.length); // 32</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-en="🌍 5. Real-world: pros, cons, flaws">🌍 5. Cas réel : avantages, inconvénients, failles</span></h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-5 bg-emerald-500/5 border-emerald-500/20 border rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✅ Advantages">✅ Avantages</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Unified addition law → natural constant time">Loi d'addition unifiée → temps constant naturel</li>
+            <li data-en="No point at infinity → fewer bugs">Pas de point à l'infini → moins de bugs</li>
+            <li data-en="Deterministic EdDSA signatures">Signatures EdDSA déterministes</li>
+            <li data-en="Very fast in pure software">Très rapide en software pur</li>
+            <li data-en="Modern standard: SSH, Git, JWT, Tor v3">Standard moderne : SSH, Git, JWT, Tor v3</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-amber-500/5 border-amber-500/20 border rounded-xl">
+          <div class="text-amber-400 font-semibold mb-2" data-en="⚠️ Disadvantages">⚠️ Inconvénients</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Less geometrically intuitive than Weierstrass">Moins intuitive géométriquement que Weierstrass</li>
+            <li data-en="Limited hardware support in some legacy HSMs">Support hardware limité dans certains HSM legacy</li>
+            <li data-en="Cofactor 8 → attention to clamping">Cofacteur 8 → attention au clamping</li>
+            <li data-en="Still not in some government standards (but EdDSA is in FIPS 186-5)">Toujours pas dans certaines normes gouvernementales (mais EdDSA est dans FIPS 186-5)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border-red-500/30 border rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="💥 Known flaws">💥 Failles connues</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Bad implementation: forgotten clamping → small-subgroup attacks">Mauvaise implémentation : clamping oublié → small-subgroup attacks</li>
+            <li data-en="Ed25519 batch verification bugs (libsodium 2019)">Ed25519 batch verification bugs (libsodium 2019)</li>
+            <li data-en="Confusion between Ed25519 (sign) and X25519 (DH) → misuse">Confusion entre Ed25519 (sign) et X25519 (DH) → mauvais usage</li>
+            <li data-en="Bad deterministic nonce derivation if entropy compromised">Mauvaise dérivation du nonce déterministe si entropie compromise</li>
+            <li data-en="Shor (quantum): breaks Ed25519/Ed448 → PQC migration">Shor (quantique) : casse Ed25519/Ed448 → migration PQC</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🧠 Quiz -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz" data-en="🧠 Quiz">🧠 Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+
+    <script>
+      const QUIZ_DATA = [
+      {q_fr:"Quelle est la forme d"une courbe d"Edwards tordue ?", q_en:"What is the form of a twisted Edwards curve?", choices_fr:["y² = x³ + ax + b", "By² = x³ + Ax² + x", "a·x² + y² = 1 + d·x²·y²", "y = mx + c"], choices_en:["y² = x³ + ax + b", "By² = x³ + Ax² + x", "a·x² + y² = 1 + d·x²·y²", "y = mx + c"], answer:2, e_fr:"Forme caractéristique des courbes d"Edwards tordues.", e_en:"Characteristic form of twisted Edwards curves."},
+      {q_fr:"Quel est le grand avantage par rapport à Weierstrass ?", q_en:"What is the big advantage over Weierstrass?", choices_fr:["Plus rapide", "Loi d"addition UNIFIÉE (pas de cas spéciaux)", "Plus petite", "Plus standard"], choices_en:["Faster", "UNIFIED addition law (no special cases)", "Smaller", "More standard"], answer:1, e_fr:"Une seule formule pour add, double, neutre → temps constant naturel, moins de bugs.", e_en:"One formula for add, double, identity → natural constant time, fewer bugs."},
+      {q_fr:"Curve25519 (Montgomery) et Edwards25519 sont-elles différentes ?", q_en:"Are Curve25519 (Montgomery) and Edwards25519 different?", choices_fr:["Oui, totalement", "Non, elles sont birationnellement équivalentes (même courbe sous deux angles)", "Edwards est une variante post-quantique", "Cela dépend du langage"], choices_en:["Yes, completely", "No, they are birationally equivalent (same curve from two angles)", "Edwards is a post-quantum variant", "Depends on language"], answer:1, e_fr:"Mêmes points, formules d"addition différentes. X25519 (Montgomery) pour ECDH, Ed25519 (Edwards) pour signatures.", e_en:"Same points, different addition formulas. X25519 (Montgomery) for ECDH, Ed25519 (Edwards) for signatures."},
+      {q_fr:"Quelle est la taille d"une signature Ed25519 ?", q_en:"What is the size of an Ed25519 signature?", choices_fr:["32 octets", "64 octets", "128 octets", "256 octets"], choices_en:["32 bytes", "64 bytes", "128 bytes", "256 bytes"], answer:1, e_fr:"64 octets : R (32) + S (32). Clé publique aussi 32 octets.", e_en:"64 bytes: R (32) + S (32). Public key also 32 bytes."}
+    ];
+    </script>
+
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab').forEach(t => {
+          t.classList.remove('bg-brand-500','text-white');
+          t.classList.add('bg-white/5','border','border-white/10');
+        });
+        tab.classList.add('bg-brand-500','text-white');
+        tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden', tab.dataset.lang!=='js');
+      });
+    });
+
+    // Quiz logic
+    const Q = QUIZ_DATA;
+    const quizDiv = document.getElementById('quiz');
+    function renderQuiz() {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      quizDiv.innerHTML = '';
+      Q.forEach((q,i) => {
+        const b = document.createElement('div');
+        b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+        const question = lang==='en' ? q.q_en : q.q_fr;
+        const choices = lang==='en' ? q.choices_en : q.choices_fr;
+        b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${question}</div>
+          <div class="space-y-2">${choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+          <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+        quizDiv.appendChild(b);
+      });
+    }
+    renderQuiz();
+    document.addEventListener('lang-changed', renderQuiz);
+
+    document.getElementById('quiz-submit').addEventListener('click', () => {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      let score = 0;
+      Q.forEach((q,i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l => l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex = quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        const explainLabel = lang==='en' ? 'Explanation' : 'Explication';
+        ex.innerHTML = `<strong class="text-brand-500">${explainLabel} :</strong> ${lang==='en' ? q.e_en : q.e_fr}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) { const ch = +sel.value; if (ch === q.answer) score++; else labels[ch].classList.add('quiz-wrong'); }
+      });
+      const r = document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const ok = score === Q.length;
+      const msg = ok ? (lang==='en'?'🎉 Flawless!':'🎉 Sans-faute !')
+                : score >= Q.length/2 ? (lang==='en'?'👍 Not bad.':'👍 Pas mal.')
+                : (lang==='en'?'📚 Retry.':'📚 Réessaie.');
+      const cls = ok ? 'border-emerald-500/40 bg-emerald-500/10'
+                : score >= Q.length/2 ? 'border-amber-500/40 bg-amber-500/10'
+                : 'border-red-500/40 bg-red-500/10';
+      r.className = `mt-6 p-5 rounded-xl border ${cls}`;
+      r.innerHTML = `<div class="font-semibold text-lg mb-1">${lang==='en'?'Score':'Score'} : ${score}/${Q.length}</div><div class="text-sm text-slate-300">${msg}</div>`;
+      CryptoLab.recordScore('edwards', score, Q.length);
+      if (ok && !CryptoLab.hasBadge('edwards-master')) {
+        const label = lang==='en' ? 'Edwards Master' : 'Maître Edwards';
+        CryptoLab.earnBadge('edwards-master', label, '🌀');
+        CryptoLab.showToast('🌀 ' + (lang==='en'?'Badge unlocked':'Badge débloqué') + ' : <u>'+label+'</u> !');
+      }
+    });
+  </script>
+</body>
+</html>

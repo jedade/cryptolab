@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Réseaux de Feistel — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">🔀</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1971 · Horst Feistel (IBM)</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Réseaux de Feistel</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Generic structure">Structure générique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="DES · Blowfish · Twofish">DES · Blowfish · Twofish</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Intermediate level">Niveau intermédiaire</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <p class="text-slate-300 leading-relaxed" data-en="A <strong>Feistel network</strong> isn't a cryptosystem, it's a <em>generic structure</em> for building a block cipher. Designed by <strong>Horst Feistel</strong> at IBM in 1971 for the Lucifer project, it was popularized by <strong>DES (1977)</strong> and then reused by dozens of algorithms: Blowfish, Twofish, RC5, RC6, CAST, MISTY, GOST, Camellia.">
+        Un <strong>réseau de Feistel</strong> n'est pas un cryptosystème, c'est une <em>structure
+        générique</em> pour construire un chiffrement par blocs. Conçu par <strong>Horst Feistel</strong>
+        chez IBM en 1971 pour le projet Lucifer, il a été popularisé par <strong>DES (1977)</strong> puis
+        repris par des dizaines d'algorithmes : Blowfish, Twofish, RC5, RC6, CAST, MISTY, GOST, Camellia.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="Its magic property: the inner function <em>F</em> doesn't need to be invertible. That's an enormous design freedom — you can put any function (S-box, modular addition, hash…) and get a perfectly reversible cipher.">
+        Sa propriété magique : la fonction interne <em>F</em> n'a pas besoin d'être inversible. C'est
+        une liberté de conception énorme — on peut y mettre n'importe quelle fonction (S-box, addition
+        modulaire, hash…) et obtenir un chiffrement parfaitement réversible.
+      </p>
+      <div class="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg text-sm text-amber-300">
+        ⚠️ <strong>Petite clarification</strong> : à ne pas confondre avec les <em>réseaux de Petri</em>
+        (qui sont des modèles de concurrence en informatique théorique, sans lien avec la crypto).
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <p class="text-slate-300 mb-4" data-en="We split each plaintext block into two equal halves (L₀, R₀). At each round <em>i</em> ∈ [1, n]:">On divise chaque bloc de plaintext en deux moitiés de même taille (L₀, R₀). À chaque round <em>i</em> ∈ [1, n] :</p>
+      <div class="math-box text-center">
+        <div class="text-brand-500 text-lg">L<sub>i</sub> = R<sub>i−1</sub></div>
+        <div class="text-brand-500 text-lg">R<sub>i</sub> = L<sub>i−1</sub> ⊕ F(R<sub>i−1</sub>, K<sub>i</sub>)</div>
+      </div>
+      <p class="text-slate-300 mt-4">Le bloc chiffré final est (L<sub>n</sub>, R<sub>n</sub>). Pour déchiffrer, on applique exactement la même structure mais en parcourant les sous-clés à l'envers :</p>
+      <div class="math-box text-center mt-3">
+        <div class="text-emerald-400 text-lg">R<sub>i−1</sub> = L<sub>i</sub></div>
+        <div class="text-emerald-400 text-lg">L<sub>i−1</sub> = R<sub>i</sub> ⊕ F(L<sub>i</sub>, K<sub>i</sub>)</div>
+      </div>
+      <div class="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-sm text-emerald-300">
+        💡 <strong>Cœur de la magie</strong> : F peut être quelconque (non-inversible, non-bijective, asymétrique).
+        Seules les sous-clés et leur ordre changent entre chiffrement et déchiffrement.
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🧮 3. Pourquoi ça marche</h2>
+      <p class="text-slate-300 mb-3">Démonstration en 1 round (les n rounds suivent par induction) :</p>
+      <div class="p-5 bg-white/5 border border-white/10 rounded-xl text-sm space-y-2 font-mono">
+        <div>Chiffrement : L₁ = R₀ ; R₁ = L₀ ⊕ F(R₀, K)</div>
+        <div>Déchiffrement avec (L₁, R₁) :</div>
+        <div class="ml-4">R₀' = L₁ = R₀ ✓</div>
+        <div class="ml-4">L₀' = R₁ ⊕ F(L₁, K) = (L₀ ⊕ F(R₀, K)) ⊕ F(R₀, K) = L₀ ✓</div>
+      </div>
+      <p class="text-slate-300 mt-4 text-sm">
+        Le XOR est sa propre inverse : a ⊕ b ⊕ b = a. C'est ce qui permet de récupérer L₀ sans jamais inverser F.
+      </p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🔍 4. Simulation Feistel jouet (32 bits, 4 rounds)</h2>
+      <p class="text-slate-400 text-sm mb-4">Fonction F = (R + K) mod 2¹⁶ ⊕ rotation. À but pédagogique uniquement, vraie sécurité = DES, AES.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div class="grid md:grid-cols-2 gap-3">
+          <div><label class="block text-sm mb-2" data-en="Plaintext block (32-bit hex, 8 chars)">Bloc clair (32 bits hex, 8 chars)</label><input id="f-pt" value="cafebabe" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+          <div><label class="block text-sm mb-2" data-en="Master key (16-bit hex)">Clé maîtresse (16 bits hex)</label><input id="f-key" value="42a3" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+        </div>
+        <div class="flex gap-2">
+          <button id="f-enc" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="🔒 Encrypt (4 rounds)">🔒 Chiffrer (4 rounds)</button>
+          <button id="f-dec" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg" data-en="🔓 Decrypt the result">🔓 Déchiffrer le résultat</button>
+        </div>
+        <div id="f-out" class="hidden space-y-2 text-sm font-mono"></div>
+        <details>
+          <summary class="cursor-pointer text-slate-400 text-sm hover:text-white" data-en="Round trace (L, R after each)">Trace des rounds (L, R après chaque)</summary>
+          <div id="f-trace" class="mt-3 font-mono text-xs space-y-1"></div>
+        </details>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">📋 5. Algorithmes basés sur Feistel</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold text-brand-500 mb-2">DES (1977)</div>
+          <p class="text-xs text-slate-400 mb-2">Bloc 64 / clé 56 bits / 16 rounds. F = expansion + XOR clé + 8 S-boxes + permutation. Cassé en 1998.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold text-brand-500 mb-2">3DES (1998)</div>
+          <p class="text-xs text-slate-400">DES appliqué 3 fois (encrypt-decrypt-encrypt) avec 3 clés. Toléré pour legacy, déprécié 2024.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold text-brand-500 mb-2">Blowfish (1993)</div>
+          <p class="text-xs text-slate-400">Bruce Schneier · bloc 64 / clé jusqu'à 448 bits / 16 rounds. Libre, populaire dans bcrypt.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold text-brand-500 mb-2">Twofish (1998)</div>
+          <p class="text-xs text-slate-400">Successeur de Blowfish, finaliste AES. Bloc 128 / clé 128-256 / 16 rounds.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold text-brand-500 mb-2">Camellia (2000)</div>
+          <p class="text-xs text-slate-400">Mitsubishi/NTT · alternative à AES standardisée ISO, RFC 3713. Bloc 128, structure mixte Feistel.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold text-brand-500 mb-2">GOST 28147-89</div>
+          <p class="text-xs text-slate-400">Standard soviétique/russe. Bloc 64 / clé 256 / 32 rounds. S-boxes définies localement.</p>
+        </div>
+      </div>
+      <div class="mt-4 p-4 bg-brand-500/10 border border-brand-500/30 rounded-lg text-sm">
+        <strong>Variantes notables :</strong>
+        <ul class="mt-2 space-y-1 list-disc list-inside text-slate-300">
+          <li><strong>Feistel déséquilibré</strong> (Skipjack) : L et R de tailles différentes</li>
+          <li><strong>Generalized Feistel</strong> : plus de 2 branches (RC6, CAST-256)</li>
+          <li><strong>ARX</strong> (ChaCha20, Speck) : autre paradigme, sans Feistel</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">💻 6. Code (Feistel générique)</h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>def feistel(block, subkeys, F, decrypt=False):
+    """Chiffre/déchiffre un bloc via un réseau de Feistel.
+    F : fonction (R, K) -> bloc même taille que R."""
+    L, R = block
+    keys = list(reversed(subkeys)) if decrypt else subkeys
+    for K in keys:
+        L, R = R, L ^ F(R, K)
+    return (R, L)            # swap final pour symétrie
+
+# Exemple avec F triviale (NON sécurisée — illustration uniquement)
+def F(R, K):
+    return ((R + K) ^ ((R << 3) | (R >> 13))) &amp; 0xFFFF
+
+subkeys = [0x42a3, 0x9f01, 0xbeef, 0x1337]
+ct = feistel((0xcafe, 0xbabe), subkeys, F)
+pt = feistel(ct, subkeys, F, decrypt=True)
+assert pt == (0xcafe, 0xbabe)</code></pre>
+      <pre id="code-js" class="hidden"><code>function feistel([L, R], subkeys, F, decrypt = false) {
+  const keys = decrypt ? [...subkeys].reverse() : subkeys;
+  for (const K of keys) {
+    [L, R] = [R, (L ^ F(R, K)) & 0xFFFF];
+  }
+  return [R, L];               // swap final
+}
+
+const F = (R, K) => ((R + K) ^ ((R << 3) | (R >> 13))) & 0xFFFF;
+const subkeys = [0x42a3, 0x9f01, 0xbeef, 0x1337];
+
+const ct = feistel([0xcafe, 0xbabe], subkeys, F);
+const pt = feistel(ct, subkeys, F, true);
+console.log(pt);   // [0xcafe, 0xbabe]</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🌍 7. Forces & limites</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Strengths">✓ Forces</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Simple structure, proven by 50 years of analysis">Structure simple, prouvée par 50 ans d'analyse</li>
+            <li data-en="F can be anything except trivially linear">F peut être tout sauf trivialement linéaire</li>
+            <li data-en="Encryption = decryption (same code)">Chiffrement = déchiffrement (même code)</li>
+            <li data-en="Enables compact hardware (easy key reversal)">Permet hardware compact (clé reverse facile)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Limits">✗ Limites</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="64-bit block insufficient (Sweet32) → AES = SPN 128">Bloc 64 bits insuffisant (Sweet32) → AES = SPN 128</li>
+            <li data-en="Less parallelizable than SPN (sequential rounds)">Moins parallélisable que SPN (rounds séquentiels)</li>
+            <li data-en="Slower diffusion than SPN (avalanche in n/2 rounds)">Diffusion plus lente que SPN (Avalanche en n/2 rounds)</li>
+            <li data-en="Modern choice for block cipher = SPN (AES)">Choix moderne pour blocs cipher = SPN (AES)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Linear cryptanalysis (Matsui, 1993)">Linear cryptanalysis (Matsui, 1993)</div>
+          <p class="text-xs text-slate-300" data-en="Finds linear approximations of S-boxes to break DES with 2⁴³ pairs.">Trouve des approximations linéaires des S-boxes pour casser DES avec 2⁴³ paires.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Differential cryptanalysis (Biham-Shamir)">Differential cryptanalysis (Biham-Shamir)</div>
+          <p class="text-xs text-slate-300" data-en="Tracks how differences propagate through rounds — breaks DES in 2⁴⁷.">Observe la propagation de différences à travers les rounds — DES casse en 2⁴⁷.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Sweet32 (2016)">Sweet32 (2016)</div>
+          <p class="text-xs text-slate-300" data-en="CBC block collisions for 64-bit ciphers (Blowfish, 3DES) → ~32 GB suffices.">Collisions de blocs en mode CBC pour les chiffrements 64-bit (Blowfish, 3DES) → ~32 Go suffisent.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="DES brute force (EFF, 1998)">Brute force DES (EFF, 1998)</div>
+          <p class="text-xs text-slate-300" data-en="56 bits → broken in 56h by DES Cracker. 3DES deprecated in 2024.">56 bits → cassés en 56h par DES Cracker. 3DES déprécié 2024.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz">🧠 8. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    const F = (R, K) => ((R + K) ^ ((R << 3) | (R >> 13))) & 0xFFFF;
+    function feistel(L, R, keys, decrypt = false) {
+      const ks = decrypt ? [...keys].reverse() : keys;
+      const trace = [{ round: 0, L, R }];
+      for (let i = 0; i < ks.length; i++) {
+        const newL = R;
+        const newR = (L ^ F(R, ks[i])) & 0xFFFF;
+        L = newL; R = newR;
+        trace.push({ round: i + 1, L, R, key: ks[i] });
+      }
+      return { L: R, R: L, trace };  // swap final
+    }
+
+    let lastCT = null, lastKeys = null;
+
+    document.getElementById('f-enc').addEventListener('click', () => {
+      const pt = parseInt(document.getElementById('f-pt').value, 16);
+      const mk = parseInt(document.getElementById('f-key').value, 16);
+      const L = (pt >>> 16) & 0xFFFF, R = pt & 0xFFFF;
+      // Dérivation simpliste de 4 sous-clés
+      const keys = [mk, (mk ^ 0x1234) & 0xFFFF, (mk + 0x5678) & 0xFFFF, (mk ^ 0xABCD) & 0xFFFF];
+      const { L: cL, R: cR, trace } = feistel(L, R, keys);
+      lastCT = (cL << 16) | cR;
+      lastKeys = keys;
+      const out = document.getElementById('f-out');
+      out.classList.remove('hidden');
+      out.innerHTML = `
+        <div class="p-3 bg-ink-900 border border-white/10 rounded">Clair : 0x${pt.toString(16).padStart(8,'0').toUpperCase()} (L=${L.toString(16)}, R=${R.toString(16)})</div>
+        <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded">Chiffré : <strong>0x${((cL<<16)|cR).toString(16).padStart(8,'0').toUpperCase()}</strong></div>
+      `;
+      document.getElementById('f-trace').innerHTML = trace.map(t =>
+        `<div>Round ${t.round}: L=${t.L.toString(16).padStart(4,'0')}, R=${t.R.toString(16).padStart(4,'0')}${t.key!==undefined?` (K=${t.key.toString(16)})`:''}</div>`).join('');
+    });
+
+    document.getElementById('f-dec').addEventListener('click', () => {
+      if (lastCT === null) {
+        document.getElementById('f-out').classList.remove('hidden');
+        document.getElementById('f-out').innerHTML = `<div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded text-amber-400">Chiffre d'abord.</div>`;
+        return;
+      }
+      const L = (lastCT >>> 16) & 0xFFFF, R = lastCT & 0xFFFF;
+      const { L: dL, R: dR } = feistel(L, R, lastKeys, true);
+      const out = document.getElementById('f-out');
+      out.classList.remove('hidden');
+      out.innerHTML += `<div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded">Déchiffré : 0x${((dL<<16)|dR).toString(16).padStart(8,'0').toUpperCase()}</div>`;
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Qu'est-ce qu'un réseau de Feistel ?", choices:["Un cryptosystème complet","Une structure générique pour construire des chiffrements par blocs","Un protocole d'échange de clés","Une fonction de hachage"], answer:1, explain:"Structure permettant de bâtir un chiffrement réversible autour d'une fonction F arbitraire." },
+      { q:"Quelle est la propriété magique de Feistel ?", choices:["F doit être inversible","F PEUT être non-inversible","F est toujours linéaire","F doit être un hash"], answer:1, explain:"Le XOR rend l'inversion possible sans inverser F. C'est ce qui ouvre énormément de liberté de conception." },
+      { q:"Quels algorithmes utilisent Feistel ?", choices:["AES, ChaCha20","DES, 3DES, Blowfish, Twofish","SHA-256, MD5","RSA, ECC"], answer:1, explain:"DES est le cas emblématique. AES utilise une structure SPN différente." },
+      { q:"Quelle est la limite de DES (et donc de la sécurité Feistel-64) en 2026 ?", choices:["Algorithme trop complexe","Bloc de 64 bits → attaque Sweet32, clé 56 bits brute-forcée","Pas open source","Trop lent"], answer:1, explain:"Bloc 64 limite à ~2³² blocs (32 Go) par clé avant collision exploitable. AES utilise 128 bits." },
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('feistel',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('feistel-master')){CryptoLab.earnBadge('feistel-master','Architecte Feistel','🔀');CryptoLab.showToast('🔀 Badge débloqué : <u>Architecte Feistel</u> !');}
+    });
+  </script>
+</body>
+</html>

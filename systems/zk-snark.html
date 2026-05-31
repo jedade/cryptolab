@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>zk-SNARK & zk-STARK — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">🌟</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500" data-en="2012 / 2018 · Modern ZKPs">2012 / 2018 · ZKP modernes</div>
+        <h1 class="text-4xl md:text-5xl font-bold" data-en="zk-SNARK & zk-STARK">zk-SNARK & zk-STARK</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Zero-knowledge proof">Preuve à divulgation nulle</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Succinct · Non-interactive">Succincte · Non-interactive</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="Zcash · Ethereum L2">Zcash · Ethereum L2</span>
+      
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="zk-SNARK">zk-SNARK</div><div class="font-semibold" data-en="2012 (Bitansky, Chiesa, Genkin, Tromer)">2012 (Bitansky, Chiesa, Genkin, Tromer)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="zk-STARK">zk-STARK</div><div class="font-semibold" data-en="2018 (Ben-Sasson, Bentov, Horesh, Riabzev)">2018 (Ben-Sasson, Bentov, Horesh, Riabzev)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Use">Usage</div><div class="font-semibold" data-en="Privacy + blockchain scalability">Confidentialité + scalabilité blockchain</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>zk-SNARKs</strong> (Succinct Non-interactive ARguments of Knowledge) and <strong>zk-STARKs</strong> (Scalable Transparent ARguments of Knowledge) are the <em>industrial</em> ZKPs that enabled Zcash, Ethereum rollups (zkSync, StarkNet, Linea), and decentralized identity. Their revolution: a short proof (~200 bytes for SNARK) verifiable in milliseconds, attesting a computation was done correctly <em>without revealing inputs</em>.">Les <strong>zk-SNARKs</strong> (Succinct Non-interactive ARguments of Knowledge) et <strong>zk-STARKs</strong> (Scalable Transparent ARguments of Knowledge) sont les ZKP <em>industriels</em> qui ont rendu possibles Zcash, les rollups Ethereum (zkSync, StarkNet, Linea), et l'identité décentralisée. Leur révolution : une preuve courte (~200 octets pour SNARK) vérifiable en quelques ms, qui atteste qu'un calcul a été effectué correctement <em>sans dévoiler les entrées</em>.</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <div data-en="<p class="text-slate-300 mb-4">To prove "I correctly ran program P on private inputs", we transform P into:</p>
+      <div class="p-5 bg-white/5 border border-white/10 rounded-xl space-y-2 text-sm">
+        <div><strong>1. Arithmetic circuit</strong>: equations over a finite field</div>
+        <div><strong>2. R1CS / AIR</strong>: constraint system (Rank-1 Constraint System or Algebraic Intermediate Representation)</div>
+        <div><strong>3. QAP / PLONK / FRI</strong>: polynomial transformation</div>
+        <div><strong>4. Proof</strong>: polynomial commitment + random openings</div>
+        <div><strong>5. Verification</strong>: bilinear pairing (SNARK) or Merkle hash (STARK)</div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 mt-4">
+        <div class="p-5 bg-brand-500/10 border border-brand-500/30 rounded-xl">
+          <div class="text-brand-500 font-semibold mb-2">zk-SNARK</div>
+          <p class="text-xs text-slate-300">Proof ~200-400 bytes · verify &lt; 10 ms · BUT requires <em>trusted setup</em> per circuit (or universal for PLONK)</p>
+        </div>
+        <div class="p-5 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+          <div class="text-purple-400 font-semibold mb-2">zk-STARK</div>
+          <p class="text-xs text-slate-300">Larger proof (~100 KB) BUT no trusted setup, post-quantum, more scalable for big computations</p>
+        </div>
+      </div>"><p class="text-slate-300 mb-4">Pour prouver « j'ai exécuté correctement un programme P sur des entrées privées », on transforme P en :</p>
+      <div class="p-5 bg-white/5 border border-white/10 rounded-xl space-y-2 text-sm">
+        <div><strong>1. Circuit arithmétique</strong> : équations sur un corps fini</div>
+        <div><strong>2. R1CS / AIR</strong> : système de contraintes (Rank-1 Constraint System ou Algebraic Intermediate Representation)</div>
+        <div><strong>3. QAP / PLONK / FRI</strong> : transformation en polynômes</div>
+        <div><strong>4. Preuve</strong> : engagement polynomial + ouvertures aléatoires</div>
+        <div><strong>5. Vérification</strong> : appariement bilinéaire (SNARK) ou hash de Merkle (STARK)</div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 mt-4">
+        <div class="p-5 bg-brand-500/10 border border-brand-500/30 rounded-xl">
+          <div class="text-brand-500 font-semibold mb-2">zk-SNARK</div>
+          <p class="text-xs text-slate-300">Preuve ~200-400 octets · vérif &lt; 10 ms · MAIS nécessite un <em>trusted setup</em> par circuit (ou universel pour PLONK)</p>
+        </div>
+        <div class="p-5 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+          <div class="text-purple-400 font-semibold mb-2">zk-STARK</div>
+          <p class="text-xs text-slate-300">Preuve plus grande (~100 Ko) MAIS aucun trusted setup, post-quantique, plus scalable pour les gros calculs</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="math-box text-center" data-en="<div class="text-brand-500">Pinocchio (Groth16): proof = 3 elliptic points (~200 bytes)</div><div class="text-emerald-400 mt-2">PLONK: proof = 9 G₁ + 7 𝔽 (~400 bytes), universal trusted setup</div><div class="text-amber-400 mt-2">STARK: proof = O(log²(N)) hashes via FRI (Fast Reed-Solomon IOP)</div>"><div class="text-brand-500">Pinocchio (Groth16) : preuve = 3 points elliptiques (~200 octets)</div><div class="text-emerald-400 mt-2">PLONK : preuve = 9 G₁ + 7 𝔽 (~400 octets), trusted setup universel</div><div class="text-amber-400 mt-2">STARK : preuve = O(log²(N)) hashes via FRI (Fast Reed-Solomon IOP)</div></div>
+      <p class="text-slate-300 mt-4 text-sm" data-en="SNARKs rely on cryptographic assumptions on pairing-friendly elliptic curves (BLS12-381, BN254). STARKs rely ONLY on cryptographic hash functions (SHA-256, Poseidon) → quantum resistant.">Les SNARKs reposent sur des hypothèses cryptographiques sur courbes elliptiques avec couplage (BLS12-381, BN254). Les STARKs reposent UNIQUEMENT sur les fonctions de hachage cryptographiques (SHA-256, Poseidon) → résistants quantique.</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.code">💻 4. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># Exemple conceptuel avec circom (DSL pour zk-SNARK)
+# Fichier sum.circom :
+"""
+pragma circom 2.0.0;
+
+template Sum() {
+    signal input a;
+    signal input b;
+    signal output c;
+    c <== a + b;
+}
+
+component main = Sum();
+"""
+
+# Compilation : circom sum.circom --r1cs --wasm
+# Preuve avec snarkjs :
+# 1. Powers of Tau ceremony (trusted setup universel)
+# 2. snarkjs groth16 setup sum.r1cs pot12_final.ptau sum_0000.zkey
+# 3. snarkjs groth16 prove ... → proof.json + public.json
+# 4. snarkjs groth16 verify verification_key.json public.json proof.json
+# → OK / KO en quelques ms
+
+# Côté Python : py-ecc, py-snark, ou wrapper Rust (arkworks via PyO3).
+# Côté JS : circomlibjs, snarkjs (en navigateur direct)</code></pre>
+      <pre id="code-js" class="hidden"><code>// Vérification d'une preuve Groth16 dans le navigateur
+import { groth16 } from 'snarkjs';
+
+// Preuve générée hors ligne par le prouveur
+const proof = { /* { pi_a, pi_b, pi_c, protocol, curve } */ };
+const publicSignals = ['42'];       // entrées publiques exposées
+const vKey = await fetch('verification_key.json').then(r => r.json());
+
+const ok = await groth16.verify(vKey, publicSignals, proof);
+console.log(ok);   // true si preuve valide
+
+// Côté contrat Solidity : on déploie un Verifier auto-généré par snarkjs,
+// puis on appelle verifier.verifyProof(a, b, c, input) → ~250k gas</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-en="🌍 5. Real-world: pros, cons, flaws">🌍 5. Cas réel : avantages, inconvénients, failles</span></h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-5 bg-emerald-500/5 border-emerald-500/20 border rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✅ Advantages">✅ Avantages</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Ultra-short proofs (200 B – 100 KB)">Preuves ultra-courtes (200 o – 100 Ko)</li>
+            <li data-en="Verification in milliseconds">Vérification en quelques ms</li>
+            <li data-en="Total privacy + proven integrity">Confidentialité totale + intégrité prouvée</li>
+            <li data-en="STARK: transparent + post-quantum">STARK : transparent + post-quantique</li>
+            <li data-en="Foundation of Ethereum rollups (zkEVM)">Base des rollups Ethereum (zkEVM)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-amber-500/5 border-amber-500/20 border rounded-xl">
+          <div class="text-amber-400 font-semibold mb-2" data-en="⚠️ Disadvantages">⚠️ Inconvénients</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Proof generation expensive (memory, CPU)">Génération de preuve coûteuse (mémoire, CPU)</li>
+            <li data-en="SNARK: trusted setup → multi-party trust">SNARK : trusted setup → confiance multi-parties</li>
+            <li data-en="Complex circuit compilation (circom, halo2)">Compilation des circuits complexe (circom, halo2)</li>
+            <li data-en="Subtle circuit bugs = security holes">Bugs subtils dans les circuits = trous de sécurité</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border-red-500/30 border rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="💥 Known flaws">💥 Failles connues</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Zcash counterfeiting bug (2018-2019): fake ZEC for 5 months">Zcash counterfeiting bug (2018-2019) : faux ZEC pendant 5 mois</li>
+            <li data-en="Compromised trusted setup → fake proofs possible">Cérémonie trusted setup compromise → faux proofs possibles</li>
+            <li data-en="Tornado Cash: deposit/withdrawal timing analysis">Tornado Cash : analyse de timing de dépôts/retraits</li>
+            <li data-en="Sigma protocols bugs (Aurora 2021, Polygon zkEVM 2023)">Sigma protocols bugs (Aurora 2021, Polygon zkEVM 2023)</li>
+            <li data-en="FRI low-degree test: if mis-tuned, soundness too low">FRI low-degree test : si mal paramétré, soundness trop faible</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🧠 Quiz -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz" data-en="🧠 Quiz">🧠 Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+
+    <script>
+      const QUIZ_DATA = [
+      {q_fr:"Quelle est la propriété SUCCINCT des SNARKs ?", q_en:"What does SUCCINCT mean for SNARKs?", choices_fr:["Le secret est court", "La preuve est courte et vite vérifiable", "L"algorithme tient en 1 ligne", "Aucune des trois"], choices_en:["Secret is short", "Proof is short and quickly verifiable", "Algorithm fits in 1 line", "None"], answer:1, e_fr:"Succinct = preuve courte (octets) et vérification rapide (ms), même pour un calcul énorme.", e_en:"Succinct = short proof (bytes) and fast verification (ms), even for huge computation."},
+      {q_fr:"Quel est le grand avantage des STARKs sur les SNARKs ?", q_en:"What is the big advantage of STARKs over SNARKs?", choices_fr:["Plus petits", "Pas de trusted setup + post-quantique", "Plus rapides à générer", "Plus standards"], choices_en:["Smaller", "No trusted setup + post-quantum", "Faster to generate", "More standard"], answer:1, e_fr:"STARKs n"utilisent que des hash → pas de setup à truster, et résistent au quantique.", e_en:"STARKs use only hashes → no setup to trust, and quantum resistant."},
+      {q_fr:"Qui a utilisé les zk-SNARKs en premier en production ?", q_en:"Who first used zk-SNARKs in production?", choices_fr:["Bitcoin", "Zcash", "Ethereum", "Monero"], choices_en:["Bitcoin", "Zcash", "Ethereum", "Monero"], answer:1, e_fr:"Zcash en 2016, avec la cérémonie Powers of Tau.", e_en:"Zcash in 2016, with the Powers of Tau ceremony."},
+      {q_fr:"Qu"est-ce qu"un trusted setup ?", q_en:"What is a trusted setup?", choices_fr:["Un serveur de confiance", "Une cérémonie où on génère des paramètres en supprimant l"aléa qui les a produits", "Un certificat TLS", "Un mot de passe"], choices_en:["A trusted server", "A ceremony where parameters are generated by discarding the randomness used", "A TLS certificate", "A password"], answer:1, e_fr:"Toxic waste : si un seul participant garde l"aléa, il peut forger des preuves.", e_en:"Toxic waste: if a single participant keeps the randomness, they can forge proofs."}
+    ];
+    </script>
+
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab').forEach(t => {
+          t.classList.remove('bg-brand-500','text-white');
+          t.classList.add('bg-white/5','border','border-white/10');
+        });
+        tab.classList.add('bg-brand-500','text-white');
+        tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden', tab.dataset.lang!=='js');
+      });
+    });
+
+    // Quiz logic
+    const Q = QUIZ_DATA;
+    const quizDiv = document.getElementById('quiz');
+    function renderQuiz() {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      quizDiv.innerHTML = '';
+      Q.forEach((q,i) => {
+        const b = document.createElement('div');
+        b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+        const question = lang==='en' ? q.q_en : q.q_fr;
+        const choices = lang==='en' ? q.choices_en : q.choices_fr;
+        b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${question}</div>
+          <div class="space-y-2">${choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+          <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+        quizDiv.appendChild(b);
+      });
+    }
+    renderQuiz();
+    document.addEventListener('lang-changed', renderQuiz);
+
+    document.getElementById('quiz-submit').addEventListener('click', () => {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      let score = 0;
+      Q.forEach((q,i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l => l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex = quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        const explainLabel = lang==='en' ? 'Explanation' : 'Explication';
+        ex.innerHTML = `<strong class="text-brand-500">${explainLabel} :</strong> ${lang==='en' ? q.e_en : q.e_fr}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) { const ch = +sel.value; if (ch === q.answer) score++; else labels[ch].classList.add('quiz-wrong'); }
+      });
+      const r = document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const ok = score === Q.length;
+      const msg = ok ? (lang==='en'?'🎉 Flawless!':'🎉 Sans-faute !')
+                : score >= Q.length/2 ? (lang==='en'?'👍 Not bad.':'👍 Pas mal.')
+                : (lang==='en'?'📚 Retry.':'📚 Réessaie.');
+      const cls = ok ? 'border-emerald-500/40 bg-emerald-500/10'
+                : score >= Q.length/2 ? 'border-amber-500/40 bg-amber-500/10'
+                : 'border-red-500/40 bg-red-500/10';
+      r.className = `mt-6 p-5 rounded-xl border ${cls}`;
+      r.innerHTML = `<div class="font-semibold text-lg mb-1">${lang==='en'?'Score':'Score'} : ${score}/${Q.length}</div><div class="text-sm text-slate-300">${msg}</div>`;
+      CryptoLab.recordScore('snark', score, Q.length);
+      if (ok && !CryptoLab.hasBadge('snark-master')) {
+        const label = lang==='en' ? 'zk-SNARK Master' : 'Maître zk-SNARK';
+        CryptoLab.earnBadge('snark-master', label, '🌟');
+        CryptoLab.showToast('🌟 ' + (lang==='en'?'Badge unlocked':'Badge débloqué') + ' : <u>'+label+'</u> !');
+      }
+    });
+  </script>
+</body>
+</html>

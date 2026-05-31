@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cryptographie quantique — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🔬</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1984 · Bennett & Brassard</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Cryptographie quantique — BB84</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="QKD">QKD</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Polarized photons">Photons polarisés</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Advanced">Avancé</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Quantum cryptography</strong> doesn't aim to <em>resist</em> quantum computers — that's the role of <em>post</em>-quantum cryptography. It directly uses the <strong>laws of quantum physics</strong> (no-cloning, measurement disturbance) to guarantee security, theoretically unconditionally.">
+        La <strong>cryptographie quantique</strong> ne cherche pas à <em>résister</em> aux
+        ordinateurs quantiques — c'est le rôle de la cryptographie <em>post</em>-quantique.
+        Elle utilise directement les <strong>lois de la physique quantique</strong>
+        (no-cloning, perturbation par la mesure) pour garantir la sécurité, théoriquement
+        de manière inconditionnelle.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="Its main application is <strong data-en="QKD">QKD</strong> (Quantum Key Distribution): distributing a secure symmetric key between two parties via an optical channel.">
+        Son application principale est la <strong data-en="QKD">QKD</strong> (Quantum Key Distribution) :
+        distribuer une clé symétrique sécurisée entre deux parties via un canal optique.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">⚙️ 2. BB84 — pas à pas</h2>
+      <ol class="list-decimal list-inside text-slate-300 space-y-2">
+        <li data-en="Alice generates n random bits and n random bases (+ rectilinear or × diagonal).">Alice génère n bits aléatoires et n bases aléatoires (+ rectilinéaire ou × diagonale).</li>
+        <li data-en="She encodes each bit as a photon polarization (4 possible states).">Elle encode chaque bit comme une polarisation de photon (4 états possibles).</li>
+        <li data-en="Bob measures each photon with a randomly chosen basis as well.">Bob mesure chaque photon avec une base également choisie au hasard.</li>
+        <li data-en="Alice and Bob <em>publicly</em> compare bases (not bits) and keep only positions where they match.">Alice et Bob comparent <em>publiquement</em> les bases (pas les bits) et ne gardent que les positions où elles coïncident.</li>
+        <li data-en="If Eve intercepted, measured and forwarded, she caused wave function collapse in ~25% of cases → a sample of compared bits reveals her presence.">Si Eve a intercepté, mesuré et renvoyé, elle a forcé l'effondrement de la fonction d'onde dans ~25% des cas → un échantillon de bits comparés révèle sa présence.</li>
+      </ol>
+    </section>
+
+    <section id="e91">
+      <h2 class="text-2xl font-bold mb-4">🧮 3. Variante E91 (Ekert, 1991)</h2>
+      <p class="text-slate-300 mb-3" data-en="Instead of polarizing photons, we generate <strong>entangled</strong> pairs shared between Alice and Bob. Security rests on violating <strong>Bell's inequalities</strong>: if Eve listens, the quantum correlations are broken and statistically detectable.">
+        Au lieu de polariser des photons, on génère des paires <strong>intriquées</strong>
+        partagées entre Alice et Bob. La sécurité repose sur la violation des
+        <strong>inégalités de Bell</strong> : si Eve écoute, les corrélations quantiques sont
+        cassées et détectables statistiquement.
+      </p>
+      <div class="p-5 bg-brand-500/10 border border-brand-500/30 rounded-xl text-sm">
+        <strong>Théorème de non-clonage</strong> (Wootters &amp; Zurek, 1982) :
+        <code class="bg-white/5 px-2 py-0.5 rounded">∄</code> opération unitaire qui copie un état
+        quantique inconnu. C'est ce qui empêche Eve d'écouter passivement.
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🔍 4. Simulation BB84</h2>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm mb-2">Nombre de bits (n)</label>
+            <input id="bb-n" type="number" value="20" min="4" max="100" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" />
+          </div>
+          <div class="flex items-end">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input id="bb-eve" type="checkbox" class="accent-red-500" />
+              <span>👁 Eve intercepte</span>
+            </label>
+          </div>
+        </div>
+        <button id="bb-run" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="⚡ Run the protocol">⚡ Lancer le protocole</button>
+        <div id="bb-out" class="hidden space-y-3"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">💻 5. Code (simulation BB84)</h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>import random
+
+def bb84(n, eve=False):
+    a_bits  = [random.randint(0,1) for _ in range(n)]
+    a_bases = [random.choice('+x') for _ in range(n)]
+    b_bases = [random.choice('+x') for _ in range(n)]
+    b_bits = []
+    for i in range(n):
+        bit, base = a_bits[i], a_bases[i]
+        if eve:
+            e_base = random.choice('+x')
+            if e_base != base:
+                bit = random.randint(0,1)  # perturbation
+        if b_bases[i] == base:
+            b_bits.append(bit)
+        else:
+            b_bits.append(random.randint(0,1))
+    shared = [(a_bits[i], b_bits[i]) for i in range(n) if a_bases[i] == b_bases[i]]
+    errors = sum(1 for a,b in shared if a != b)
+    return shared, errors
+
+shared, errs = bb84(100, eve=True)
+print(f"Bits gardés : {len(shared)}, erreurs : {errs} → QBER {errs/len(shared)*100:.1f}%")</code></pre>
+      <pre id="code-js" class="hidden"><code>function bb84(n, eve=false) {
+  const aBits  = Array.from({length:n}, ()=> Math.random() &lt; 0.5 ? 0 : 1);
+  const aBases = Array.from({length:n}, ()=> Math.random() &lt; 0.5 ? '+' : 'x');
+  const bBases = Array.from({length:n}, ()=> Math.random() &lt; 0.5 ? '+' : 'x');
+  const bBits = [];
+
+  for (let i=0; i&lt;n; i++) {
+    let bit = aBits[i], base = aBases[i];
+    if (eve) {
+      const eBase = Math.random() &lt; 0.5 ? '+' : 'x';
+      if (eBase !== base) bit = Math.random() &lt; 0.5 ? 0 : 1;
+    }
+    bBits.push(bBases[i] === base ? bit : (Math.random() &lt; 0.5 ? 0 : 1));
+  }
+
+  const shared = [];
+  for (let i=0; i&lt;n; i++) if (aBases[i] === bBases[i]) shared.push([aBits[i], bBits[i]]);
+  const errors = shared.filter(([a,b]) => a !== b).length;
+  return { shared, errors, qber: errors / shared.length };
+}</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.realworld">🌍 6. Cas réel & limites</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Deployments">✓ Déploiements</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Chinese Micius satellite (2017) — intercontinental QKD">Satellite chinois Micius (2017) — QKD intercontinental</li>
+            <li data-en="QKD networks in Geneva, Tokyo, Vienna, Beijing">Réseaux QKD Genève, Tokyo, Vienne, Pékin</li>
+            <li data-en="ID Quantique, Toshiba — commercial products">ID Quantique, Toshiba — produits commerciaux</li>
+            <li data-en="Swiss banks, cantonal elections (Geneva)">Banques suisses, élections cantonales (Genève)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Practical limits">✗ Limites pratiques</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Limited distance (~few hundred km in fiber)">Distance limitée (~few hundred km en fibre)</li>
+            <li data-en="Requires specialized optical hardware">Nécessite matériel optique spécialisé</li>
+            <li data-en="Implementation attacks (blinded detectors)">Attaques par implémentation (détecteurs aveuglés)</li>
+            <li data-en="Doesn't replace signatures / asymmetric">Ne remplace pas signatures / asymétrique</li>
+            <li data-en="NSA &amp; ANSSI: prefer PQC over QKD">NSA & ANSSI : préfèrent la PQC à la QKD</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Blinded detectors (Makarov, 2010)">Détecteurs aveuglés (Makarov, 2010)</div>
+          <p class="text-xs text-slate-300" data-en="Eve injects a strong laser to saturate Bob's detectors → control of his measurements.">Eve injecte un laser puissant pour saturer les détecteurs de Bob → contrôle de ses mesures.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Trojan-horse attack">Trojan-horse attack</div>
+          <p class="text-xs text-slate-300" data-en="Eve illuminates Alice's device with a laser and reads the reflection to guess bases.">Eve illumine l'appareil d'Alice avec un laser et lit la réflexion pour deviner les bases.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bad post-processing (error correction)">Mauvaise post-traitement (correction d'erreur)</div>
+          <p class="text-xs text-slate-300" data-en="If error correction leaks too much, the shared secret is compromised.">Si la correction d'erreur fuit trop d'information, le secret partagé est compromis.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Classical channel authentication">Authentification du canal classique</div>
+          <p class="text-xs text-slate-300" data-en="QKD requires an authenticated classical channel — otherwise trivial MITM.">QKD nécessite un canal classique authentifié — sinon MITM trivial.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Practical cost">Coût pratique</div>
+          <p class="text-xs text-slate-300" data-en="Limited to ~few hundred km in fiber, very specialized equipment. ANSSI prefers PQC.">Limité à ~few hundred km en fibre, équipement très spécialisé. ANSSI préfère PQC.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    function bb84(n, eve) {
+      const bases = ['+','x'];
+      const aBits  = Array.from({length:n}, ()=> Math.random()<0.5?0:1);
+      const aBases = Array.from({length:n}, ()=> bases[Math.random()<0.5?0:1]);
+      const bBases = Array.from({length:n}, ()=> bases[Math.random()<0.5?0:1]);
+      const bBits = [];
+      const transmitted = [];
+      for (let i=0; i<n; i++) {
+        let bit = aBits[i];
+        const base = aBases[i];
+        if (eve) {
+          const eBase = bases[Math.random()<0.5?0:1];
+          if (eBase !== base) bit = Math.random()<0.5?0:1;
+        }
+        if (bBases[i] === base) bBits.push(bit);
+        else bBits.push(Math.random()<0.5?0:1);
+        transmitted.push(bit);
+      }
+      const sharedIdx = [];
+      for (let i=0; i<n; i++) if (aBases[i] === bBases[i]) sharedIdx.push(i);
+      const errors = sharedIdx.filter(i => aBits[i] !== bBits[i]).length;
+      return { aBits, aBases, bBases, bBits, sharedIdx, errors };
+    }
+
+    document.getElementById('bb-run').addEventListener('click', () => {
+      const n = +document.getElementById('bb-n').value;
+      const eve = document.getElementById('bb-eve').checked;
+      const r = bb84(n, eve);
+      const out = document.getElementById('bb-out');
+      out.classList.remove('hidden');
+      const cell = (v, hl) => `<td class="px-2 py-1 ${hl?'bg-emerald-500/20':''}">${v}</td>`;
+      const sharedSet = new Set(r.sharedIdx);
+      let table = `<div class="overflow-x-auto"><table class="font-mono text-xs w-full text-center">
+        <thead><tr class="text-slate-400 border-b border-white/10">
+          <th class="py-1">i</th>${r.aBits.map((_,i)=>`<th class="${sharedSet.has(i)?'text-emerald-400':''}">${i}</th>`).join('')}
+        </tr></thead><tbody>
+        <tr><td class="py-1 text-slate-400">Alice bit</td>${r.aBits.map((b,i)=>cell(b, sharedSet.has(i))).join('')}</tr>
+        <tr><td class="py-1 text-slate-400">Alice base</td>${r.aBases.map((b,i)=>cell(b, sharedSet.has(i))).join('')}</tr>
+        <tr><td class="py-1 text-slate-400">Bob base</td>${r.bBases.map((b,i)=>cell(b, sharedSet.has(i))).join('')}</tr>
+        <tr><td class="py-1 text-slate-400">Bob bit</td>${r.bBits.map((b,i)=>cell(b, sharedSet.has(i))).join('')}</tr>
+        </tbody></table></div>`;
+      const kept = r.sharedIdx.length;
+      const qber = kept ? (r.errors/kept*100).toFixed(1) : 0;
+      const verdict = eve
+        ? (r.errors > kept*0.1
+            ? `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">⚠️ QBER élevé (${qber}%) → présence d'Eve détectée. Clé rejetée.</div>`
+            : `<div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded text-amber-400">QBER faible (${qber}%) cette fois — chanceux ! Avec plus de bits, Eve serait démasquée.</div>`)
+        : `<div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded text-emerald-400">✓ QBER ≈ ${qber}% (sans intrusion). Clé partagée acceptée.</div>`;
+      out.innerHTML = `
+        ${table}
+        <div class="p-3 bg-brand-500/10 border border-brand-500/30 rounded">${kept} bits gardés (bases coïncidant) sur ${n} transmis.</div>
+        ${verdict}
+      `;
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Que distribue la QKD ?", choices:["Un message chiffré","Une clé symétrique partagée","Une signature","Un certificat"], answer:1, explain:"QKD = Quantum KEY Distribution. Le message lui-même est ensuite chiffré classiquement (one-time pad ou AES)." },
+      { q:"Quel principe physique empêche Eve d'écouter sans être détectée ?", choices:["Loi d'Ohm","Théorème de non-clonage + perturbation par la mesure","Effet Doppler","Loi de Snell"], answer:1, explain:"On ne peut copier un état quantique inconnu (Wootters-Zurek 1982). Mesurer change l'état." },
+      { q:"Vers quelle valeur tend le QBER en présence d'Eve qui mesure tout ?", choices:["0%","10%","25%","100%"], answer:2, explain:"Eve choisit la mauvaise base ½ fois, et alors introduit une erreur ½ → 25% des bits comparés ne coïncident pas." },
+      { q:"BB84 est-il vulnérable à un ordinateur quantique ?", choices:["Oui, comme RSA","Non — la sécurité est information-théorique","Seulement avec 1000 qubits","Cela dépend de la marque"], answer:1, explain:"Sa sécurité repose sur la physique, pas sur la complexité calculatoire. Aucun ordinateur classique ou quantique ne peut la contourner." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('qc',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('qc-master')){CryptoLab.earnBadge('qc-master','Explorateur Quantique','🔬');CryptoLab.showToast('🔬 Badge débloqué : <u>Explorateur Quantique</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

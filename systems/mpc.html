@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MPC & Shamir Secret Sharing — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🤖</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1979 · Shamir</div>
+        <h1 class="text-4xl md:text-5xl font-bold">MPC & partage de secret de Shamir</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Multi-party">Multi-parties</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Threshold (t, n)">Seuil (t, n)</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Intermediate">Intermédiaire</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Secure multi-party computation (MPC)</strong> lets multiple participants jointly compute a function on their private inputs without revealing them to each other. The fundamental building block is <strong>threshold secret sharing</strong> published by Adi <strong>Shamir</strong> in 1979.">
+        Le <strong>calcul multi-parties sécurisé (MPC)</strong> permet à plusieurs
+        participants de calculer une fonction sur leurs entrées privées sans révéler ces
+        entrées les uns aux autres. La brique fondamentale est le <strong>partage de
+        secret à seuil</strong> publié par Adi <strong>Shamir</strong> en 1979.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="<strong>(t, n)</strong> scheme: a secret S is split into <em>n</em> shares. <em>t</em> shares suffice to reconstruct S. <em>t−1</em> shares reveal <strong>no information</strong> about S (perfect, information-theoretic security).">
+        Schéma <strong>(t, n)</strong> : un secret S est divisé en <em>n</em> parts.
+        <em>t</em> parts suffisent pour reconstruire S. <em>t−1</em> parts ne révèlent
+        <strong>aucune information</strong> sur S (sécurité parfaite, information-théorique).
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">⚙️ 2. Principe — polynômes</h2>
+      <p class="text-slate-300 mb-4" data-en="The dealer chooses a random polynomial of degree <strong>t−1</strong> whose constant term is the secret:">Le dealer choisit un polynôme aléatoire de degré <strong>t−1</strong> dont le terme constant est le secret :</p>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl">
+        <div class="text-center font-mono text-brand-500">P(x) = S + a₁·x + a₂·x² + … + a<sub>t−1</sub>·x<sup>t−1</sup>  (mod p)</div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4">
+        Les parts distribuées sont (1, P(1)), (2, P(2)), …, (n, P(n)). Tout polynôme de
+        degré t−1 est uniquement déterminé par t points : <strong>interpolation de Lagrange</strong>
+        retrouve S = P(0).
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🧮 3. Interpolation de Lagrange</h2>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl">
+        <div class="text-center font-mono text-brand-500">S = P(0) = Σ y<sub>i</sub> · L<sub>i</sub>(0)</div>
+        <div class="text-center font-mono text-emerald-400 mt-2">L<sub>i</sub>(0) = Π<sub>j ≠ i</sub> (−x<sub>j</sub>) / (x<sub>i</sub> − x<sub>j</sub>)</div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4">Tout est calculé modulo un grand premier <em>p</em> pour rester dans un corps fini.</p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🔍 4. Simulation Shamir (t, n)</h2>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div class="grid md:grid-cols-4 gap-3 text-sm">
+          <div><label class="block text-xs mb-1">Secret S</label><input id="sh-s" value="1234" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+          <div><label class="block text-xs mb-1">n (parts)</label><input id="sh-n" value="5" type="number" min="2" max="10" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+          <div><label class="block text-xs mb-1">t (seuil)</label><input id="sh-t" value="3" type="number" min="2" max="10" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+          <div><label class="block text-xs mb-1">p (premier)</label><input id="sh-p" value="100003" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+        </div>
+        <button id="sh-split" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="✂️ Split the secret">✂️ Découper le secret</button>
+        <div id="sh-shares" class="hidden space-y-2"></div>
+        <div id="sh-reconstruct" class="hidden border-t border-white/10 pt-5 space-y-3">
+          <div class="text-sm text-slate-400">Coche au moins <span id="sh-need">t</span> parts pour reconstruire :</div>
+          <div id="sh-checks" class="space-y-1 font-mono text-sm"></div>
+          <button id="sh-rec" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg" data-en="🔓 Reconstruct (Lagrange)">🔓 Reconstruire (Lagrange)</button>
+          <div id="sh-out" class="hidden p-3 font-mono text-sm rounded"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>import random
+
+def split(secret, n, t, p):
+    coeffs = [secret] + [random.randint(0, p-1) for _ in range(t-1)]
+    return [(i, sum(c * pow(i, k, p) for k, c in enumerate(coeffs)) % p)
+            for i in range(1, n+1)]
+
+def reconstruct(shares, p):
+    secret = 0
+    for j, (xj, yj) in enumerate(shares):
+        num, den = 1, 1
+        for k, (xk, _) in enumerate(shares):
+            if k != j:
+                num = (num * (-xk)) % p
+                den = (den * (xj - xk)) % p
+        secret = (secret + yj * num * pow(den, -1, p)) % p
+    return secret
+
+shares = split(1234, n=5, t=3, p=100003)
+print(reconstruct(shares[:3], 100003))   # 1234</code></pre>
+      <pre id="code-js" class="hidden"><code>function modinv(a, p) {
+  let [or, r] = [((a % p) + p) % p, p], [os, s] = [1n, 0n];
+  while (r) { const q = or / r; [or, r] = [r, or - q*r]; [os, s] = [s, os - q*s]; }
+  return ((os % p) + p) % p;
+}
+function modpow(b, e, m) { let r=1n; b=((b%m)+m)%m; while(e>0n){if(e&amp;1n)r=(r*b)%m;e>>=1n;b=(b*b)%m;} return r; }
+
+function split(secret, n, t, p) {
+  const coeffs = [secret];
+  for (let i=1; i&lt;t; i++) coeffs.push(BigInt(Math.floor(Math.random()*Number(p))));
+  const shares = [];
+  for (let i=1n; i&lt;=BigInt(n); i++) {
+    let y = 0n;
+    for (let k=0; k&lt;t; k++) y = (y + coeffs[k] * modpow(i, BigInt(k), p)) % p;
+    shares.push([i, y]);
+  }
+  return shares;
+}
+
+function reconstruct(shares, p) {
+  let secret = 0n;
+  for (let j=0; j&lt;shares.length; j++) {
+    const [xj, yj] = shares[j];
+    let num = 1n, den = 1n;
+    for (let k=0; k&lt;shares.length; k++) if (k !== j) {
+      num = (num * (-shares[k][0] + p*100n)) % p;
+      den = (den * ((xj - shares[k][0] + p*100n) % p)) % p;
+    }
+    secret = (secret + yj * num % p * modinv(den, p)) % p;
+  }
+  return secret;
+}</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🌍 6. Cas réel</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Use cases">✓ Usages</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="MPC wallets (Fireblocks, Coinbase Custody)">Wallets MPC (Fireblocks, Coinbase Custody)</li>
+            <li data-en="FROST threshold signatures (Bitcoin)">Signatures à seuil FROST (Bitcoin)</li>
+            <li data-en="Trusted setup ceremonies (Zcash)">Cérémonies trusted setup (Zcash)</li>
+            <li data-en="Key recovery (SSSS, Trezor Shamir Backup)">Récupération de clé (SSSS, Trezor Shamir Backup)</li>
+            <li data-en="Enterprise vaults (Vault, HashiCorp)">Coffres-forts d'entreprise (Vault, HashiCorp)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Pitfalls">✗ Pièges</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Bad RNG → predictable coefficients">Mauvais générateur d'aléa → coefficients prévisibles</li>
+            <li data-en="Without authentication, shares can be forged (VSS, PVSS solve this)">Sans authentification, les parts peuvent être falsifiées (VSS, PVSS résolvent)</li>
+            <li data-en="Full MPC has high communication cost">MPC complet a un coût communication élevé</li>
+            <li data-en="Wrong t/n choice (too low → fragility, too high → availability)">Définir t/n incorrect (trop bas → fragilité, trop haut → dispo)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Unauthenticated shares">Parts non authentifiées</div>
+          <p class="text-xs text-slate-300" data-en="Without VSS/PVSS, a malicious dealer can give inconsistent shares → bad reconstruction.">Sans VSS/PVSS, un dealer malveillant peut donner des parts incohérentes → mauvaise reconstruction.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bad randomness for coefficients">Mauvaise aléa pour les coefficients</div>
+          <p class="text-xs text-slate-300" data-en="If a_i are predictable, polynomial is too → secret guessed with fewer than t shares.">Si les a_i sont prévisibles, le polynôme l'est aussi → secret deviné avec moins de t parts.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Side-channel on reconstruction">Side-channel sur la reconstruction</div>
+          <p class="text-xs text-slate-300" data-en="Timing reveals which shares were used.">Timing révèle quelles parts ont été utilisées.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bad t/n choice">t/n mal choisi</div>
+          <p class="text-xs text-slate-300" data-en="t too low = fragility (single-node compromise), t too high = availability threatened.">t trop bas = fragilité (compromis d'un seul nœud), t trop haut = disponibilité menacée.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Byzantine attack on MPC">Attaque Byzantine sur MPC</div>
+          <p class="text-xs text-slate-300" data-en="Dishonest participants can bias the result without robust MPC (SPDZ, BGW).">Participants malhonnêtes peuvent biaiser le résultat sans MPC robuste (SPDZ, BGW).</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    function modinv(a, p) {
+      let [or, r] = [((a % p) + p) % p, p], [os, s] = [1n, 0n];
+      while (r) { const q = or / r; [or, r] = [r, or - q*r]; [os, s] = [s, os - q*s]; }
+      return ((os % p) + p) % p;
+    }
+    function modpow(b, e, m) { let r=1n; b=((b%m)+m)%m; while(e>0n){if(e&1n)r=(r*b)%m;e>>=1n;b=(b*b)%m;} return r; }
+    function randBig(p) { return BigInt(Math.floor(Math.random()*Number(p < 1000000n ? p : 1000000n))); }
+
+    let allShares = null, p_global = 0n, t_global = 0;
+
+    document.getElementById('sh-split').addEventListener('click', () => {
+      try {
+        const secret = BigInt(document.getElementById('sh-s').value);
+        const n = +document.getElementById('sh-n').value;
+        const t = +document.getElementById('sh-t').value;
+        const p = BigInt(document.getElementById('sh-p').value);
+        if (t > n) throw new Error('t doit être ≤ n');
+        if (secret >= p) throw new Error('secret doit être < p');
+        const coeffs = [secret];
+        for (let i=1; i<t; i++) coeffs.push(randBig(p));
+        const shares = [];
+        for (let i=1n; i<=BigInt(n); i++) {
+          let y = 0n;
+          for (let k=0; k<t; k++) y = (y + coeffs[k] * modpow(i, BigInt(k), p)) % p;
+          shares.push([i, y]);
+        }
+        allShares = shares; p_global = p; t_global = t;
+
+        const sharesDiv = document.getElementById('sh-shares');
+        sharesDiv.classList.remove('hidden');
+        sharesDiv.innerHTML = `<div class="text-sm text-slate-400 mb-2">Polynôme (degré ${t-1}) : P(x) = ${coeffs.map((c,i)=> i===0?c:`${c}·x^${i}`).join(' + ')}  (mod ${p})</div>` +
+          shares.map(([x,y]) =>
+            `<div class="p-3 bg-ink-900 border border-white/10 rounded font-mono text-sm">Part #${x} : (x=${x}, y=${y})</div>`).join('');
+
+        const recDiv = document.getElementById('sh-reconstruct');
+        recDiv.classList.remove('hidden');
+        document.getElementById('sh-need').textContent = t;
+        const checks = document.getElementById('sh-checks');
+        checks.innerHTML = shares.map(([x,y],i) =>
+          `<label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="sh-cb accent-brand-500" data-i="${i}"/><span>Part #${x} → (${x}, ${y})</span></label>`).join('');
+      } catch(e) {
+        document.getElementById('sh-shares').classList.remove('hidden');
+        document.getElementById('sh-shares').innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">❌ ${e.message}</div>`;
+      }
+    });
+
+    document.getElementById('sh-rec').addEventListener('click', () => {
+      const out = document.getElementById('sh-out');
+      out.classList.remove('hidden');
+      const selected = [...document.querySelectorAll('.sh-cb:checked')].map(cb => allShares[+cb.dataset.i]);
+      if (selected.length < t_global) {
+        out.className = 'p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400 font-mono text-sm';
+        out.textContent = `Pas assez de parts (${selected.length} < t=${t_global}).`;
+        return;
+      }
+      const p = p_global;
+      let secret = 0n;
+      for (let j=0; j<selected.length; j++) {
+        const [xj, yj] = selected[j];
+        let num = 1n, den = 1n;
+        for (let k=0; k<selected.length; k++) if (k !== j) {
+          num = (num * ((-selected[k][0] + p*100n) % p)) % p;
+          den = (den * ((xj - selected[k][0] + p*100n) % p)) % p;
+        }
+        secret = (secret + yj * num % p * modinv(den, p)) % p;
+      }
+      out.className = 'p-3 bg-emerald-500/10 border border-emerald-500/30 rounded text-emerald-400 font-mono text-sm';
+      out.textContent = `S = ${secret}  (à partir de ${selected.length} parts)`;
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Dans un schéma Shamir (t, n), combien de parts suffisent pour retrouver S ?", choices:["1","n","t","Toutes"], answer:2, explain:"t parts suffisent. C'est tout l'intérêt du « seuil »." },
+      { q:"Combien de parts t−1 révèlent-elles sur S ?", choices:["50%","Rien (sécurité parfaite)","Tout","Cela dépend de p"], answer:1, explain:"Sécurité information-théorique : t−1 parts définissent une infinité de polynômes valides." },
+      { q:"Quel outil mathématique reconstruit le secret ?", choices:["Transformée de Fourier","Interpolation de Lagrange","Factorisation","Gradient descent"], answer:1, explain:"Lagrange retrouve P(0) à partir de t points (x_i, y_i)." },
+      { q:"Quel usage moderne s'appuie sur le partage de secret à seuil ?", choices:["Wi-Fi","Wallets MPC, signatures à seuil (FROST), trusted setups","Compression vidéo","DNS"], answer:1, explain:"Coinbase, Fireblocks, Zcash, Bitcoin Taproot — partout où aucun acteur seul ne doit détenir la clé." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('mpc',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('mpc-master')){CryptoLab.earnBadge('mpc-master','Architecte MPC','🤖');CryptoLab.showToast('🤖 Badge débloqué : <u>Architecte MPC</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

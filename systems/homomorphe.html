@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chiffrement homomorphe — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🧮</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1978 → 2009</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Chiffrement homomorphe</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Computation on ciphertext">Calcul sur chiffré</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="PHE · SHE · FHE">PHE · SHE · FHE</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Advanced">Avancé</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Homomorphic encryption</strong> allows computations <em>directly on encrypted data</em>, without ever decrypting. The result, once decrypted, is identical to what you'd get on the plaintext.">
+        Le <strong>chiffrement homomorphe</strong> permet de réaliser des calculs <em>directement
+        sur des données chiffrées</em>, sans jamais les déchiffrer. Le résultat, une fois déchiffré,
+        est identique à celui qu'on aurait obtenu sur les données en clair.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="It's the ultimate tool for <strong>confidential cloud computing</strong> and <strong>privacy-preserving machine learning</strong>.">C'est l'outil ultime du <strong>cloud computing confidentiel</strong> et du <strong>machine learning préservant la vie privée</strong>.</p>
+      <div class="mt-5 grid sm:grid-cols-3 gap-3">
+        <div class="p-4 bg-emerald-500/5 border border-emerald-500/30 rounded-lg"><div class="font-semibold text-emerald-400">PHE</div><div class="text-xs text-slate-400 mt-1" data-en="Partial — ONE operation (+ or ×)">Partiel — UNE opération (+ ou ×)</div><div class="text-xs mt-1">RSA, ElGamal, Paillier</div></div>
+        <div class="p-4 bg-amber-500/5 border border-amber-500/30 rounded-lg"><div class="font-semibold text-amber-400">SHE</div><div class="text-xs text-slate-400 mt-1" data-en="Few operations (limited depth)">Quelques opérations (profondeur limitée)</div><div class="text-xs mt-1">BGV, BFV</div></div>
+        <div class="p-4 bg-brand-500/5 border border-brand-500/30 rounded-lg"><div class="font-semibold text-brand-500">FHE</div><div class="text-xs text-slate-400 mt-1" data-en="Fully — all operations">Pleinement — toutes opérations</div><div class="text-xs mt-1">Gentry 2009 · CKKS · TFHE</div></div>
+      </div>
+    </section>
+
+    <section id="paillier">
+      <h2 class="text-2xl font-bold mb-4">⚙️ 2. Le cryptosystème de Paillier (1999)</h2>
+      <p class="text-slate-300 mb-4" data-en="Paillier is <strong>additively homomorphic</strong>: multiplying two ciphertexts gives the ciphertext of the sum of plaintexts.">Paillier est <strong>additivement homomorphe</strong> : multiplier deux chiffrés donne le chiffré de la somme des clairs.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl font-mono text-center">
+        <div class="text-emerald-400">E(m₁) · E(m₂) mod n² &nbsp; = &nbsp; E(m₁ + m₂)</div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🧮 3. Mathématiques de Paillier</h2>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl space-y-2">
+        <div class="font-mono text-brand-500">Clés : choisir p, q premiers · n = p·q · λ = lcm(p−1, q−1)</div>
+        <div class="font-mono text-brand-500">g = n + 1 (générateur simple valable) · μ = λ⁻¹ mod n</div>
+        <div class="font-mono text-emerald-400 pt-2">E(m) = g<sup>m</sup> · r<sup>n</sup> mod n²  &nbsp; (r aléatoire)</div>
+        <div class="font-mono text-amber-400">D(c) = L(c<sup>λ</sup> mod n²) · μ mod n  &nbsp; avec L(x) = (x−1)/n</div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4">
+        Sécurité = problème de résiduosité composite (lié à la factorisation de n).
+        Notez la composante aléatoire <em>r</em> : Paillier est <strong>probabiliste</strong>
+        (même message → chiffrés différents).
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🔍 4. Simulation Paillier</h2>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div><label class="block text-sm mb-2">p</label><input id="pa-p" value="7" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+          <div><label class="block text-sm mb-2">q</label><input id="pa-q" value="11" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" /></div>
+        </div>
+        <button id="pa-gen" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="🔑 Generate keys">🔑 Générer les clés</button>
+        <div id="pa-keys" class="hidden text-sm font-mono space-y-2"></div>
+        <div class="border-t border-white/10 pt-5 grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm mb-2">m₁</label>
+            <input id="pa-m1" value="15" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" />
+          </div>
+          <div>
+            <label class="block text-sm mb-2">m₂</label>
+            <input id="pa-m2" value="22" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" />
+          </div>
+        </div>
+        <button id="pa-add" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg" data-en="🧮 Encrypt + homomorphic sum + decrypt">🧮 Chiffrer + somme homomorphe + déchiffrer</button>
+        <div id="pa-out" class="hidden text-sm font-mono space-y-2"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># pip install phe
+from phe import paillier
+
+pub, priv = paillier.generate_paillier_keypair(n_length=2048)
+
+c1 = pub.encrypt(15)
+c2 = pub.encrypt(22)
+
+c_sum = c1 + c2          # opération SUR LE CHIFFRÉ
+print(priv.decrypt(c_sum))   # 37 ✓
+
+c_scaled = c1 * 10       # multiplication par constante OK aussi
+print(priv.decrypt(c_scaled))  # 150</code></pre>
+      <pre id="code-js" class="hidden"><code>function modpow(b,e,m){let r=1n;b=((b%m)+m)%m;while(e>0n){if(e&amp;1n)r=(r*b)%m;e>>=1n;b=(b*b)%m;}return r;}
+function modinv(a,m){let [or,r]=[((a%m)+m)%m,m],[os,s]=[1n,0n];while(r){const q=or/r;[or,r]=[r,or-q*r];[os,s]=[s,os-q*s];}return ((os%m)+m)%m;}
+const lcm = (a,b) => { const g=(x,y)=>{while(y){[x,y]=[y,x%y];}return x;}; return a*b/g(a,b); };
+
+function paillierKeys(p, q) {
+  const n = p*q, n2 = n*n;
+  const lambda = lcm(p-1n, q-1n);
+  const g = n + 1n;
+  // L(u) = (u-1)/n ; mu = (L(g^λ mod n²))⁻¹ mod n
+  const mu = modinv((modpow(g, lambda, n2) - 1n) / n, n);
+  return { pub: {n, g, n2}, priv: {lambda, mu, n} };
+}
+
+function encrypt(pub, m, r) {
+  return (modpow(pub.g, m, pub.n2) * modpow(r, pub.n, pub.n2)) % pub.n2;
+}
+function decrypt(priv, c) {
+  const n2 = priv.n * priv.n;
+  return ((modpow(c, priv.lambda, n2) - 1n) / priv.n * priv.mu) % priv.n;
+}
+// Homomorphisme additif
+const sumCipher = (pub, c1, c2) => (c1 * c2) % pub.n2;</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.realworld">🌍 6. Cas réel & limites</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Use cases">✓ Cas d'usage</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Verifiable electronic voting (Helios)">Vote électronique vérifiable (Helios)</li>
+            <li data-en="ML inference on private data (CKKS)">Inférence ML sur données privées (CKKS)</li>
+            <li data-en="Multi-center medical studies">Études médicales multi-centres</li>
+            <li data-en="Cloud where the provider doesn't see the data">Cloud où le fournisseur ne voit pas les données</li>
+            <li data-en="Apple Private Compute Cloud (2024+)">Apple Private Compute Cloud (2024+)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Limits">✗ Limites</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Pure FHE: 100× to 10000× slower than plaintext">FHE pur : 100× à 10000× plus lent que clair</li>
+            <li data-en="Noise growth → expensive bootstrapping">Croissance du bruit → bootstrapping coûteux</li>
+            <li data-en="Large ciphertexts (MB or GB per value)">Chiffrés volumineux (Mo voire Go par valeur)</li>
+            <li data-en="Complex libraries (Microsoft SEAL, OpenFHE, Concrete)">Bibliothèques complexes (Microsoft SEAL, OpenFHE, Concrete)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Noise growth (SHE)">Croissance du bruit (SHE)</div>
+          <p class="text-xs text-slate-300" data-en="Past a multiplicative depth, noise corrupts decryption.">Au-delà d'une profondeur de multiplications, le bruit corrompt le déchiffrement.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Expensive bootstrapping (FHE)">Bootstrapping coûteux (FHE)</div>
+          <p class="text-xs text-slate-300" data-en="Noise reset: ~seconds per encrypted-data operation.">Réinitialisation du bruit : ~secondes par opération sur des données chiffrées.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Specific schemes (RSA/Paillier multiplied)">Schémas spécifiques (RSA/Paillier multipliés)</div>
+          <p class="text-xs text-slate-300" data-en="Not IND-CCA → wrap in AEAD mode if possible.">Pas IND-CCA → manipuler en mode AEAD si possible.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Side-channel on decryption">Side-channel sur le décrypt</div>
+          <p class="text-xs text-slate-300" data-en="Timing/cache attack the private key like in classical asymmetric.">Timing/cache attaquent la clé privée de la même façon qu'en asymétrique classique.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    function modpow(b,e,m){let r=1n;b=((b%m)+m)%m;while(e>0n){if(e&1n)r=(r*b)%m;e>>=1n;b=(b*b)%m;}return r;}
+    function modinv(a,m){let [or,r]=[((a%m)+m)%m,m],[os,s]=[1n,0n];while(r){const q=or/r;[or,r]=[r,or-q*r];[os,s]=[s,os-q*s];}return ((os%m)+m)%m;}
+    function gcd(a,b){while(b){[a,b]=[b,a%b];}return a;}
+    const lcm = (a,b) => a*b/gcd(a,b);
+    function randCoprime(n){let r;do{r=BigInt(Math.floor(Math.random()*Number(n-1n))+1);}while(gcd(r,n)!==1n);return r;}
+
+    let keys = null;
+    document.getElementById('pa-gen').addEventListener('click', () => {
+      const out = document.getElementById('pa-keys');
+      try {
+        const p = BigInt(document.getElementById('pa-p').value);
+        const q = BigInt(document.getElementById('pa-q').value);
+        if (p === q) throw new Error('p ≠ q requis');
+        const n = p*q, n2 = n*n;
+        const lambda = lcm(p-1n, q-1n);
+        const g = n + 1n;
+        const u = modpow(g, lambda, n2);
+        const mu = modinv((u - 1n) / n, n);
+        keys = { pub:{n,g,n2}, priv:{lambda, mu, n} };
+        out.classList.remove('hidden');
+        out.innerHTML = `
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">n = ${n}, n² = ${n2}</div>
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">λ = lcm(p−1, q−1) = ${lambda}</div>
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">μ = ${mu}</div>
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded">🔓 Clé publique : (n=${n}, g=${g})</div>
+          <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded">🔐 Clé privée : (λ=${lambda}, μ=${mu})</div>
+        `;
+      } catch(e){
+        out.classList.remove('hidden');
+        out.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">❌ ${e.message}</div>`;
+      }
+    });
+
+    document.getElementById('pa-add').addEventListener('click', () => {
+      const out = document.getElementById('pa-out');
+      out.classList.remove('hidden');
+      if (!keys) { out.innerHTML = `<div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded text-amber-400">Génère d'abord les clés.</div>`; return; }
+      try {
+        const m1 = BigInt(document.getElementById('pa-m1').value);
+        const m2 = BigInt(document.getElementById('pa-m2').value);
+        if (m1 >= keys.pub.n || m2 >= keys.pub.n) throw new Error(`m doit être < n (${keys.pub.n})`);
+        const r1 = randCoprime(keys.pub.n);
+        const r2 = randCoprime(keys.pub.n);
+        const c1 = (modpow(keys.pub.g, m1, keys.pub.n2) * modpow(r1, keys.pub.n, keys.pub.n2)) % keys.pub.n2;
+        const c2 = (modpow(keys.pub.g, m2, keys.pub.n2) * modpow(r2, keys.pub.n, keys.pub.n2)) % keys.pub.n2;
+        const cSum = (c1 * c2) % keys.pub.n2;
+        const dec = ((modpow(cSum, keys.priv.lambda, keys.pub.n2) - 1n) / keys.priv.n * keys.priv.mu) % keys.priv.n;
+        out.innerHTML = `
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">E(${m1}) = ${c1}</div>
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">E(${m2}) = ${c2}</div>
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded">E(m₁) × E(m₂) mod n² = ${cSum}</div>
+          <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded">Déchiffré = ${dec} ${dec===m1+m2?'✓ = '+m1+'+'+m2:''}</div>
+        `;
+      } catch(e){
+        out.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">❌ ${e.message}</div>`;
+      }
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Que permet le chiffrement homomorphe ?", choices:["Compresser les données","Calculer sur des données chiffrées sans les déchiffrer","Hasher plus vite","Échanger une clé"], answer:1, explain:"On obtient E(f(m)) à partir de E(m) sans jamais accéder à m." },
+      { q:"Paillier est-il additivement ou multiplicativement homomorphe ?", choices:["Multiplicatif","Additif","Aucun","Les deux"], answer:1, explain:"E(m₁)·E(m₂) mod n² = E(m₁+m₂). Idéal pour additions sur chiffrés." },
+      { q:"Qui a démontré la faisabilité du FHE en 2009 ?", choices:["Adi Shamir","Craig Gentry","Whitfield Diffie","Manuel Blum"], answer:1, explain:"Gentry a publié le premier schéma FHE avec bootstrapping." },
+      { q:"Quel est un cas d'usage typique du chiffrement homomorphe ?", choices:["Compression vidéo","Vote électronique vérifiable","Backup quotidien","Pare-feu"], answer:1, explain:"On somme les bulletins chiffrés sans révéler aucun vote individuel." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('he',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('he-master')){CryptoLab.earnBadge('he-master','Alchimiste Homomorphe','🧮');CryptoLab.showToast('🧮 Badge débloqué : <u>Alchimiste Homomorphe</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

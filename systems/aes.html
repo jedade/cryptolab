@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AES — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🛡️</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">2001 · NIST</div>
+        <h1 class="text-4xl md:text-5xl font-bold">AES — Advanced Encryption Standard</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Symmetric">Symétrique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Block cipher">Chiffrement par blocs</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="World standard">Standard mondial</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1">Inventeurs (Rijndael)</div><div class="font-semibold">Joan Daemen & Vincent Rijmen</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Standardization">Standardisation</div><div class="font-semibold" data-en="2001 (FIPS 197)">2001 (FIPS 197)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Type">Type</div><div class="font-semibold" data-en="128-bit blocks · 128/192/256 keys">Blocs 128 bits · clés 128/192/256</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>AES</strong> is the world's symmetric encryption standard. It was selected by NIST after a public competition (1997–2000) to replace DES. The winning candidate, <em>Rijndael</em>, is fast in both software and hardware (AES-NI instruction set on all modern CPUs), and has resisted every known attack for 25 years.">
+        <strong>AES</strong> est le standard mondial de chiffrement symétrique. Il a été
+        sélectionné par le NIST après une compétition publique (1997–2000) pour remplacer
+        DES. Le candidat gagnant, <em>Rijndael</em>, est rapide en logiciel comme en matériel
+        (jeu d'instructions AES-NI sur tous les CPU modernes), et résiste à toutes les
+        attaques connues depuis 25 ans.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <p class="text-slate-300 mb-4" data-en="AES encrypts 128-bit blocks via 10, 12 or 14 <em>rounds</em> depending on key size. Each round applies 4 transformations on a 4×4-byte state:">AES chiffre des blocs de 128 bits via 10, 12 ou 14 <em>rounds</em> selon la taille de clé. Chaque round applique 4 transformations sur un état 4×4 octets :</p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-2xl mb-2">🔀</div>
+          <div class="font-semibold mb-1">SubBytes</div>
+          <p class="text-xs text-slate-400">Substitution non-linéaire octet par octet via la S-box (inverse dans GF(2⁸)).</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-2xl mb-2">↔️</div>
+          <div class="font-semibold mb-1">ShiftRows</div>
+          <p class="text-xs text-slate-400">Décalage cyclique des lignes : 0, 1, 2, 3 positions.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-2xl mb-2">🧮</div>
+          <div class="font-semibold mb-1">MixColumns</div>
+          <p class="text-xs text-slate-400">Mélange linéaire de chaque colonne via une matrice MDS dans GF(2⁸).</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-2xl mb-2">🔑</div>
+          <div class="font-semibold mb-1">AddRoundKey</div>
+          <p class="text-xs text-slate-400">XOR avec la sous-clé du round (dérivée par le KeySchedule).</p>
+        </div>
+      </div>
+      <p class="text-slate-400 text-sm mt-4" data-en="The last round omits MixColumns. The key is expanded into subkeys by the <em>key schedule</em>.">Le dernier round omet MixColumns. La clé est étendue en sous-clés par le <em>key schedule</em>.</p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🧮 3. Mathématiques — GF(2⁸)</h2>
+      <p class="text-slate-300 mb-3" data-en="All internal computations happen in the <strong>Galois field GF(2⁸)</strong>, i.e. polynomials of degree ≤ 7 with coefficients in {0, 1}, modulo the irreducible polynomial:">Tous les calculs internes se font dans le <strong>corps de Galois GF(2⁸)</strong>, c'est-à-dire les polynômes de degré ≤ 7 à coefficients dans {0, 1}, modulo le polynôme irréductible :</p>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl text-center">
+        <div class="font-mono text-brand-500 text-lg">x⁸ + x⁴ + x³ + x + 1</div>
+        <div class="text-xs text-slate-400 mt-2">(0x11B en hexadécimal)</div>
+      </div>
+      <p class="text-slate-400 text-sm mt-4" data-en="The S-box is the multiplicative inverse in GF(2⁸) followed by an affine transformation. MixColumns multiplies each column by a fixed matrix in the same field.">La S-box est l'inverse multiplicatif dans GF(2⁸) suivi d'une transformation affine. MixColumns multiplie chaque colonne par une matrice fixe dans ce même corps.</p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🔍 4. Simulation interactive (Web Crypto API)</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Real encryption via <code>window.crypto.subtle</code> + PBKDF2 (100,000 iterations) + AES-GCM 256.">Chiffrement réel via <code>window.crypto.subtle</code> + PBKDF2 (100 000 itérations) + AES-GCM 256.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Password">Mot de passe</label>
+          <input id="aes-pwd" type="text" value="cryptolab2026" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Plaintext">Texte clair</label>
+          <textarea id="aes-pt" rows="2" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg focus:border-brand-500 focus:outline-none">Message secret à protéger.</textarea>
+        </div>
+        <div class="flex gap-3">
+          <button id="aes-enc" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="🔒 Encrypt (AES-GCM 256)">🔒 Chiffrer (AES-GCM 256)</button>
+          <button id="aes-dec" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg"><span data-i18n="detail.decrypt" data-en="🔓 Decrypt">🔓 Déchiffrer</span></button>
+        </div>
+        <div id="aes-out" class="hidden space-y-2 text-sm font-mono"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># pip install cryptography
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+import os
+
+key = AESGCM.generate_key(bit_length=256)  # 32 octets
+nonce = os.urandom(12)                     # 96 bits recommandés pour GCM
+aead = AESGCM(key)
+
+ct = aead.encrypt(nonce, b"Hello AES", associated_data=b"meta")
+pt = aead.decrypt(nonce, ct, associated_data=b"meta")
+print(pt)  # b"Hello AES"
+
+# Variante haut niveau : Fernet (AES-CBC + HMAC, gestion clé incluse)
+from cryptography.fernet import Fernet
+f = Fernet(Fernet.generate_key())
+token = f.encrypt(b"Secret")
+print(f.decrypt(token))</code></pre>
+      <pre id="code-js" class="hidden"><code>async function aesEncrypt(password, plaintext) {
+  const enc = new TextEncoder();
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+
+  const baseKey = await crypto.subtle.importKey(
+    'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt, iterations:100000, hash:'SHA-256'},
+    baseKey, {name:'AES-GCM', length:256}, false, ['encrypt']);
+
+  const ct = await crypto.subtle.encrypt(
+    {name:'AES-GCM', iv}, key, enc.encode(plaintext));
+  return { salt, iv, ct: new Uint8Array(ct) };
+}</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.realworld">🌍 6. Cas réel & limites</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Ubiquitous">✓ Omniprésent</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="TLS 1.3 (AES-GCM), Wi-Fi (WPA2/WPA3)">TLS 1.3 (AES-GCM), Wi-Fi (WPA2/WPA3)</li>
+            <li data-en="Encrypted disks: FileVault, BitLocker, LUKS">Disques chiffrés : FileVault, BitLocker, LUKS</li>
+            <li data-en="VPN (IPsec, OpenVPN), SSH">VPN (IPsec, OpenVPN), SSH</li>
+            <li data-en="Messaging (Signal, WhatsApp) — under the hood">Messageries (Signal, WhatsApp) — sous le capot</li>
+            <li data-en="NSA-approved up to TOP SECRET (256 bits)">Approuvé NSA jusqu'au TOP SECRET (256 bits)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Implementation pitfalls">✗ Pièges d'implémentation</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="<strong>ECB</strong>: absolutely avoid (the penguin image)"><strong>ECB</strong> : à fuir absolument (l'image du pingouin)</li>
+            <li data-en="IV/nonce reuse in GCM = catastrophe (key recovery)">Réutilisation d'IV/nonce en GCM = catastrophe (récupération clé)</li>
+            <li data-en="Side-channel attacks (timing, cache)">Attaques par canal auxiliaire (timing, cache)</li>
+            <li data-en="Grover halves security → prefer AES-256 post-quantum">Grover divise la sécurité par 2 → préférer AES-256 post-quantique</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Nonce reuse in GCM">Réutilisation de nonce en GCM</div>
+          <p class="text-xs text-slate-300" data-en="Forbidden Attack (Joux 2016) → authentication key recovery.">Forbidden Attack (Joux 2016) → récupération de la clé d'authentification.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="ECB mode (the Tux penguin)">Mode ECB (le pingouin Tux)</div>
+          <p class="text-xs text-slate-300" data-en="Visible patterns in ciphertext: NEVER use for structured data.">Patterns visibles dans le chiffré : à NE JAMAIS utiliser pour des données structurées.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Padding oracle (CBC without MAC)">Padding oracle (CBC sans MAC)</div>
+          <p class="text-xs text-slate-300" data-en="POODLE (2014), Lucky13 — byte-by-byte decryption via server responses.">POODLE (2014), Lucky13 — déchiffrement octet par octet via réponses serveur.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Cache-timing on software AES">Cache-timing sur AES software</div>
+          <p class="text-xs text-slate-300" data-en="Bernstein (2005): key extraction on shared web server via L1 cache.">Bernstein (2005) : extraction de clé sur serveur web partagé via cache L1.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Grover's algorithm (quantum)">Algorithme de Grover (quantique)</div>
+          <p class="text-xs text-slate-300" data-en="√n search → AES-128 → 64 bits security. Long-term AES-256 mandatory.">Recherche √n → AES-128 → 64 bits de sécurité. Migration AES-256 obligatoire long terme.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bad key management">Mauvaise gestion des clés</div>
+          <p class="text-xs text-slate-300" data-en="Plaintext key in config, in Git, in logs → most frequent operational break.">Clé en clair en config, dans Git, en logs → casse opérationnelle la plus fréquente.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    const enc = new TextEncoder();
+    const dec = new TextDecoder();
+    const toHex = u8 => [...u8].map(b=>b.toString(16).padStart(2,'0')).join('');
+    const toB64 = u8 => btoa(String.fromCharCode(...u8));
+    const fromB64 = s => Uint8Array.from(atob(s), c=>c.charCodeAt(0));
+    const fromHex = s => Uint8Array.from(s.match(/.{2}/g).map(h=>parseInt(h,16)));
+
+    async function deriveKey(pwd, salt) {
+      const base = await crypto.subtle.importKey('raw', enc.encode(pwd), 'PBKDF2', false, ['deriveKey']);
+      return crypto.subtle.deriveKey(
+        {name:'PBKDF2', salt, iterations:100000, hash:'SHA-256'},
+        base, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
+    }
+
+    let lastCipher = null;
+
+    document.getElementById('aes-enc').addEventListener('click', async () => {
+      const out = document.getElementById('aes-out');
+      out.classList.remove('hidden');
+      try {
+        const pwd = document.getElementById('aes-pwd').value;
+        const pt = document.getElementById('aes-pt').value;
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const key = await deriveKey(pwd, salt);
+        const ct = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, enc.encode(pt)));
+        lastCipher = {salt:toHex(salt), iv:toHex(iv), ct:toB64(ct)};
+        out.innerHTML = `
+          <div class="p-3 bg-ink-900 border border-white/10 rounded"><span class="text-slate-400" data-en="Salt (PBKDF2):">Sel (PBKDF2) :</span><br>${lastCipher.salt}</div>
+          <div class="p-3 bg-ink-900 border border-white/10 rounded"><span class="text-slate-400" data-en="IV (96 bits):">IV (96 bits) :</span><br>${lastCipher.iv}</div>
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded break-all"><span class="text-emerald-400" data-en="Ciphered (base64):">Chiffré (base64) :</span><br>${lastCipher.ct}</div>
+        `;
+      } catch (e) { out.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">❌ ${e.message}</div>`; }
+    });
+
+    document.getElementById('aes-dec').addEventListener('click', async () => {
+      const out = document.getElementById('aes-out');
+      out.classList.remove('hidden');
+      if (!lastCipher) { out.innerHTML = `<div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded text-amber-400">Chiffre d'abord un message.</div>`; return; }
+      try {
+        const pwd = document.getElementById('aes-pwd').value;
+        const key = await deriveKey(pwd, fromHex(lastCipher.salt));
+        const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:fromHex(lastCipher.iv)}, key, fromB64(lastCipher.ct));
+        out.innerHTML = `<div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded"><span class="text-emerald-400">Déchiffré :</span><br>${dec.decode(pt)}</div>`;
+      } catch (e) { out.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">❌ Mauvais mot de passe ou données corrompues</div>`; }
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Quelles tailles de clé AES sont standardisées ?", choices:["56, 112, 168","128, 192, 256","64, 128, 256","256, 512, 1024"], answer:1, explain:"AES-128, AES-192, AES-256. Le bloc reste toujours 128 bits." },
+      { q:"Pourquoi NE JAMAIS utiliser le mode ECB ?", choices:["Il est trop lent","Blocs identiques donnent chiffrés identiques (motifs visibles)","Il n'est pas standardisé","La clé est faible"], answer:1, explain:"L'image classique du pingouin Tux chiffré en ECB le montre instantanément." },
+      { q:"Que garantit AES-GCM en plus du chiffrement ?", choices:["Compression","Authentification (AEAD)","Forward secrecy","Signature"], answer:1, explain:"GCM = Galois/Counter Mode → chiffrement + tag d'authentification (intégrité)." },
+      { q:"Sur un ordinateur quantique, AES-128 garde combien de bits de sécurité ?", choices:["128","64","256","0"], answer:1, explain:"L'algorithme de Grover divise par 2 la sécurité d'une recherche exhaustive → préférer AES-256 (128 bits post-quantiques)." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('aes',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('aes-master')){CryptoLab.earnBadge('aes-master','Maître AES','🛡️');CryptoLab.showToast('🛡️ Badge débloqué : <u>Maître AES</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

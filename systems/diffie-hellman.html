@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diffie-Hellman — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🤝</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1976 · Stanford</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Diffie-Hellman</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Key exchange">Échange de clés</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Discrete logarithm">Logarithme discret</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Intermediate">Intermédiaire</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Authors">Auteurs</div><div class="font-semibold">Whitfield Diffie & Martin Hellman</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Year">Année</div><div class="font-semibold">1976</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Type">Type</div><div class="font-semibold">Protocole d'échange de clé</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Diffie-Hellman (DH)</strong> is the first public protocol allowing two parties — who have never communicated before — to generate a common secret key <em>by talking over a completely open channel</em>. It's the founding act of public-key cryptography. Ralph Merkle is often co-credited.">
+        <strong>Diffie-Hellman (DH)</strong> est le premier protocole public permettant à
+        deux parties — qui n'ont jamais communiqué auparavant — de générer une clé secrète
+        commune <em>en discutant sur un canal totalement ouvert</em>. C'est l'acte fondateur
+        de la cryptographie à clé publique. Ralph Merkle est souvent co-crédité.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="Caveat: DH is <strong>not encryption</strong>, it's a <em>key establishment</em> mechanism. The shared key is then used for symmetric encryption (AES, ChaCha20…).">
+        Attention : DH n'est <strong>pas un chiffrement</strong>, c'est un mécanisme
+        d'<em>établissement de clé</em>. La clé partagée sert ensuite à un chiffrement
+        symétrique (AES, ChaCha20…).
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <p class="text-slate-300 mb-4" data-en="Alice and Bob publicly agree on two numbers: a prime <strong>p</strong> and a generator <strong>g</strong>. Each then keeps a secret.">Alice et Bob s'accordent publiquement sur deux nombres : un premier <strong>p</strong> et un générateur <strong>g</strong>. Chacun garde ensuite un secret.</p>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/30 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2">👩 Alice</div>
+          <ul class="text-sm space-y-1 text-slate-300 font-mono">
+            <li>secret a</li>
+            <li>A = g<sup>a</sup> mod p</li>
+            <li>envoie A à Bob</li>
+            <li class="pt-2 text-emerald-400">K = B<sup>a</sup> mod p</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-amber-500/5 border border-amber-500/30 rounded-xl">
+          <div class="text-amber-400 font-semibold mb-2">👁 Eve (espionne)</div>
+          <p class="text-xs text-slate-400">Voit passer : p, g, A, B</p>
+          <p class="text-xs text-slate-400 mt-2">Pour retrouver K, il lui faudrait calculer le <strong>logarithme discret</strong> — pratiquement infaisable pour de grands p.</p>
+        </div>
+        <div class="p-5 bg-brand-500/5 border border-brand-500/30 rounded-xl">
+          <div class="text-brand-500 font-semibold mb-2">👨 Bob</div>
+          <ul class="text-sm space-y-1 text-slate-300 font-mono">
+            <li>secret b</li>
+            <li>B = g<sup>b</sup> mod p</li>
+            <li>envoie B à Alice</li>
+            <li class="pt-2 text-brand-500">K = A<sup>b</sup> mod p</li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4 text-center">
+        Magie : A<sup>b</sup> = (g<sup>a</sup>)<sup>b</sup> = g<sup>ab</sup> = (g<sup>b</sup>)<sup>a</sup> = B<sup>a</sup> &nbsp;⇒&nbsp; <strong>même clé</strong> chez les deux.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl space-y-2">
+        <div class="text-center font-mono">Public : p (premier), g (générateur de ℤ/pℤ*)</div>
+        <div class="text-center font-mono text-brand-500">A = g<sup>a</sup> mod p &nbsp;&nbsp;|&nbsp;&nbsp; B = g<sup>b</sup> mod p</div>
+        <div class="text-center font-mono text-emerald-400 text-lg pt-2">K = g<sup>ab</sup> mod p</div>
+      </div>
+      <p class="text-slate-300 mt-4" data-en="Security rests on the <strong>discrete logarithm problem (DLP)</strong>: knowing g, p, A = g<sup>a</sup> mod p, recovering <em>a</em> is exponentially hard. With p ≥ 2048 bits, it's out of reach of classical computers.">
+        La sécurité repose sur le <strong>problème du logarithme discret (DLP)</strong> :
+        connaissant g, p, A = g<sup>a</sup> mod p, retrouver <em>a</em> est exponentiellement
+        difficile. Avec p ≥ 2048 bits, c'est hors de portée des ordinateurs classiques.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.simulation">🔍 4. Simulation interactive</span></h2>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-2">p (premier public)</label>
+            <input id="dh-p" type="text" value="23" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">g (générateur public)</label>
+            <input id="dh-g" type="text" value="5" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">a — secret d'Alice</label>
+            <input id="dh-a" type="text" value="6" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">b — secret de Bob</label>
+            <input id="dh-b" type="text" value="15" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          </div>
+        </div>
+        <button id="dh-run" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="⚡ Run the exchange">⚡ Lancer l'échange</button>
+        <div id="dh-out" class="hidden grid md:grid-cols-3 gap-3 text-sm font-mono"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>import secrets
+
+p = 0xFFFFFFFFFFFFFFFFC90FDAA22168C234... # premier de 2048 bits (RFC 3526)
+g = 2
+
+# Alice
+a = secrets.randbelow(p-2) + 1
+A = pow(g, a, p)
+
+# Bob
+b = secrets.randbelow(p-2) + 1
+B = pow(g, b, p)
+
+# Échange : Alice envoie A, Bob envoie B
+K_alice = pow(B, a, p)
+K_bob   = pow(A, b, p)
+
+assert K_alice == K_bob   # ✓ même clé partagée</code></pre>
+      <pre id="code-js" class="hidden"><code>function modpow(b, e, m) {
+  let r = 1n; b = b % m;
+  while (e > 0n) {
+    if (e &amp; 1n) r = (r * b) % m;
+    e >>= 1n; b = (b * b) % m;
+  }
+  return r;
+}
+
+const p = 23n, g = 5n;
+
+// Secrets locaux
+const a = 6n, b = 15n;
+
+// Envois publics
+const A = modpow(g, a, p);   // 8
+const B = modpow(g, b, p);   // 19
+
+// Clé partagée
+const K1 = modpow(B, a, p);  // 2
+const K2 = modpow(A, b, p);  // 2
+
+console.log(K1 === K2);  // true</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.realworld">🌍 6. Cas réel & limites</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Modern uses">✓ Utilisations modernes</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="TLS 1.3 (ECDHE handshake — elliptic variant)">TLS 1.3 (handshake ECDHE — variante elliptique)</li>
+            <li data-en="Signal Protocol (initial X3DH)">Signal Protocol (X3DH initial)</li>
+            <li data-en="SSH (session key exchange)">SSH (échange de clé de session)</li>
+            <li data-en="WireGuard (based on Noise / Curve25519)">WireGuard (basé sur Noise / Curve25519)</li>
+            <li data-en="<strong>Forward secrecy</strong>: ephemeral keys → past protected"><strong>Forward secrecy</strong> : clés éphémères → passé protégé</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Pitfalls">✗ Pièges</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Raw DH does NOT authenticate → <strong>MITM possible</strong> (Eve = fake Alice on Bob's side)">DH brut ne s'authentifie PAS → <strong>MITM possible</strong> (Eve = faux Alice côté Bob)</li>
+            <li data-en="Combine with signature (RSA, ECDSA) or PSK">Combiner avec signature (RSA, ECDSA) ou PSK</li>
+            <li data-en="Logjam (2015): small shared DH groups vulnerable">Logjam (2015) : petits groupes DH partagés vulnérables</li>
+            <li data-en="Broken by Shor's algorithm (post-quantum)">Cassé par l'algorithme de Shor (post-quantique)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Man-in-the-Middle (without authentication)">Man-in-the-Middle (sans authentification)</div>
+          <p class="text-xs text-slate-300" data-en="Eve impersonates Alice to Bob and vice versa. Fix: sign A and B.">Eve se fait passer pour Alice côté Bob et vice-versa. Solution : signer A et B.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Logjam (2015)">Logjam (2015)</div>
+          <p class="text-xs text-slate-300" data-en="Default 512-bit shared groups on millions of servers → GNFS precomputation.">Petits groupes 512-bit partagés par défaut sur des millions de serveurs → précalcul GNFS.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Small subgroup attack">Small subgroup attack</div>
+          <p class="text-xs text-slate-300" data-en="If Eve sends a malicious B in a low-order subgroup, she learns bits of a.">Si Eve envoie un B malicieux dans un sous-groupe d'ordre faible, elle apprend des bits de a.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Shor's algorithm (quantum)">Algorithme de Shor (quantique)</div>
+          <p class="text-xs text-slate-300" data-en="Breaks discrete log in polynomial time → classical DH doomed mid-term.">Casse le logarithme discret en temps polynomial → DH classique mort à moyen terme.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bad RNG on a, b">Mauvais RNG sur a, b</div>
+          <p class="text-xs text-slate-300" data-en="If a is predictable (Debian OpenSSL 2008), the shared key is too.">Si a est prévisible (Debian OpenSSL 2008), la clé partagée l'est aussi.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    function modpow(b,e,m){let r=1n;b=b%m;while(e>0n){if(e&1n)r=(r*b)%m;e>>=1n;b=(b*b)%m;}return r;}
+
+    document.getElementById('dh-run').addEventListener('click', () => {
+      const out = document.getElementById('dh-out');
+      out.classList.remove('hidden');
+      try {
+        const p = BigInt(document.getElementById('dh-p').value);
+        const g = BigInt(document.getElementById('dh-g').value);
+        const a = BigInt(document.getElementById('dh-a').value);
+        const b = BigInt(document.getElementById('dh-b').value);
+        const A = modpow(g,a,p);
+        const B = modpow(g,b,p);
+        const K1 = modpow(B,a,p);
+        const K2 = modpow(A,b,p);
+        out.innerHTML = `
+          <div class="p-4 bg-emerald-500/5 border border-emerald-500/30 rounded-lg">
+            <div class="text-emerald-400 font-semibold mb-2">👩 Alice</div>
+            <div>a = ${a} <span class="text-slate-500">(secret)</span></div>
+            <div>A = g^a mod p = <span class="text-emerald-400">${A}</span></div>
+            <div class="mt-2 pt-2 border-t border-white/10">K = B^a mod p = <span class="text-emerald-400 font-bold">${K1}</span></div>
+          </div>
+          <div class="p-4 bg-amber-500/5 border border-amber-500/30 rounded-lg">
+            <div class="text-amber-400 font-semibold mb-2">👁 Eve voit</div>
+            <div>p = ${p}, g = ${g}</div>
+            <div>A = ${A}</div>
+            <div>B = ${B}</div>
+            <div class="mt-2 pt-2 border-t border-white/10 text-xs text-slate-400">K reste hors d'atteinte sans calculer a ou b (DLP).</div>
+          </div>
+          <div class="p-4 bg-brand-500/5 border border-brand-500/30 rounded-lg">
+            <div class="text-brand-500 font-semibold mb-2">👨 Bob</div>
+            <div>b = ${b} <span class="text-slate-500">(secret)</span></div>
+            <div>B = g^b mod p = <span class="text-brand-500">${B}</span></div>
+            <div class="mt-2 pt-2 border-t border-white/10">K = A^b mod p = <span class="text-brand-500 font-bold">${K2}</span></div>
+          </div>
+        `;
+      } catch(e) {
+        out.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400 col-span-3">❌ ${e.message}</div>`;
+      }
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"DH permet-il de chiffrer un message ?", choices:["Oui, c'est un chiffrement asymétrique","Non — c'est un protocole d'échange de clé","Oui, mais seulement les nombres","Non — c'est une fonction de hachage"], answer:1, explain:"DH produit une clé partagée. Le chiffrement se fait ensuite avec un algorithme symétrique (AES, ChaCha20...)." },
+      { q:"Sur quel problème mathématique repose la sécurité de DH ?", choices:["Factorisation","Logarithme discret","TSP","P vs NP"], answer:1, explain:"Connaître g, p, g^a mod p ne permet pas de retrouver a efficacement." },
+      { q:"Quelle attaque DH brut ne contre PAS ?", choices:["Brute force","Logjam pour petits groupes","Man-in-the-Middle","Toutes les précédentes"], answer:2, explain:"DH non authentifié est vulnérable au MITM. Solution : signer A et B avec une clé long-terme (RSA/ECDSA)." },
+      { q:"Que désigne la 'forward secrecy' (PFS) dans le contexte DH ?", choices:["Compromettre une clé long-terme ne compromet pas les sessions passées","La clé est envoyée en avance","Le serveur authentifie en premier","Le protocole est plus rapide"], answer:0, explain:"En utilisant des paires DH éphémères (ECDHE), chaque session a sa propre clé secrète." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('dh',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('dh-master')){CryptoLab.earnBadge('dh-master','Maître Diffie-Hellman','🤝');CryptoLab.showToast('🤝 Badge débloqué : <u>Maître Diffie-Hellman</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

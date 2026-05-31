@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChaCha20 — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">🌊</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">2008 · D.J. Bernstein</div>
+        <h1 class="text-4xl md:text-5xl font-bold">ChaCha20</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Stream cipher">Chiffrement par flux</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="ARX (Add-Rotate-XOR)">ARX (Add-Rotate-XOR)</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="TLS 1.3 · WireGuard">TLS 1.3 · WireGuard</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Author">Auteur</div><div class="font-semibold" data-en="Daniel J. Bernstein">Daniel J. Bernstein</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Year">Année</div><div class="font-semibold" data-en="2008 (Salsa20 variant, 2005)">2008 (variant de Salsa20, 2005)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Family">Famille</div><div class="font-semibold" data-en="ARX stream cipher">Chiffrement par flux ARX</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>ChaCha20</strong> is a modern stream cipher designed to be <strong>fast in pure software</strong> (without dedicated hardware instructions like AES-NI). On an ARM phone or microcontroller, it's often faster than AES — hence its massive adoption: <strong>TLS 1.3, WireGuard, OpenSSH, Tor, Signal</strong>.">
+        <strong>ChaCha20</strong> est un chiffrement par flux moderne, conçu pour être <strong>rapide en software pur</strong>
+        (sans instructions matérielles dédiées comme AES-NI). Sur un téléphone ARM ou un microcontrôleur, il est
+        souvent plus rapide qu'AES — d'où son adoption massive : <strong>TLS 1.3, WireGuard, OpenSSH, Tor, Signal</strong>.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="Paired with <strong>Poly1305</strong> (also Bernstein's ultra-fast MAC), it forms the AEAD <code>ChaCha20-Poly1305</code> — one of two default cryptographic suites in TLS 1.3 (alongside AES-GCM).">
+        Couplé à <strong>Poly1305</strong> (MAC ultra-rapide de Bernstein aussi), il forme l'AEAD
+        <code>ChaCha20-Poly1305</code> — une des deux suites cryptographiques par défaut de TLS 1.3 (avec AES-GCM).
+      </p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <p class="text-slate-300 mb-4" data-en="ChaCha20 doesn't encrypt directly: it generates a pseudo-random <em>keystream</em> that you XOR with the plaintext.">ChaCha20 ne chiffre pas directement : il génère un <em>keystream</em> pseudo-aléatoire qu'on XOR avec le clair.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-4">
+        <div class="font-mono text-sm">
+          <div class="text-slate-400">État initial : matrice 4×4 de 32 bits (16 mots = 512 bits)</div>
+          <div class="mt-2 grid grid-cols-4 gap-1 text-center text-xs">
+            <div class="p-2 bg-brand-500/10 border border-brand-500/30 rounded">constant<br><span class="text-slate-500">"expa"</span></div>
+            <div class="p-2 bg-brand-500/10 border border-brand-500/30 rounded">constant<br><span class="text-slate-500">"nd 3"</span></div>
+            <div class="p-2 bg-brand-500/10 border border-brand-500/30 rounded">constant<br><span class="text-slate-500">"2-by"</span></div>
+            <div class="p-2 bg-brand-500/10 border border-brand-500/30 rounded">constant<br><span class="text-slate-500">"te k"</span></div>
+            <div class="p-2 bg-emerald-500/10 border border-emerald-500/30 rounded">key₀</div>
+            <div class="p-2 bg-emerald-500/10 border border-emerald-500/30 rounded">key₁</div>
+            <div class="p-2 bg-emerald-500/10 border border-emerald-500/30 rounded">key₂</div>
+            <div class="p-2 bg-emerald-500/10 border border-emerald-500/30 rounded">key₃</div>
+            <div class="p-2 bg-emerald-500/10 border border-emerald-500/30 rounded">key₄</div>
+            <div class="p-2 bg-emerald-500/10 border border-emerald-500/30 rounded">key₅</div>
+            <div class="p-2 bg-emerald-500/10 border border-emerald-500/30 rounded">key₆</div>
+            <div class="p-2 bg-emerald-500/10 border border-emerald-500/30 rounded">key₇</div>
+            <div class="p-2 bg-amber-500/10 border border-amber-500/30 rounded">counter</div>
+            <div class="p-2 bg-purple-500/10 border border-purple-500/30 rounded">nonce₀</div>
+            <div class="p-2 bg-purple-500/10 border border-purple-500/30 rounded">nonce₁</div>
+            <div class="p-2 bg-purple-500/10 border border-purple-500/30 rounded">nonce₂</div>
+          </div>
+        </div>
+        <p class="text-slate-300 text-sm" data-en="We apply <strong>20 rounds</strong> (10 columns + 10 diagonals) of the <em>quarter-round</em>, then add the initial state to the final state → 64 bytes of keystream. Increment the counter and repeat.">
+          On applique <strong>20 rounds</strong> (10 colonnes + 10 diagonales) de la <em>quarter-round</em>,
+          puis on additionne l'état initial à l'état final → 64 octets de keystream. On incrémente le counter
+          et on recommence.
+        </p>
+        <div class="p-4 bg-ink-900 border border-white/10 rounded font-mono text-xs">
+          <span class="text-brand-500">// Quarter-round ARX</span><br>
+          a += b; d ^= a; d = rotl(d, 16);<br>
+          c += d; b ^= c; b = rotl(b, 12);<br>
+          a += b; d ^= a; d = rotl(d, &nbsp;8);<br>
+          c += d; b ^= c; b = rotl(b, &nbsp;7);
+        </div>
+        <p class="text-slate-300 text-sm" data-en="ARX = <strong>Add (mod 2³²), Rotate, XOR</strong>. Three simple operations, perfect for CPUs. No tables → natural resistance to cache side-channels.">
+          ARX = <strong>Add (mod 2³²), Rotate, XOR</strong>. Trois opérations simples, parfaites pour les CPU.
+          Pas de table → résistance naturelle aux side-channels par cache.
+        </p>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🧮 3. Spécifications</h2>
+      <div class="math-box">
+        <div class="text-center text-brand-500 text-lg">Key : 256 bits &nbsp;·&nbsp; Nonce : 96 bits &nbsp;·&nbsp; Counter : 32 bits</div>
+        <div class="text-center text-emerald-400 mt-2">Bloc keystream : 64 octets &nbsp;·&nbsp; Max data / (key, nonce) : 2³² blocs ≈ 256 Go</div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 mt-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <strong class="text-brand-500">XChaCha20</strong>
+          <p class="text-sm text-slate-400 mt-1">Variant à nonce étendu (192 bits). Permet de générer un nonce purement aléatoire sans risque de collision.</p>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <strong class="text-brand-500">ChaCha20-Poly1305</strong>
+          <p class="text-sm text-slate-400 mt-1">AEAD standardisé (RFC 8439). Chiffrement + tag d'authentification 128 bits.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🔍 4. Simulation pédagogique du keystream</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Didactic implementation in pure JS. For production, see the code tab.">Implémentation didactique en JS pur. Pour la prod, voir l'onglet code.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div>
+          <label class="block text-sm mb-2">Clé 256 bits (hex, 64 chars)</label>
+          <input id="cc-key" value="000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-xs" />
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm mb-2">Nonce 96 bits (hex, 24 chars)</label>
+            <input id="cc-nonce" value="000000000000004a00000000" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-xs" />
+          </div>
+          <div>
+            <label class="block text-sm mb-2">Counter</label>
+            <input id="cc-ctr" value="1" type="number" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm mb-2" data-en="Message">Message</label>
+          <textarea id="cc-msg" rows="2" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm">Ladies and Gentlemen of the class of '99...</textarea>
+        </div>
+        <button id="cc-run" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="⚡ Encrypt (XOR with keystream)">⚡ Chiffrer (XOR avec keystream)</button>
+        <div id="cc-out" class="hidden space-y-2 text-sm font-mono"></div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># pip install cryptography
+from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
+import os
+
+key = ChaCha20Poly1305.generate_key()      # 32 octets = 256 bits
+nonce = os.urandom(12)                     # 96 bits
+aead = ChaCha20Poly1305(key)
+
+ciphertext = aead.encrypt(nonce, b"Hello CryptoLab", associated_data=b"meta")
+plaintext  = aead.decrypt(nonce, ciphertext, associated_data=b"meta")
+print(plaintext)  # b"Hello CryptoLab"
+
+# XChaCha20 (nonce 192 bits aléatoire — pratique)
+from nacl.secret import SecretBox
+box = SecretBox(key)
+encrypted = box.encrypt(b"Hello")          # nonce auto-géré
+print(box.decrypt(encrypted))</code></pre>
+      <pre id="code-js" class="hidden"><code>// Node.js (Web Crypto ne supporte pas ChaCha20 nativement en 2026)
+import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
+
+const key   = randomBytes(32);   // 256 bits
+const nonce = randomBytes(12);   // 96 bits
+const aad   = Buffer.from('meta');
+
+const cipher = createCipheriv('chacha20-poly1305', key, nonce, { authTagLength: 16 });
+cipher.setAAD(aad);
+const ct  = Buffer.concat([cipher.update('Hello CryptoLab'), cipher.final()]);
+const tag = cipher.getAuthTag();
+
+const decipher = createDecipheriv('chacha20-poly1305', key, nonce, { authTagLength: 16 });
+decipher.setAAD(aad);
+decipher.setAuthTag(tag);
+const pt = Buffer.concat([decipher.update(ct), decipher.final()]);
+console.log(pt.toString());  // Hello CryptoLab</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🌍 6. Pourquoi ChaCha20 plutôt qu'AES ?</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Strengths">✓ Atouts</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Fast everywhere, especially without AES-NI (mobile, IoT)">Rapide partout, surtout sans AES-NI (mobile, IoT)</li>
+            <li data-en="ARX → intrinsic cache side-channel resistance">ARX → résistance side-channel par cache intrinsèque</li>
+            <li data-en="No padding, no modes — it's XOR">Pas de padding, pas de modes — c'est XOR</li>
+            <li data-en="Simple construction: 100 readable lines of C">Construction simple : 100 lignes de C lisibles</li>
+            <li data-en="Adopted by Google (Android), Cloudflare, OpenSSH by default">Adopté Google (Android), Cloudflare, OpenSSH par défaut</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Pitfalls">✗ Pièges</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Reusing (key, nonce) = complete break (XOR of 2 ciphertexts reveals XOR of 2 plaintexts)">Réutiliser un (key, nonce) = casse totale (XOR des 2 chiffrés révèle XOR des 2 clairs)</li>
+            <li data-en="The 96-bit nonce limits to 2⁹⁶/2 ≈ 4×10²⁸ messages before collision">Le nonce 96 bits limite à 2⁹⁶/2 ≈ 4×10²⁸ messages avant collision</li>
+            <li data-en="Always use ChaCha20-Poly1305, never raw ChaCha20">Toujours utiliser ChaCha20-Poly1305, jamais ChaCha20 nu</li>
+            <li data-en="Grover: 128-bit quantum security (like AES-256)">Grover : sécurité quantique 128 bits (comme AES-256)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Nonce reuse">Réutilisation de nonce</div>
+          <p class="text-xs text-slate-300" data-en="XOR of 2 ciphertexts = XOR of 2 plaintexts. Total and instant break.">XOR de 2 chiffrés = XOR de 2 clairs. Casse totale et instantanée.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Raw ChaCha20 (without Poly1305)">ChaCha20 nu (sans Poly1305)</div>
+          <p class="text-xs text-slate-300" data-en="No authentication → trivial forgery. Always use ChaCha20-Poly1305.">Pas d'authentification → forgery triviale. Toujours utiliser ChaCha20-Poly1305.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Random 96-bit nonce at scale">Nonce 96-bit aléatoire en grand volume</div>
+          <p class="text-xs text-slate-300" data-en="Collision after ~2⁴⁸ messages. Use XChaCha20 (192-bit nonce) for high volume.">Collision après ~2⁴⁸ messages. Utiliser XChaCha20 (nonce 192-bit) si gros volume.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Grover's algorithm (quantum)">Algorithme de Grover (quantique)</div>
+          <p class="text-xs text-slate-300" data-en="256-bit key → 128 bits post-quantum. Still safe (like AES-256).">256-bit clé → 128 bits post-quantique. Reste sûr (comme AES-256).</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bad key RNG">Mauvais générateur d'aléa pour la clé</div>
+          <p class="text-xs text-slate-300" data-en="Not specific to ChaCha20 but devastating on any symmetric primitive.">Pas spécifique à ChaCha20 mais devastateur sur toute primitive symétrique.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    // ============================================================
+    // ChaCha20 — implémentation pédagogique pure JS
+    // ============================================================
+    const rotl = (a, b) => ((a << b) | (a >>> (32 - b))) >>> 0;
+    function qr(s, a, b, c, d) {
+      s[a] = (s[a] + s[b]) >>> 0; s[d] = rotl(s[d] ^ s[a], 16);
+      s[c] = (s[c] + s[d]) >>> 0; s[b] = rotl(s[b] ^ s[c], 12);
+      s[a] = (s[a] + s[b]) >>> 0; s[d] = rotl(s[d] ^ s[a],  8);
+      s[c] = (s[c] + s[d]) >>> 0; s[b] = rotl(s[b] ^ s[c],  7);
+    }
+    function chachaBlock(key, counter, nonce) {
+      const state = new Uint32Array(16);
+      state[0]=0x61707865; state[1]=0x3320646e; state[2]=0x79622d32; state[3]=0x6b206574;
+      for (let i = 0; i < 8; i++) state[4+i] = key[i];
+      state[12] = counter;
+      for (let i = 0; i < 3; i++) state[13+i] = nonce[i];
+      const work = new Uint32Array(state);
+      for (let i = 0; i < 10; i++) {
+        qr(work, 0,4, 8,12); qr(work, 1,5, 9,13); qr(work, 2,6,10,14); qr(work, 3,7,11,15);
+        qr(work, 0,5,10,15); qr(work, 1,6,11,12); qr(work, 2,7, 8,13); qr(work, 3,4, 9,14);
+      }
+      const out = new Uint8Array(64);
+      for (let i = 0; i < 16; i++) {
+        const v = (work[i] + state[i]) >>> 0;
+        out[i*4]   = v & 0xff;
+        out[i*4+1] = (v >>> 8) & 0xff;
+        out[i*4+2] = (v >>> 16) & 0xff;
+        out[i*4+3] = (v >>> 24) & 0xff;
+      }
+      return out;
+    }
+    function chacha20(key, nonce, counter, data) {
+      const out = new Uint8Array(data.length);
+      let ctr = counter;
+      for (let i = 0; i < data.length; i += 64) {
+        const block = chachaBlock(key, ctr++, nonce);
+        for (let j = 0; j < 64 && i+j < data.length; j++) out[i+j] = data[i+j] ^ block[j];
+      }
+      return out;
+    }
+    const hexToU32 = (hex, n) => {
+      const arr = new Uint32Array(n);
+      for (let i = 0; i < n; i++) {
+        const o = i*8;
+        arr[i] = (parseInt(hex.slice(o,o+2),16))
+               | (parseInt(hex.slice(o+2,o+4),16)<<8)
+               | (parseInt(hex.slice(o+4,o+6),16)<<16)
+               | (parseInt(hex.slice(o+6,o+8),16)<<24);
+      }
+      return arr;
+    };
+    const toHex = u8 => [...u8].map(b => b.toString(16).padStart(2,'0')).join('');
+
+    document.getElementById('cc-run').addEventListener('click', () => {
+      const out = document.getElementById('cc-out');
+      out.classList.remove('hidden');
+      try {
+        const keyHex = document.getElementById('cc-key').value.trim();
+        const nonceHex = document.getElementById('cc-nonce').value.trim();
+        if (keyHex.length !== 64) throw new Error('clé doit faire 64 hex chars (256 bits)');
+        if (nonceHex.length !== 24) throw new Error('nonce doit faire 24 hex chars (96 bits)');
+        const key = hexToU32(keyHex, 8);
+        const nonce = hexToU32(nonceHex, 3);
+        const ctr = parseInt(document.getElementById('cc-ctr').value, 10);
+        const msg = new TextEncoder().encode(document.getElementById('cc-msg').value);
+        const ks = chachaBlock(key, ctr, nonce);
+        const ct = chacha20(key, nonce, ctr, msg);
+        const back = chacha20(key, nonce, ctr, ct);
+        out.innerHTML = `
+          <div class="p-3 bg-ink-900 border border-white/10 rounded break-all"><span class="text-slate-400">Keystream (1er bloc, 64 octets) :</span><br>${toHex(ks)}</div>
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded break-all"><span class="text-emerald-400">Chiffré (hex) :</span><br>${toHex(ct)}</div>
+          <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded"><span class="text-amber-400">Déchiffré (XOR à nouveau) :</span><br>${new TextDecoder().decode(back)}</div>
+        `;
+      } catch (e) {
+        out.innerHTML = `<div class="p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400">❌ ${e.message}</div>`;
+      }
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"À quelle famille appartient ChaCha20 ?", choices:["Chiffrement par blocs","Chiffrement par flux","Hash","Signature"], answer:1, explain:"ChaCha20 produit un keystream pseudo-aléatoire qu'on XOR avec le clair." },
+      { q:"Que signifie ARX dans ChaCha20 ?", choices:["AES-Round-XOR","Add-Rotate-XOR","ARM-Resilient-XOR","Asymmetric-RNG-XOR"], answer:1, explain:"Trois opérations 32-bit : addition mod 2³², rotation, XOR. Rapides sur tout CPU." },
+      { q:"Que se passe-t-il si on réutilise (clé, nonce) ?", choices:["Rien","Le même keystream → XOR de 2 chiffrés = XOR de 2 clairs (catastrophe)","Le chiffré est plus court","Le tag d'auth change"], answer:1, explain:"C'est la faille classique du chiffrement par flux. Un nonce DOIT être unique par clé." },
+      { q:"Quelle est la suite AEAD standardisée associée à ChaCha20 ?", choices:["ChaCha20-CBC","ChaCha20-GCM","ChaCha20-Poly1305","ChaCha20-HMAC"], answer:2, explain:"RFC 8439. Standard dans TLS 1.3, WireGuard, etc." },
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('chacha20',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('chacha20-master')){CryptoLab.earnBadge('chacha20-master','Surfeur ChaCha20','🌊');CryptoLab.showToast('🌊 Badge débloqué : <u>Surfeur ChaCha20</u> !');}
+    });
+  </script>
+</body>
+</html>

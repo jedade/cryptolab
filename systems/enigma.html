@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enigma — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">⚙️</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1918 – 1945 · Allemagne</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Machine Enigma</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Electromechanical rotors">Rotors électromécaniques</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Symmetric">Symétrique</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Intermediate level">Niveau intermédiaire</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Inventor">Inventeur</div><div class="font-semibold">Arthur Scherbius (1918)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Broken by">Cassée par</div><div class="font-semibold">Rejewski, Turing, Welchman</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Configurations">Configurations</div><div class="font-semibold" data-en="~158 quintillion">~158 quintillions</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Enigma</strong> is the encryption machine used by Nazi Germany during World War II. Patented in 1918, it combines 3 (or 4 on the naval Enigma M4) movable rotors, a reflector, and a plugboard. Its systematic breaking at Bletchley Park, under Alan Turing's leadership, shortened the war by several years.">
+        <strong>Enigma</strong> est la machine de chiffrement utilisée par l'Allemagne nazie
+        pendant la Seconde Guerre mondiale. Brevetée en 1918, elle combine 3 (ou 4 sur
+        l'Enigma M4 navale) rotors mobiles, un réflecteur et un tableau de connexions
+        (plugboard). Sa cassure systématique par Bletchley Park, sous la direction d'Alan
+        Turing, a raccourci la guerre de plusieurs années.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="Early mathematical work: Marian Rejewski (Poland, 1932). Industrial scaling: Turing and his electromechanical <em>Bombe</em>.">
+        Premiers travaux mathématiques : Marian Rejewski (Pologne, 1932). Mise à l'échelle
+        industrielle : Turing et sa <em>Bombe</em> électromécanique.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <p class="text-slate-300 mb-4" data-en="On each keystroke, current flows through:">À chaque touche frappée, le courant traverse :</p>
+      <ol class="list-decimal list-inside text-slate-300 space-y-1 mb-4">
+        <li><strong>Tableau de connexions</strong> (plugboard) — permute des paires de lettres</li>
+        <li>Rotor I → Rotor II → Rotor III (chacun applique sa permutation)</li>
+        <li><strong>Réflecteur</strong> — renvoie le courant vers la sortie</li>
+        <li>Rotor III → Rotor II → Rotor I (en sens inverse)</li>
+        <li>Plugboard (à nouveau) → lampe correspondant à la lettre chiffrée</li>
+      </ol>
+      <div class="p-5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-sm text-slate-300">
+        ⚠️ <strong>Conséquence du réflecteur</strong> : une lettre ne peut jamais se chiffrer
+        elle-même. Cette particularité a été exploitée à Bletchley Park.
+      </div>
+      <div class="p-5 bg-brand-500/5 border border-brand-500/30 rounded-xl text-sm text-slate-300 mt-3">
+        💡 <strong>Auto-inverse</strong> : avec le même réglage, chiffrer KHOOR redonne HELLO.
+        Inutile d'avoir un mode séparé pour déchiffrer.
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <p class="text-slate-300 mb-3" data-en="Total number of military configurations (Wehrmacht Enigma):">Le nombre total de configurations militaires (Enigma Wehrmacht) :</p>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl text-center">
+        <div class="font-mono text-brand-500">5 × 4 × 3 (ordre des rotors) × 26³ (positions) × 26³ (anneaux) × C(26,10)·9!! (plugboard)</div>
+        <div class="font-mono text-emerald-400 text-xl mt-3">≈ 1,58 × 10²⁰</div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4" data-en="Huge space — but drastically reduced by <em>cribs</em> (probable words like &quot;Wettervorhersage&quot;, weather) and the self-inverse property. Turing's <em>Bombe</em> tested positions in parallel to eliminate contradictions.">
+        Espace énorme — mais réduit drastiquement par les <em>cribs</em> (mots probables comme
+        "Wettervorhersage", météo) et la propriété d'auto-inverse. La <em>Bombe</em> de Turing
+        testait des positions en parallèle pour éliminer les contradictions.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🔍 4. Simulation Enigma simplifiée</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="3 rotors I, II, III (historical wiring) + reflector B. No plugboard for simplicity. Rotors advance on each letter.">3 rotors I, II, III (câblage historique) + réflecteur B. Sans plugboard pour simplifier. Les rotors avancent à chaque lettre.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-2">Position rotor I (A-Z)</label>
+            <input id="r1" type="text" value="A" maxlength="1" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono uppercase text-center focus:border-brand-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Position rotor II</label>
+            <input id="r2" type="text" value="A" maxlength="1" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono uppercase text-center focus:border-brand-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Position rotor III</label>
+            <input id="r3" type="text" value="A" maxlength="1" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono uppercase text-center focus:border-brand-500 focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Message">Message</label>
+          <input id="enigma-msg" type="text" value="HELLO WORLD" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono uppercase focus:border-brand-500 focus:outline-none" />
+        </div>
+        <button id="enigma-run" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="⚡ Encrypt / decrypt">⚡ Chiffrer / déchiffrer</button>
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Result">Résultat</label>
+          <div id="enigma-out" class="px-4 py-3 bg-ink-900 border border-emerald-500/30 rounded-lg font-mono min-h-[3rem] text-emerald-400 break-all"></div>
+        </div>
+        <p class="text-xs text-slate-500">Astuce : remets les mêmes positions et passe le résultat → tu retrouves le clair.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">💻 5. Code (cœur de la simulation)</h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>ROTORS = {
+  'I':   "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
+  'II':  "AJDKSIRUXBLHWTMCQGZNPYFVOE",
+  'III': "BDFHJLCPRTXVZNYEIWGAKMUSQO",
+}
+REFLECTOR_B = "YRUHQSLDPXNGOKMIEBFZCWVJAT"
+A = ord('A')
+
+def rotor_fwd(c, wiring, pos):
+    return chr((ord(wiring[(ord(c) - A + pos) % 26]) - A - pos) % 26 + A)
+
+def rotor_bwd(c, wiring, pos):
+    idx = wiring.index(chr((ord(c) - A + pos) % 26 + A))
+    return chr((idx - pos) % 26 + A)
+
+def enigma(text, positions):
+    p = [ord(x)-A for x in positions]
+    out = []
+    for ch in text.upper():
+        if not ch.isalpha(): out.append(ch); continue
+        # Stepping (simplifié : tous avancent ; vraie Enigma a un mécanisme avec encoches)
+        p[2] = (p[2]+1) % 26
+        x = ch
+        for w, pos in zip(['III','II','I'], [p[2],p[1],p[0]]):
+            x = rotor_fwd(x, ROTORS[w], pos)
+        x = REFLECTOR_B[ord(x)-A]
+        for w, pos in zip(['I','II','III'], [p[0],p[1],p[2]]):
+            x = rotor_bwd(x, ROTORS[w], pos)
+        out.append(x)
+    return ''.join(out)
+
+print(enigma("HELLO WORLD", "AAA"))</code></pre>
+      <pre id="code-js" class="hidden"><code>const ROTORS = {
+  I:   "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
+  II:  "AJDKSIRUXBLHWTMCQGZNPYFVOE",
+  III: "BDFHJLCPRTXVZNYEIWGAKMUSQO",
+};
+const REFLECTOR_B = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
+const A = 65;
+
+const fwd = (c, wiring, pos) =>
+  String.fromCharCode((wiring.charCodeAt((c.charCodeAt(0)-A+pos)%26) - A - pos + 52) % 26 + A);
+const bwd = (c, wiring, pos) => {
+  const i = wiring.indexOf(String.fromCharCode((c.charCodeAt(0)-A+pos)%26 + A));
+  return String.fromCharCode((i - pos + 52) % 26 + A);
+};
+
+function enigma(text, positions) {
+  const p = [...positions].map(x => x.charCodeAt(0) - A);
+  return [...text.toUpperCase()].map(ch => {
+    if (!/[A-Z]/.test(ch)) return ch;
+    p[2] = (p[2] + 1) % 26;
+    let x = ch;
+    [['III',p[2]],['II',p[1]],['I',p[0]]].forEach(([w,pos]) => x = fwd(x, ROTORS[w], pos));
+    x = REFLECTOR_B[x.charCodeAt(0) - A];
+    [['I',p[0]],['II',p[1]],['III',p[2]]].forEach(([w,pos]) => x = bwd(x, ROTORS[w], pos));
+    return x;
+  }).join('');
+}</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🌍 6. Pourquoi elle est tombée</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Strengths">✓ Forces</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="~10²⁰ possible configurations">~10²⁰ configurations possibles</li>
+            <li data-en="Internal state changes on every keystroke">État interne change à chaque touche</li>
+            <li data-en="Robust against the era's manual cryptanalysis">Robuste face à la cryptanalyse manuelle de l'époque</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Exploited weaknesses">✗ Failles exploitées</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="<strong>A letter is never encrypted to itself</strong>"><strong>Une lettre n'est jamais chiffrée par elle-même</strong></li>
+            <li data-en="<strong>Cribs</strong>: stereotyped messages (weather, &quot;Heil Hitler&quot;)"><strong>Cribs</strong> : messages stéréotypés (météo, "Heil Hitler")</li>
+            <li data-en="Repetitive operational procedures">Procédures opérationnelles répétitives</li>
+            <li data-en="Turing's <em>Bombe</em> tested hypotheses in parallel">La <em>Bombe</em> de Turing testait des hypothèses en parallèle</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Reflector self-inversion">Auto-inversion du réflecteur</div>
+          <p class="text-xs text-slate-300" data-en="A letter never encrypts to itself → drastically shrinks the hypothesis space.">Une lettre ne se chiffre jamais en elle-même → réduit drastiquement l'espace des hypothèses.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Cribs (probable words, Bletchley Park)">Cribs (mots probables, Bletchley Park)</div>
+          <p class="text-xs text-slate-300" data-en="Stereotyped messages (weather &quot;Wettervorhersage&quot;, &quot;Keine besonderen Ereignisse&quot;) = entry points.">Messages stéréotypés (météo "Wettervorhersage", "Keine besonderen Ereignisse") = points d'entrée.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Turing's electromechanical Bombe (1940)">Bombe électromécanique de Turing (1940)</div>
+          <p class="text-xs text-slate-300" data-en="Massively parallel hypothesis tests, ~5h to crack a day's key.">Tests massivement parallèles d'hypothèses, ~5h pour casser une clé du jour.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Repetitive operational procedures">Procédures opérationnelles répétitives</div>
+          <p class="text-xs text-slate-300" data-en="Message indicators repeated 2× or guessable session keys.">Indicateurs de message répétés 2× ou clés de session devinables.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Hardware capture (Polish Cipher Bureau, 1932)">Capture de matériel (Cipher Bureau polonais, 1932)</div>
+          <p class="text-xs text-slate-300" data-en="Rejewski reconstructs rotor wiring from a stolen manual.">Rejewski reconstitue le câblage des rotors à partir d'un manuel volé.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    const ROTORS = {
+      I:   "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
+      II:  "AJDKSIRUXBLHWTMCQGZNPYFVOE",
+      III: "BDFHJLCPRTXVZNYEIWGAKMUSQO",
+    };
+    const REFLECTOR_B = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
+    const A = 65;
+    const fwd = (c, wiring, pos) =>
+      String.fromCharCode((wiring.charCodeAt((c.charCodeAt(0)-A+pos)%26) - A - pos + 52) % 26 + A);
+    const bwd = (c, wiring, pos) => {
+      const i = wiring.indexOf(String.fromCharCode((c.charCodeAt(0)-A+pos)%26 + A));
+      return String.fromCharCode((i - pos + 52) % 26 + A);
+    };
+
+    function enigma(text, positions) {
+      const p = [...positions].map(x => x.charCodeAt(0) - A);
+      return [...text.toUpperCase()].map(ch => {
+        if (!/[A-Z]/.test(ch)) return ch;
+        p[2] = (p[2] + 1) % 26;
+        let x = ch;
+        [['III',p[2]],['II',p[1]],['I',p[0]]].forEach(([w,pos]) => x = fwd(x, ROTORS[w], pos));
+        x = REFLECTOR_B[x.charCodeAt(0) - A];
+        [['I',p[0]],['II',p[1]],['III',p[2]]].forEach(([w,pos]) => x = bwd(x, ROTORS[w], pos));
+        return x;
+      }).join('');
+    }
+
+    document.getElementById('enigma-run').addEventListener('click', () => {
+      const positions = (document.getElementById('r1').value + document.getElementById('r2').value + document.getElementById('r3').value).toUpperCase().padEnd(3, 'A');
+      const msg = document.getElementById('enigma-msg').value;
+      document.getElementById('enigma-out').textContent = enigma(msg, positions);
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Quelle propriété cruciale a aidé à casser Enigma ?", choices:["Les rotors étaient trop lents","Une lettre ne peut pas se chiffrer elle-même","Le clavier était QWERTZ","Les Allemands n'utilisaient pas Enigma"], answer:1, explain:"À cause du réflecteur, on pouvait éliminer toute position rotor qui aurait permis ce cas — accélérant le test." },
+      { q:"Qui a conçu la 'Bombe' qui automatisait le cassage à Bletchley Park ?", choices:["Claude Shannon","Alan Turing","Marian Rejewski","John von Neumann"], answer:1, explain:"Turing (avec Welchman), s'appuyant sur les travaux préalables de Rejewski." },
+      { q:"Pourquoi Enigma est-elle 'auto-inverse' ?", choices:["Par chance","À cause du réflecteur qui rend la permutation involutive","Parce que tous les rotors sont identiques","Pour la rendre plus lente"], answer:1, explain:"Le réflecteur garantit qu'avec les mêmes réglages, taper E ⇒ X et taper X ⇒ E." },
+      { q:"Quel mot allemand stéréotypé servait souvent de 'crib' (mot probable) ?", choices:["Wettervorhersage (météo)","Schadenfreude","Glücklich","Computer"], answer:0, explain:"Les bulletins météo journaliers commençaient toujours pareil — cadeau pour la cryptanalyse." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('enigma',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('enigma-master')){CryptoLab.earnBadge('enigma-master',"Briseur d'Enigma",'⚙️');CryptoLab.showToast('⚙️ Badge débloqué : <u>Briseur d\\'Enigma</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

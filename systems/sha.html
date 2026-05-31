@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SHA — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🧬</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1993+ · NIST/NSA</div>
+        <h1 class="text-4xl md:text-5xl font-bold">SHA — Secure Hash Algorithms</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Cryptographic hash">Hash cryptographique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="One-way">Sens unique</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="Beginner level">Niveau débutant</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <p class="text-slate-300 leading-relaxed" data-en="A <strong>cryptographic hash function</strong> takes data of any size and produces a fixed-size digest — deterministic, one-way, and sensitive to a single-bit change. The SHA family (Secure Hash Algorithm) groups the main worldwide standards.">
+        Une <strong>fonction de hachage cryptographique</strong> prend une donnée de taille
+        quelconque et produit une empreinte de taille fixe — déterministe, à sens unique, et
+        sensible au moindre bit modifié. La famille SHA (Secure Hash Algorithm) regroupe les
+        principaux standards mondiaux.
+      </p>
+      <div class="mt-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-bold">SHA-1</div>
+          <div class="text-xs text-slate-400">160 bits · 1995</div>
+          <div class="text-red-400 text-xs mt-1" data-en="🛑 Broken (2017)">🛑 Cassé (2017)</div>
+        </div>
+        <div class="p-4 bg-emerald-500/5 border border-emerald-500/30 rounded-lg">
+          <div class="font-bold">SHA-256</div>
+          <div class="text-xs text-slate-400">256 bits · SHA-2</div>
+          <div class="text-emerald-400 text-xs mt-1">✓ Standard actuel</div>
+        </div>
+        <div class="p-4 bg-emerald-500/5 border border-emerald-500/30 rounded-lg">
+          <div class="font-bold">SHA-512</div>
+          <div class="text-xs text-slate-400">512 bits · SHA-2</div>
+          <div class="text-emerald-400 text-xs mt-1">✓ Très utilisé</div>
+        </div>
+        <div class="p-4 bg-brand-500/5 border border-brand-500/30 rounded-lg">
+          <div class="font-bold">SHA-3 (Keccak)</div>
+          <div class="text-xs text-slate-400">2015 · construction éponge</div>
+          <div class="text-brand-500 text-xs mt-1">✓ Alternative</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">⚙️ 2. Propriétés requises</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold mb-2 text-brand-500">1. Résistance à la préimage</div>
+          <p class="text-sm text-slate-400">Trouver M tel que H(M) = h est infaisable.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold mb-2 text-brand-500">2. Seconde préimage</div>
+          <p class="text-sm text-slate-400">Étant donné M₁, trouver M₂ ≠ M₁ avec H(M₁)=H(M₂) est infaisable.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold mb-2 text-brand-500">3. Résistance aux collisions</div>
+          <p class="text-sm text-slate-400">Trouver n'importe quels M₁ ≠ M₂ tels que H(M₁) = H(M₂) est infaisable.</p>
+        </div>
+      </div>
+      <p class="text-slate-300 mt-4 text-sm">
+        <strong>Effet avalanche</strong> : changer 1 bit en entrée doit modifier environ 50% des bits en sortie.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🧮 3. Construction Merkle-Damgård (SHA-2)</h2>
+      <p class="text-slate-300 mb-3" data-en="SHA-256 iterates a compression function over 512-bit blocks:">SHA-256 itère une fonction de compression sur des blocs de 512 bits :</p>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl">
+        <div class="text-center font-mono text-brand-500">H<sub>i</sub> = f(H<sub>i−1</sub>, M<sub>i</sub>)</div>
+        <div class="text-center text-xs text-slate-400 mt-2">avec H₀ = IV (valeur initiale fixe) et f = compression à 64 rounds</div>
+      </div>
+      <p class="text-slate-300 mt-4 text-sm" data-en="SHA-3 uses a totally different <em>sponge construction</em> (Keccak), chosen by NIST in 2012 to provide an alternative in case of structural flaw in SHA-2.">SHA-3 utilise une <em>construction éponge</em> totalement différente (Keccak), choisie par le NIST en 2012 pour offrir une alternative en cas de faille structurelle de SHA-2.</p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🔍 4. Simulation interactive (Web Crypto)</h2>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div>
+          <label class="block text-sm font-medium mb-2" data-en="Text to hash">Texte à hasher</label>
+          <textarea id="sha-in" rows="2" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none">CryptoLab 2026</textarea>
+        </div>
+        <div id="sha-hashes" class="space-y-3"></div>
+      </div>
+
+      <h3 class="text-xl font-bold mt-10 mb-4">⚡ Effet avalanche</h3>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-2">Texte A</label>
+            <input id="av-a" type="text" value="Bonjour" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Texte B (modifie 1 lettre)</label>
+            <input id="av-b" type="text" value="Bonsoir" class="w-full px-4 py-2 bg-ink-900 border border-white/10 rounded-lg font-mono focus:border-brand-500 focus:outline-none" />
+          </div>
+        </div>
+        <div id="av-out" class="space-y-2 font-mono text-xs break-all"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>import hashlib
+
+h = hashlib.sha256(b"CryptoLab 2026").hexdigest()
+print(h)  # 64 caractères hex = 256 bits
+
+# Hasher un fichier
+def file_sha256(path):
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(8192), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+# Hash de mot de passe : NE JAMAIS faire sha256(password) !
+# Utiliser Argon2id, scrypt, bcrypt, ou au minimum PBKDF2
+from hashlib import pbkdf2_hmac
+salt = b'random_per_user_salt'
+dk = pbkdf2_hmac('sha256', b'mon_motdepasse', salt, 600_000)</code></pre>
+      <pre id="code-js" class="hidden"><code>async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return [...new Uint8Array(buf)]
+    .map(b => b.toString(16).padStart(2,'0'))
+    .join('');
+}
+
+// Hasher un fichier (Blob)
+async function hashFile(file) {
+  const buf = await file.arrayBuffer();
+  const h = await crypto.subtle.digest('SHA-256', buf);
+  return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+console.log(await sha256("CryptoLab 2026"));</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.realworld">🌍 6. Cas réel & limites</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Use cases">✓ Usages</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Digital signatures (hash then sign)">Signatures numériques (hash puis signe)</li>
+            <li data-en="Integrity verification (checksums, Merkle trees)">Vérification d'intégrité (checksums, Merkle trees)</li>
+            <li data-en="Bitcoin (double SHA-256 for Proof of Work)">Bitcoin (double SHA-256 pour Proof of Work)</li>
+            <li data-en="Git (SHA-1 IDs → migrating to SHA-256)">Git (identifiants SHA-1 → migration SHA-256)</li>
+            <li data-en="HMAC (authentication)">HMAC (authentification)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Pitfalls">✗ Pièges</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="NEVER sha256(password) alone → use Argon2/bcrypt">NE JAMAIS sha256(password) seul → utiliser Argon2/bcrypt</li>
+            <li data-en="Length-extension attack on Merkle-Damgård (SHA-256 without HMAC)">Length-extension attack sur Merkle-Damgård (SHA-256 sans HMAC)</li>
+            <li data-en="MD5 and SHA-1 broken: forbidden in security">MD5 et SHA-1 cassés : interdits en sécurité</li>
+            <li data-en="Grover halves → SHA-256 → 128 bits post-quantum">Grover divise par 2 → SHA-256 → 128 bits post-quantique</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="MD5 collisions (Wang 2004)">Collisions MD5 (Wang 2004)</div>
+          <p class="text-xs text-slate-300" data-en="Collision in ~seconds on modern CPU. MD5 banned in security.">Collision en ~secondes sur CPU moderne. MD5 interdit en sécurité.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="SHAttered (SHA-1, Google 2017)">SHAttered (SHA-1, Google 2017)</div>
+          <p class="text-xs text-slate-300" data-en="110 GPU-years for a collision. SHA-1 banned since 2017.">110 années-GPU pour une collision. SHA-1 interdit depuis 2017.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Length-extension attack">Length-extension attack</div>
+          <p class="text-xs text-slate-300" data-en="SHA-256(secret ∥ message) allows hash extension → always use HMAC.">SHA-256(secret ∥ message) permet d'étendre le hash → toujours utiliser HMAC.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Naive password hashing">Hash de mot de passe naïf</div>
+          <p class="text-xs text-slate-300" data-en="sha256(pw) crackable at 100 Gh/s on GPU → use Argon2id/bcrypt/scrypt.">sha256(pw) cassable à 100 Gh/s sur GPU → utiliser Argon2id/bcrypt/scrypt.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Rainbow tables (no salt)">Rainbow tables (sans sel)</div>
+          <p class="text-xs text-slate-300" data-en="Precomputed hash tables → 14 billion entries on 4 GB.">Tables précalculées de hashes → 14 milliards d'entrées sur 4 Go.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Grover's algorithm (quantum)">Algorithme de Grover (quantique)</div>
+          <p class="text-xs text-slate-300" data-en="SHA-256 → 128 bits collision security. Prefer SHA-384/512 long term.">SHA-256 → 128 bits de sécurité collision. SHA-384/512 à privilégier long terme.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    const enc = new TextEncoder();
+    const toHex = b => [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+
+    async function refreshHashes() {
+      const text = document.getElementById('sha-in').value;
+      const data = enc.encode(text);
+      const algos = ['SHA-1','SHA-256','SHA-384','SHA-512'];
+      const cont = document.getElementById('sha-hashes');
+      cont.innerHTML = '';
+      for (const algo of algos) {
+        const h = toHex(await crypto.subtle.digest(algo, data));
+        cont.innerHTML += `
+          <div class="p-3 bg-ink-900 border border-white/10 rounded">
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold ${algo==='SHA-1'?'text-red-400':'text-brand-500'}">${algo}</span>
+              <span class="text-slate-500">${h.length*4} bits</span>
+            </div>
+            <div class="font-mono text-xs break-all">${h}</div>
+          </div>`;
+      }
+    }
+    document.getElementById('sha-in').addEventListener('input', refreshHashes);
+    refreshHashes();
+
+    async function refreshAv() {
+      const a = document.getElementById('av-a').value;
+      const b = document.getElementById('av-b').value;
+      const ha = toHex(await crypto.subtle.digest('SHA-256', enc.encode(a)));
+      const hb = toHex(await crypto.subtle.digest('SHA-256', enc.encode(b)));
+      // Highlight differing nibbles
+      let diff = 0;
+      const cmp = [...ha].map((c,i)=>{
+        const same = c === hb[i];
+        if (!same) diff++;
+        return same ? c : `<span class="text-red-400 bg-red-500/10">${hb[i]}</span>`;
+      }).join('');
+      document.getElementById('av-out').innerHTML = `
+        <div class="p-3 bg-ink-900 border border-white/10 rounded"><span class="text-slate-400">SHA-256(A) :</span><br>${ha}</div>
+        <div class="p-3 bg-ink-900 border border-white/10 rounded"><span class="text-slate-400">SHA-256(B) :</span><br>${cmp}</div>
+        <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded text-amber-300">≈ ${Math.round(diff/ha.length*100)}% des hex changés alors que A et B ne diffèrent que d'une lettre.</div>
+      `;
+    }
+    document.getElementById('av-a').addEventListener('input', refreshAv);
+    document.getElementById('av-b').addEventListener('input', refreshAv);
+    refreshAv();
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Combien de bits produit SHA-256 ?", choices:["128","256","512","64"], answer:1, explain:"256 bits, soit 64 caractères en hexadécimal." },
+      { q:"Pourquoi MD5 et SHA-1 sont-ils déconseillés ?", choices:["Trop lents","Collisions trouvées en pratique","Pas open source","Brevetés"], answer:1, explain:"MD5 (2004, Wang) et SHA-1 (2017, Google SHAttered) sont concrètement cassés." },
+      { q:"Que faut-il ajouter pour hasher correctement un mot de passe ?", choices:["Rien, SHA-256 suffit","Un sel + une fonction lente (Argon2, bcrypt)","Un chiffrement AES","Un nonce"], answer:1, explain:"Le sel évite les rainbow tables ; la lenteur ralentit le brute force GPU." },
+      { q:"Que démontre l'effet avalanche ?", choices:["Le hash est lent","Un changement minime d'entrée transforme presque tout le hash","Le hash est réversible","Le hash compresse les données"], answer:1, explain:"≈ 50% des bits changent. Indispensable pour qu'on ne déduise rien du hash." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('sha',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('sha-master')){CryptoLab.earnBadge('sha-master','Expert Hash','🧬');CryptoLab.showToast('🧬 Badge débloqué : <u>Expert Hash</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

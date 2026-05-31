@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECDSA & EdDSA — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">✍️</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500" data-en="1992 / 2011 · Elliptic signatures">1992 / 2011 · Signatures elliptiques</div>
+        <h1 class="text-4xl md:text-5xl font-bold" data-en="ECDSA & EdDSA">ECDSA & EdDSA</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Digital signature">Signature numérique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Asymmetric">Asymétrique</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="Bitcoin · TLS · SSH">Bitcoin · TLS · SSH</span>
+      
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Inventors">Inventeurs</div><div class="font-semibold" data-en="Vanstone (ECDSA), Bernstein (EdDSA)">Vanstone (ECDSA), Bernstein (EdDSA)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Years">Années</div><div class="font-semibold" data-en="1992 (ECDSA) · 2011 (EdDSA)">1992 (ECDSA) · 2011 (EdDSA)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Type">Type</div><div class="font-semibold" data-en="Elliptic digital signature">Signature numérique elliptique</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>ECDSA</strong> (Elliptic Curve Digital Signature Algorithm) is DSA adapted to elliptic curves — used by Bitcoin (secp256k1), TLS, certificates. <strong>EdDSA</strong> (Edwards-curve Digital Signature Algorithm) is the modern version: 64-byte deterministic signatures, safer and faster. Ed25519 is the most famous instance, now standard for SSH, Git, Tor, JWT."><strong>ECDSA</strong> (Elliptic Curve Digital Signature Algorithm) est l'adaptation de DSA aux courbes elliptiques — utilisé par Bitcoin (secp256k1), TLS, certificats. <strong>EdDSA</strong> (Edwards-curve Digital Signature Algorithm) est la version moderne : signatures déterministes 64 octets, plus sûre et plus rapide. Ed25519 est l'instance la plus connue, devenue standard pour SSH, Git, Tor, JWT.</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <div data-en="<p class="text-slate-300 mb-4"><strong>ECDSA</strong> needs randomness <em>k</em> at each signature — a critical point:</p>
+      <div class="p-5 bg-white/5 border border-white/10 rounded-xl space-y-2 text-sm">
+        <div>1. Hash: <code>e = HASH(message)</code></div>
+        <div>2. Pick random k ∈ [1, n−1]</div>
+        <div>3. Compute (x₁, y₁) = k·G &nbsp;→&nbsp; <code>r = x₁ mod n</code></div>
+        <div>4. <code>s = k⁻¹ · (e + r·d) mod n</code> &nbsp;(d = private key)</div>
+        <div>5. Signature = (r, s)</div>
+      </div>
+      <p class="text-slate-300 mt-4 mb-4"><strong>EdDSA</strong> eliminates randomness — k is derived deterministically from the message hash and part of the private key:</p>
+      <div class="p-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl space-y-2 text-sm">
+        <div>1. <code>k = HASH(prefix ∥ message)</code> &nbsp;(prefix = secret derived from private key)</div>
+        <div>2. <code>R = k·G</code></div>
+        <div>3. <code>S = k + HASH(R ∥ A ∥ M) · a mod L</code> &nbsp;(a = private key)</div>
+        <div>4. Signature = (R, S), 64 bytes total</div>
+      </div>"><p class="text-slate-300 mb-4"><strong>ECDSA</strong> nécessite un aléa <em>k</em> à chaque signature — un point critique :</p>
+      <div class="p-5 bg-white/5 border border-white/10 rounded-xl space-y-2 text-sm">
+        <div>1. Hash : <code>e = HASH(message)</code></div>
+        <div>2. Choisir aléa k ∈ [1, n−1]</div>
+        <div>3. Calculer (x₁, y₁) = k·G &nbsp;→&nbsp; <code>r = x₁ mod n</code></div>
+        <div>4. <code>s = k⁻¹ · (e + r·d) mod n</code> &nbsp;(d = clé privée)</div>
+        <div>5. Signature = (r, s)</div>
+      </div>
+      <p class="text-slate-300 mt-4 mb-4"><strong>EdDSA</strong> élimine l'aléa — k est dérivé déterministiquement du hash du message et d'une partie de la clé privée :</p>
+      <div class="p-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl space-y-2 text-sm">
+        <div>1. <code>k = HASH(prefix ∥ message)</code> &nbsp;(prefix = secret dérivé de la clé privée)</div>
+        <div>2. <code>R = k·G</code></div>
+        <div>3. <code>S = k + HASH(R ∥ A ∥ M) · a mod L</code> &nbsp;(a = clé privée)</div>
+        <div>4. Signature = (R, S), 64 octets total</div>
+      </div></div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="math-box text-center" data-en="<div class="text-brand-500">ECDSA: r = (k·G).x mod n,&nbsp; s = k⁻¹ (e + r·d) mod n</div><div class="text-emerald-400 mt-2">EdDSA: k = H(prefix ∥ M) deterministic</div><div class="text-amber-400 mt-2">Verification: u₁G + u₂A == R (ECDSA) / 8S·G == 8R + 8H·A (EdDSA)</div>"><div class="text-brand-500">ECDSA : r = (k·G).x mod n,&nbsp; s = k⁻¹ (e + r·d) mod n</div><div class="text-emerald-400 mt-2">EdDSA : k = H(prefix ∥ M) déterministe</div><div class="text-amber-400 mt-2">Vérification : u₁G + u₂A == R (ECDSA) / 8S·G == 8R + 8H·A (EdDSA)</div></div>
+      <p class="text-slate-300 mt-4 text-sm" data-en="Security = elliptic curve discrete log problem (ECDLP). EdDSA adds resistance to bad RNG (without which ECDSA collapses).">Sécurité = problème du log discret sur courbe elliptique (ECDLP). EdDSA ajoute la résistance aux mauvais RNG (sans laquelle ECDSA s'effondre).</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.code">💻 4. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>from cryptography.hazmat.primitives.asymmetric.ec import generate_private_key, SECP256R1, ECDSA
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives import hashes
+
+# === ECDSA (P-256) — encore très utilisé ===
+ec_priv = generate_private_key(SECP256R1())
+sig = ec_priv.sign(b"message", ECDSA(hashes.SHA256()))
+ec_priv.public_key().verify(sig, b"message", ECDSA(hashes.SHA256()))
+
+# === EdDSA (Ed25519) — choix moderne ===
+ed_priv = Ed25519PrivateKey.generate()
+sig = ed_priv.sign(b"message")           # 64 octets, déterministe
+ed_priv.public_key().verify(sig, b"message")
+
+# Bitcoin utilise ECDSA sur secp256k1. Migration progressive vers Schnorr (BIP340).
+# Pour tout nouveau projet en 2026 : préférer Ed25519 partout où possible.</code></pre>
+      <pre id="code-js" class="hidden"><code>// Ed25519 via Web Crypto API (support 2023+)
+const keyPair = await crypto.subtle.generateKey({ name: 'Ed25519' }, true, ['sign','verify']);
+const message = new TextEncoder().encode('message');
+const signature = await crypto.subtle.sign('Ed25519', keyPair.privateKey, message);
+const ok = await crypto.subtle.verify('Ed25519', keyPair.publicKey, signature, message);
+console.log(ok);  // true
+
+// ECDSA P-256
+const ecKp = await crypto.subtle.generateKey(
+  { name:'ECDSA', namedCurve:'P-256' }, true, ['sign','verify']);
+const ecSig = await crypto.subtle.sign(
+  { name:'ECDSA', hash:'SHA-256' }, ecKp.privateKey, message);</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-en="🌍 5. Real-world: pros, cons, flaws">🌍 5. Cas réel : avantages, inconvénients, failles</span></h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-5 bg-emerald-500/5 border-emerald-500/20 border rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✅ Advantages">✅ Avantages</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Very small signatures (64 bytes for Ed25519)">Signatures très petites (64 o pour Ed25519)</li>
+            <li data-en="Very fast (10-100× faster than RSA)">Très rapide (10-100× plus rapide que RSA)</li>
+            <li data-en="EdDSA deterministic: no need for reliable RNG">EdDSA déterministe : pas besoin d'aléa fiable</li>
+            <li data-en="Standard everywhere: Bitcoin, Ethereum, TLS, SSH, Tor, Git">Standard partout : Bitcoin, Ethereum, TLS, SSH, Tor, Git</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-amber-500/5 border-amber-500/20 border rounded-xl">
+          <div class="text-amber-400 font-semibold mb-2" data-en="⚠️ Disadvantages">⚠️ Inconvénients</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="ECDSA needs perfect RNG — a reused k = key revealed">ECDSA exige un RNG parfait — un k réutilisé = clé révélée</li>
+            <li data-en="Parameter validation tricky (point not on curve)">Validation des paramètres délicate (point pas sur courbe)</li>
+            <li data-en="EdDSA hardware support still limited (HSM, TPM legacy)">EdDSA support hardware encore limité (HSM, TPM legacy)</li>
+            <li data-en="No built-in revocation mechanism">Aucun mécanisme de révocation intégré</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border-red-500/30 border rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="💥 Known flaws">💥 Failles connues</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="PlayStation 3 (2010): constant k → master signing key extracted">PlayStation 3 (2010) : k constant → master signing key extraite</li>
+            <li data-en="Sony Bitcoin (2013): broken Android Java RNG → BTC theft">Sony Bitcoin (2013) : RNG Android Java cassé → vol de BTC</li>
+            <li data-en="Lattice attacks on k bias (Howgrave-Graham, 2001+)">Lattice attacks sur biais de k (Howgrave-Graham, 2001+)</li>
+            <li data-en="Minerva (2019): ECDSA leak via timing on slow curves">Minerva (2019) : ECDSA leak via timing sur courbes lentes</li>
+            <li data-en="Shor (quantum): breaks ECDSA and EdDSA → PQC migration">Shor (quantique) : casse ECDSA et EdDSA → migration PQC</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🧠 Quiz -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz" data-en="🧠 Quiz">🧠 Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+
+    <script>
+      const QUIZ_DATA = [
+      {q_fr:"Quelle est la différence clé entre ECDSA et EdDSA ?", q_en:"What is the key difference between ECDSA and EdDSA?", choices_fr:["EdDSA est plus lent", "EdDSA est déterministe (pas d"aléa requis)", "ECDSA utilise SHA-3", "Aucune"], choices_en:["EdDSA is slower", "EdDSA is deterministic (no randomness needed)", "ECDSA uses SHA-3", "None"], answer:1, e_fr:"EdDSA dérive k du hash → robuste aux mauvais RNG. ECDSA s"effondre si k est faible.", e_en:"EdDSA derives k from hash → robust to bad RNG. ECDSA collapses if k is weak."},
+      {q_fr:"Quelle courbe Bitcoin utilise-t-il pour ses signatures ?", q_en:"Which curve does Bitcoin use for signatures?", choices_fr:["Curve25519", "secp256k1", "P-256", "BLS12-381"], choices_en:["Curve25519", "secp256k1", "P-256", "BLS12-381"], answer:1, e_fr:"secp256k1 — particularité Koblitz qui permet certaines optimisations.", e_en:"secp256k1 — Koblitz form allowing specific optimizations."},
+      {q_fr:"Quelle est la taille d"une signature Ed25519 ?", q_en:"What size is an Ed25519 signature?", choices_fr:["32 octets", "64 octets", "128 octets", "256 octets"], choices_en:["32 bytes", "64 bytes", "128 bytes", "256 bytes"], answer:1, e_fr:"64 octets : composées de R (32 o) et S (32 o).", e_en:"64 bytes: composed of R (32 B) and S (32 B)."},
+      {q_fr:"Que s"est-il passé en 2010 avec la PS3 ?", q_en:"What happened in 2010 with the PS3?", choices_fr:["Sony a utilisé MD5", "Sony a réutilisé la même valeur k → master signing key extraite", "La clé privée a été imprimée dans le manuel", "Rien"], choices_en:["Sony used MD5", "Sony reused the same k value → master signing key extracted", "The private key was printed in the manual", "Nothing"], answer:1, e_fr:"fail0verflow a récupéré la master key Sony grâce à un k constant en ECDSA.", e_en:"fail0verflow extracted Sony master key thanks to a constant k in ECDSA."}
+    ];
+    </script>
+
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab').forEach(t => {
+          t.classList.remove('bg-brand-500','text-white');
+          t.classList.add('bg-white/5','border','border-white/10');
+        });
+        tab.classList.add('bg-brand-500','text-white');
+        tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden', tab.dataset.lang!=='js');
+      });
+    });
+
+    // Quiz logic
+    const Q = QUIZ_DATA;
+    const quizDiv = document.getElementById('quiz');
+    function renderQuiz() {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      quizDiv.innerHTML = '';
+      Q.forEach((q,i) => {
+        const b = document.createElement('div');
+        b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+        const question = lang==='en' ? q.q_en : q.q_fr;
+        const choices = lang==='en' ? q.choices_en : q.choices_fr;
+        b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${question}</div>
+          <div class="space-y-2">${choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+          <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+        quizDiv.appendChild(b);
+      });
+    }
+    renderQuiz();
+    document.addEventListener('lang-changed', renderQuiz);
+
+    document.getElementById('quiz-submit').addEventListener('click', () => {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      let score = 0;
+      Q.forEach((q,i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l => l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex = quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        const explainLabel = lang==='en' ? 'Explanation' : 'Explication';
+        ex.innerHTML = `<strong class="text-brand-500">${explainLabel} :</strong> ${lang==='en' ? q.e_en : q.e_fr}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) { const ch = +sel.value; if (ch === q.answer) score++; else labels[ch].classList.add('quiz-wrong'); }
+      });
+      const r = document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const ok = score === Q.length;
+      const msg = ok ? (lang==='en'?'🎉 Flawless!':'🎉 Sans-faute !')
+                : score >= Q.length/2 ? (lang==='en'?'👍 Not bad.':'👍 Pas mal.')
+                : (lang==='en'?'📚 Retry.':'📚 Réessaie.');
+      const cls = ok ? 'border-emerald-500/40 bg-emerald-500/10'
+                : score >= Q.length/2 ? 'border-amber-500/40 bg-amber-500/10'
+                : 'border-red-500/40 bg-red-500/10';
+      r.className = `mt-6 p-5 rounded-xl border ${cls}`;
+      r.innerHTML = `<div class="font-semibold text-lg mb-1">${lang==='en'?'Score':'Score'} : ${score}/${Q.length}</div><div class="text-sm text-slate-300">${msg}</div>`;
+      CryptoLab.recordScore('ecdsa', score, Q.length);
+      if (ok && !CryptoLab.hasBadge('ecdsa-master')) {
+        const label = lang==='en' ? 'ECDSA Signer' : 'Signataire ECDSA';
+        CryptoLab.earnBadge('ecdsa-master', label, '✍️');
+        CryptoLab.showToast('✍️ ' + (lang==='en'?'Badge unlocked':'Badge débloqué') + ' : <u>'+label+'</u> !');
+      }
+    });
+  </script>
+</body>
+</html>

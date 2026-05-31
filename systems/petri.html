@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Réseaux de Petri & cryptographie — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">🔷</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500" data-en="1962 · Carl Adam Petri">1962 · Carl Adam Petri</div>
+        <h1 class="text-4xl md:text-5xl font-bold" data-en="Petri nets & cryptography">Réseaux de Petri & cryptographie</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Formal verification">Vérification formelle</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Concurrency models">Modèles de concurrence</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Advanced level">Niveau avancé</span>
+      
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Inventor">Inventeur</div><div class="font-semibold" data-en="Carl Adam Petri">Carl Adam Petri</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Year">Année</div><div class="font-semibold" data-en="1962 (PhD thesis)">1962 (thèse PhD)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Crypto usage">Usage en crypto</div><div class="font-semibold" data-en="Protocol verification">Vérification de protocoles</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Petri nets</strong> are NOT a cryptosystem — they're graphical models of <em>concurrent systems</em> (introduced by Carl Adam Petri in 1962). Their link to cryptography: they're used to <strong>formally model and verify cryptographic protocols</strong>, automatically detecting logical flaws (deadlocks, forbidden sequences, replay attacks, MITM).">Les <strong>réseaux de Petri</strong> ne sont PAS un cryptosystème — ce sont des modèles graphiques de <em>systèmes concurrents</em> (introduits par Carl Adam Petri en 1962). Leur lien avec la cryptographie : on les utilise pour <strong>modéliser et vérifier formellement des protocoles cryptographiques</strong>, détecter automatiquement des failles logiques (deadlocks, séquences interdites, attaques par rejeu, MITM).</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.howitworks">⚙️ 2. Fonctionnement</span></h2>
+      <div data-en="<p class="text-slate-300 mb-4">A Petri net consists of:</p>
+      <div class="grid md:grid-cols-2 gap-3 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500 mb-1">Places (circles)</div>
+          <p class="text-xs text-slate-400">System states (e.g. "Alice waiting for ack", "shared key valid")</p>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500 mb-1">Transitions (bars)</div>
+          <p class="text-xs text-slate-400">Events (e.g. "send challenge", "verify signature")</p>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500 mb-1">Directed arcs</div>
+          <p class="text-xs text-slate-400">Flow between places and transitions (pre/post conditions)</p>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500 mb-1">Tokens (•)</div>
+          <p class="text-xs text-slate-400">Represent resources / in-flight messages</p>
+        </div>
+      </div>
+      <p class="text-slate-300 mb-4"><strong>Crypto application: protocol verification.</strong> We model actors (Alice, Bob, Eve), their messages, their mental states. We mechanically explore <em>all</em> possible interleavings → we detect attacks never imagined.</p>
+      <div class="p-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+        <div class="text-emerald-400 font-semibold mb-2">Historical example: Needham-Schroeder (1995)</div>
+        <p class="text-xs text-slate-300">Gavin Lowe used a similar model-checking exploration (FDR) to discover, 17 years after publication, a MITM attack on the Needham-Schroeder protocol. Petri nets apply the same idea with graphical formalism.</p>
+      </div>"><p class="text-slate-300 mb-4">Un réseau de Petri se compose de :</p>
+      <div class="grid md:grid-cols-2 gap-3 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500 mb-1">Places (cercles)</div>
+          <p class="text-xs text-slate-400">États du système (ex : "Alice attend ack", "clé partagée valide")</p>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500 mb-1">Transitions (barres)</div>
+          <p class="text-xs text-slate-400">Événements (ex : "envoyer challenge", "vérifier signature")</p>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500 mb-1">Arcs orientés</div>
+          <p class="text-xs text-slate-400">Flux entre places et transitions (préconditions / postconditions)</p>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500 mb-1">Jetons (•)</div>
+          <p class="text-xs text-slate-400">Représentent les ressources / messages en cours</p>
+        </div>
+      </div>
+      <p class="text-slate-300 mb-4"><strong>Application en crypto : vérification de protocoles.</strong> On modélise les acteurs (Alice, Bob, Eve), leurs messages, leurs états mentaux. On explore mécaniquement <em>tous</em> les enchaînements possibles → on détecte des attaques jamais imaginées.</p>
+      <div class="p-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+        <div class="text-emerald-400 font-semibold mb-2">Exemple historique : Needham-Schroeder (1995)</div>
+        <p class="text-xs text-slate-300">Gavin Lowe utilise une exploration model-checking similaire (FDR) pour découvrir, 17 ans après sa publication, une attaque MITM sur le protocole Needham-Schroeder. Les réseaux de Petri appliquent la même idée avec un formalisme graphique.</p>
+      </div></div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="math-box text-center" data-en="<div class="text-brand-500">Net N = (P, T, F, M₀)</div><div class="text-emerald-400 mt-2">P = places · T = transitions · F ⊆ (P×T) ∪ (T×P) · M₀ = initial marking</div><div class="text-amber-400 mt-2">Reachable state space from M₀ → exhaustive exploration to detect property violation (CTL/LTL)</div>"><div class="text-brand-500">Réseau N = (P, T, F, M₀)</div><div class="text-emerald-400 mt-2">P = ensemble de places · T = transitions · F ⊆ (P×T) ∪ (T×P) · M₀ = marquage initial</div><div class="text-amber-400 mt-2">Espace d'états reachable depuis M₀ → exploration exhaustive pour détecter une violation de propriété (CTL/LTL)</div></div>
+      <p class="text-slate-300 mt-4 text-sm" data-en="Useful variants in crypto: <strong>colored Petri nets</strong> (typed tokens for nonces, keys, identities), <strong>timed Petri nets</strong> (model timeouts, validity windows), <strong>stochastic Petri nets</strong> (attack probabilities).">Variantes utiles en crypto : <strong>colored Petri nets</strong> (jetons typés représentant nonces, clés, identités), <strong>timed Petri nets</strong> (modéliser timeouts, fenêtres de validité), <strong>stochastic Petri nets</strong> (probabilités d'attaque).</p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.code">💻 4. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># Modélisation d'un protocole simple avec snakes (Python Petri nets)
+# pip install snakes
+from snakes.nets import *
+
+n = PetriNet('Needham-Schroeder simplifié')
+
+# Places : états des acteurs
+n.add_place(Place('Alice_init', [dot]))
+n.add_place(Place('Bob_init', [dot]))
+n.add_place(Place('Eve_observe', []))
+n.add_place(Place('Alice_sent_Na', []))
+n.add_place(Place('Bob_received', []))
+
+# Transition : Alice envoie son nonce
+n.add_transition(Transition('Alice_send', Expression('True')))
+n.add_input('Alice_init', 'Alice_send', Variable('x'))
+n.add_output('Alice_sent_Na', 'Alice_send', Variable('x'))
+n.add_output('Eve_observe', 'Alice_send', Expression("'Na'"))  # Eve écoute
+
+# Transition : Bob reçoit
+n.add_transition(Transition('Bob_recv', Expression('True')))
+n.add_input('Alice_sent_Na', 'Bob_recv', Variable('x'))
+n.add_input('Bob_init', 'Bob_recv', Variable('y'))
+n.add_output('Bob_received', 'Bob_recv', Expression("(x, y)"))
+
+# Explore l'espace d'états → cherche un marquage où Eve a appris la clé
+graph = StateGraph(n)
+graph.build()
+print(f"États accessibles : {len(graph)}")
+# En pratique : utiliser CPN Tools, ProVerif, Tamarin pour vérif de protocoles</code></pre>
+      <pre id="code-js" class="hidden"><code>// Réseaux de Petri en JS : pas de standard, mais on peut utiliser
+// des bibliothèques académiques comme petrinet.js.
+// Pour la vérification de protocoles crypto en pratique, les outils dédiés sont :
+//
+//  - ProVerif (Inria) : pi-calcul + bibliothèque crypto symbolique
+//  - Tamarin Prover (ETH Zurich) : multiset rewriting
+//  - Scyther (Cas Cremers)
+//  - AVISPA
+//
+// Ces outils ont trouvé des failles dans :
+//  - TLS 1.0/1.1/1.2 (multiples CVE)
+//  - 5G AKA (attaques 2018)
+//  - WPA3 Dragonfly (2019)
+//  - Signal Protocol (analyses formelles 2017)
+//  - EMV (cartes bancaires sans contact, 2020)
+
+console.log("Réseaux de Petri = formalisme académique pour modéliser concurrence.");
+console.log("Application crypto = exploration exhaustive des comportements d'attaque.");</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-en="🌍 5. Real-world: pros, cons, flaws">🌍 5. Cas réel : avantages, inconvénients, failles</span></h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-5 bg-emerald-500/5 border-emerald-500/20 border rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✅ Advantages">✅ Avantages</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Intuitive graphical formalism">Formalisme graphique intuitif</li>
+            <li data-en="Automatic detection of attack sequences">Détection automatique de séquences d'attaque</li>
+            <li data-en="Exhaustive protocol state exploration">Exploration exhaustive des états du protocole</li>
+            <li data-en="Rich variants: colored, timed, stochastic">Variantes riches : colored, timed, stochastic</li>
+            <li data-en="Mature theory for 60 years">Théorie mature depuis 60 ans</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-amber-500/5 border-amber-500/20 border rounded-xl">
+          <div class="text-amber-400 font-semibold mb-2" data-en="⚠️ Disadvantages">⚠️ Inconvénients</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Combinatorial state-space explosion">Explosion combinatoire de l'espace d'états</li>
+            <li data-en="Not suited for cryptographic primitives themselves (focus on protocols)">Pas adapté aux primitives cryptographiques elles-mêmes (focus protocoles)</li>
+            <li data-en="Dedicated tools (Tamarin, ProVerif) often preferred in practice">Outils dédiés (Tamarin, ProVerif) souvent préférés en pratique</li>
+            <li data-en="Steep learning curve">Courbe d'apprentissage raide</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border-red-500/30 border rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="💥 Known flaws">💥 Failles connues</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="No intrinsic "flaws" (not a cryptosystem)">Pas de "failles" intrinsèques (ce n'est pas un crypto)</li>
+            <li data-en="PRACTICAL LIMIT: does not capture side-channel attacks">LIMITE pratique : ne capture pas les attaques par canal auxiliaire</li>
+            <li data-en="LIMIT: symbolic model → misses fine cryptanalytic attacks">LIMITE : modèle symbolique → manque les attaques cryptanalytiques fines</li>
+            <li data-en="Bugs in the model = proven security but real system vulnerable">Bugs dans le modèle = sécurité prouvée mais système réel vulnérable</li>
+            <li data-en="Famous detections: Needham-Schroeder MITM (Lowe 1995), 5G AKA (2018)">Exemples célèbres détectés : Needham-Schroeder MITM (Lowe 1995), 5G AKA (2018)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🧠 Quiz -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz" data-en="🧠 Quiz">🧠 Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+
+    <script>
+      const QUIZ_DATA = [
+      {q_fr:"Les réseaux de Petri sont-ils un cryptosystème ?", q_en:"Are Petri nets a cryptosystem?", choices_fr:["Oui, symétrique", "Oui, asymétrique", "NON, ce sont des modèles de concurrence", "Oui, post-quantique"], choices_en:["Yes, symmetric", "Yes, asymmetric", "NO, they are concurrency models", "Yes, post-quantum"], answer:2, e_fr:"Ce sont des modèles formels — utilisés en crypto pour vérifier des protocoles.", e_en:"They are formal models — used in crypto to verify protocols."},
+      {q_fr:"À quoi servent-ils principalement en cryptographie ?", q_en:"What are they mainly used for in cryptography?", choices_fr:["Chiffrer des messages", "Vérifier formellement des protocoles (attaques par rejeu, MITM, deadlocks)", "Générer des nombres premiers", "Hasher des fichiers"], choices_en:["Encrypt messages", "Formally verify protocols (replay attacks, MITM, deadlocks)", "Generate primes", "Hash files"], answer:1, e_fr:"On modélise les acteurs et leurs messages → exploration exhaustive → détection d"attaques.", e_en:"We model actors and their messages → exhaustive exploration → attack detection."},
+      {q_fr:"Quel chercheur a trouvé une faille MITM dans Needham-Schroeder avec model-checking en 1995 ?", q_en:"Who found a MITM flaw in Needham-Schroeder using model-checking in 1995?", choices_fr:["Diffie", "Lowe", "Schneier", "Bernstein"], choices_en:["Diffie", "Lowe", "Schneier", "Bernstein"], answer:1, e_fr:"Gavin Lowe a démontré l"attaque 17 ans après la publication originale.", e_en:"Gavin Lowe demonstrated the attack 17 years after the original publication."},
+      {q_fr:"Quel est le grand inconvénient des réseaux de Petri pour la vérif ?", q_en:"What is the big drawback of Petri nets for verification?", choices_fr:["Ils sont trop simples", "Explosion combinatoire de l"espace d"états", "Ils sont brevetés", "Pas open source"], choices_en:["Too simple", "Combinatorial state-space explosion", "They are patented", "Not open source"], answer:1, e_fr:"Pour des protocoles complexes, le nombre d"états explose exponentiellement.", e_en:"For complex protocols, the state count explodes exponentially."}
+    ];
+    </script>
+
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab').forEach(t => {
+          t.classList.remove('bg-brand-500','text-white');
+          t.classList.add('bg-white/5','border','border-white/10');
+        });
+        tab.classList.add('bg-brand-500','text-white');
+        tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden', tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden', tab.dataset.lang!=='js');
+      });
+    });
+
+    // Quiz logic
+    const Q = QUIZ_DATA;
+    const quizDiv = document.getElementById('quiz');
+    function renderQuiz() {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      quizDiv.innerHTML = '';
+      Q.forEach((q,i) => {
+        const b = document.createElement('div');
+        b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+        const question = lang==='en' ? q.q_en : q.q_fr;
+        const choices = lang==='en' ? q.choices_en : q.choices_fr;
+        b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${question}</div>
+          <div class="space-y-2">${choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+          <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+        quizDiv.appendChild(b);
+      });
+    }
+    renderQuiz();
+    document.addEventListener('lang-changed', renderQuiz);
+
+    document.getElementById('quiz-submit').addEventListener('click', () => {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      let score = 0;
+      Q.forEach((q,i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l => l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex = quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden');
+        const explainLabel = lang==='en' ? 'Explanation' : 'Explication';
+        ex.innerHTML = `<strong class="text-brand-500">${explainLabel} :</strong> ${lang==='en' ? q.e_en : q.e_fr}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if (sel) { const ch = +sel.value; if (ch === q.answer) score++; else labels[ch].classList.add('quiz-wrong'); }
+      });
+      const r = document.getElementById('quiz-result');
+      r.classList.remove('hidden');
+      const ok = score === Q.length;
+      const msg = ok ? (lang==='en'?'🎉 Flawless!':'🎉 Sans-faute !')
+                : score >= Q.length/2 ? (lang==='en'?'👍 Not bad.':'👍 Pas mal.')
+                : (lang==='en'?'📚 Retry.':'📚 Réessaie.');
+      const cls = ok ? 'border-emerald-500/40 bg-emerald-500/10'
+                : score >= Q.length/2 ? 'border-amber-500/40 bg-amber-500/10'
+                : 'border-red-500/40 bg-red-500/10';
+      r.className = `mt-6 p-5 rounded-xl border ${cls}`;
+      r.innerHTML = `<div class="font-semibold text-lg mb-1">${lang==='en'?'Score':'Score'} : ${score}/${Q.length}</div><div class="text-sm text-slate-300">${msg}</div>`;
+      CryptoLab.recordScore('petri', score, Q.length);
+      if (ok && !CryptoLab.hasBadge('petri-master')) {
+        const label = lang==='en' ? 'Petri Modeler' : 'Modélisateur Petri';
+        CryptoLab.earnBadge('petri-master', label, '🔷');
+        CryptoLab.showToast('🔷 ' + (lang==='en'?'Badge unlocked':'Badge débloqué') + ' : <u>'+label+'</u> !');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECC — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🔺</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1985 · Koblitz & Miller</div>
+        <h1 class="text-4xl md:text-5xl font-bold">ECC — Courbes elliptiques</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Asymmetric">Asymétrique</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Curve discrete log">Log discret sur courbe</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Advanced">Avancé</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Elliptic curve cryptography (ECC)</strong> offers the same security as RSA with <em>much smaller</em> keys: 256-bit ECC ≈ 3072-bit RSA. That's why it dominates modern cryptography — TLS 1.3, Bitcoin, Signal, SSH, mobile identity.">
+        La <strong>cryptographie sur courbes elliptiques (ECC)</strong> offre la même sécurité
+        que RSA avec des clés <em>bien plus petites</em> : 256 bits ECC ≈ 3072 bits RSA. C'est
+        pourquoi elle domine la cryptographie moderne — TLS 1.3, Bitcoin, Signal, SSH, identités
+        mobiles.
+      </p>
+      <div class="mt-5 grid sm:grid-cols-3 gap-3">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg text-center"><div class="font-mono text-brand-500 text-xl">256 bits</div><div class="text-xs text-slate-400 mt-1">ECC</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg text-center"><div class="font-mono text-slate-400 text-xl">3072 bits</div><div class="text-xs text-slate-400 mt-1">RSA équivalent</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg text-center"><div class="font-mono text-emerald-400 text-xl">~12×</div><div class="text-xs text-slate-400 mt-1">plus compact</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">⚙️ 2. Fonctionnement géométrique</h2>
+      <p class="text-slate-300 mb-4" data-en="Over the reals, an elliptic curve looks like y² = x³ + ax + b. We define a geometric 'addition':">Sur les réels, une courbe elliptique a l'allure de y² = x³ + ax + b. On définit une « addition » géométrique :</p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold mb-2 text-brand-500">P + Q (deux points distincts)</div>
+          <p class="text-sm text-slate-400">Tracer la corde PQ : elle recoupe la courbe en un 3e point R. Le résultat P+Q est la <em>symétrique</em> de R par rapport à l'axe X.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="font-semibold mb-2 text-brand-500">2P (doublement)</div>
+          <p class="text-sm text-slate-400">Tracer la tangente en P. Elle recoupe la courbe en R. Le résultat 2P est la symétrique de R.</p>
+        </div>
+      </div>
+      <p class="text-slate-300 mt-4" data-en="In cryptography we work in <strong>modular arithmetic</strong> (finite field 𝔽<sub>p</sub>), which turns the continuous curve into a cloud of discrete points — but the addition law remains valid algebraically.">
+        En cryptographie on travaille en <strong>arithmétique modulaire</strong> (corps fini 𝔽<sub>p</sub>),
+        ce qui transforme la courbe continue en un nuage de points discrets — mais la loi d'addition
+        reste valable algébriquement.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.maths">🧮 3. Mathématiques</span></h2>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl space-y-2">
+        <div class="text-center font-mono text-brand-500">y² ≡ x³ + ax + b (mod p)</div>
+        <div class="text-center text-xs text-slate-400">avec 4a³ + 27b² ≢ 0 (mod p) pour éviter les singularités</div>
+        <div class="text-center font-mono text-emerald-400 text-lg pt-2">k · G = Q</div>
+        <div class="text-center text-xs text-slate-400">G = point générateur public, k = clé privée, Q = clé publique</div>
+      </div>
+      <p class="text-slate-300 mt-4 text-sm">
+        Sécurité = <strong>ECDLP</strong> (Elliptic Curve Discrete Log Problem) : étant donné G et Q,
+        retrouver k est exponentiellement difficile. Les meilleures attaques connues (Pollard rho)
+        coûtent √n opérations.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">📐 3 bis. Catalogue des courbes utilisées en production</h2>
+      <p class="text-slate-300 mb-4">Toutes les courbes ECC ne sont pas équivalentes. Forme géométrique, premier choisi, twist security, performance, résistance aux side-channels : chaque courbe a un compromis. Voici les principales en 2026 :</p>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <!-- secp256k1 -->
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl lift">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-brand-500">secp256k1</div>
+            <span class="text-xs px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Weierstrass · Koblitz">Weierstrass · Koblitz</span>
+          </div>
+          <div class="text-xs text-slate-400 mb-3">SECG · 256 bits · y² = x³ + 7</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li><strong>Bitcoin, Ethereum, toutes blockchains majeures</strong></li>
+            <li>Structure Koblitz (a=0) → optimisations d'endomorphisme GLV</li>
+            <li>Sécurité ≈ 128 bits</li>
+            <li>⚠️ Pas générée de manière vérifiable (rigid) — préférée par paranoïa anti-NSA</li>
+          </ul>
+        </div>
+
+        <!-- P-256 -->
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl lift">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-brand-500">P-256 (secp256r1, prime256v1)</div>
+            <span class="text-xs px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Weierstrass · NIST">Weierstrass · NIST</span>
+          </div>
+          <div class="text-xs text-slate-400 mb-3">NIST FIPS 186 · 256 bits</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li>Standard TLS, JWT, FIDO2, gouvernement US</li>
+            <li>Implémentation matérielle ultra-répandue (HSM, TPM, eID)</li>
+            <li>Sécurité ≈ 128 bits</li>
+            <li>⚠️ Constantes choisies par la NSA — suspicions historiques (mais aucune attaque connue)</li>
+          </ul>
+        </div>
+
+        <!-- Curve25519 -->
+        <div class="p-5 bg-white/5 border border-emerald-500/30 rounded-xl lift">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-emerald-400">Curve25519 (X25519)</div>
+            <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="Montgomery · DJB">Montgomery · DJB</span>
+          </div>
+          <div class="text-xs text-slate-400 mb-3">D.J. Bernstein, 2006 · 256 bits · y² = x³ + 486662x² + x sur 𝔽<sub>2²⁵⁵−19</sub></div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li>Signal, WhatsApp, WireGuard, SSH OpenSSH, TLS 1.3, Tor v3</li>
+            <li>Conçue pour ECDH (X25519 = Montgomery ladder)</li>
+            <li>Constantes rigides et publiquement justifiées</li>
+            <li>Résistante aux side-channels par construction (ladder à temps constant)</li>
+            <li>Twist security : pas besoin de valider le point</li>
+          </ul>
+        </div>
+
+        <!-- Ed25519 -->
+        <div class="p-5 bg-white/5 border border-emerald-500/30 rounded-xl lift">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-emerald-400">Ed25519</div>
+            <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="Edwards · EdDSA">Edwards · EdDSA</span>
+          </div>
+          <div class="text-xs text-slate-400 mb-3">Bernstein et al., 2011 · 256 bits · forme tordue d'Edwards (équivalente à Curve25519)</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li>Schéma de signature EdDSA, signatures 64 octets</li>
+            <li>Déterministe (pas besoin d'aléa de qualité à la signature)</li>
+            <li>SSH, Git, Tor, JWT, certificats X.509 modernes</li>
+            <li>Loi d'addition complète (pas de cas spéciaux à l'infini)</li>
+          </ul>
+        </div>
+
+        <!-- Curve448 -->
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl lift">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-brand-500">Curve448 / Ed448</div>
+            <span class="text-xs px-2 py-0.5 rounded bg-brand-500/10 border border-brand-500/30 text-brand-500" data-en="Edwards · 224 bits sec">Edwards · 224 bits sec</span>
+          </div>
+          <div class="text-xs text-slate-400 mb-3">Hamburg, 2014 · 448 bits · cousine plus paranoïaque de Curve25519</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li>~224 bits de sécurité (vs 128 pour 25519)</li>
+            <li>X448 dans TLS 1.3 quand on veut overkill</li>
+            <li>Plus lente — usage spécifique (long terme, gouvernemental)</li>
+          </ul>
+        </div>
+
+        <!-- BLS12-381 -->
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl lift">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-brand-500">BLS12-381</div>
+            <span class="text-xs px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-purple-300" data-en="Pairing-friendly">Pairing-friendly</span>
+          </div>
+          <div class="text-xs text-slate-400 mb-3">Barreto-Lynn-Scott · 381 bits · supporte le couplage bilinéaire</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li>Ethereum 2.0 (Beacon chain, agrégation BLS)</li>
+            <li>Zcash Sapling, zk-SNARK</li>
+            <li>Permet les signatures agrégées BLS — N signatures → 1 signature</li>
+          </ul>
+        </div>
+
+        <!-- Brainpool -->
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl lift">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-brand-500">brainpoolP256r1 / 384r1</div>
+            <span class="text-xs px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Weierstrass · Europe">Weierstrass · Europe</span>
+          </div>
+          <div class="text-xs text-slate-400 mb-3">RFC 5639 · constantes vérifiables (nothing-up-my-sleeve)</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li>Préférée par certaines réglementations européennes (BSI)</li>
+            <li>Génération transparente des paramètres</li>
+            <li>Moins répandue que P-256, support limité</li>
+          </ul>
+        </div>
+
+        <!-- secp384r1 -->
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl lift">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-brand-500">P-384 / P-521</div>
+            <span class="text-xs px-2 py-0.5 rounded bg-brand-500/10 border border-brand-500/30 text-brand-500" data-en="Weierstrass · NIST · high security">Weierstrass · NIST · haute sécurité</span>
+          </div>
+          <div class="text-xs text-slate-400 mb-3">NIST · 192 / 256 bits de sécurité</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li>NSA Suite B (TOP SECRET)</li>
+            <li>Certificats gouvernementaux, défense</li>
+            <li>Plus lente — réservée aux usages haute assurance</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="text-xl font-bold mt-10 mb-4">🔍 3 grandes familles de formes</h3>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-brand-500 font-semibold mb-2">Weierstrass courte</div>
+          <div class="font-mono text-sm text-emerald-400">y² = x³ + ax + b</div>
+          <p class="text-xs text-slate-400 mt-2">Forme historique. Cas spéciaux (point à l'infini, doubling vs add). secp256k1, P-256, Brainpool.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-emerald-500/30 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2">Montgomery</div>
+          <div class="font-mono text-sm text-emerald-400">By² = x³ + Ax² + x</div>
+          <p class="text-xs text-slate-400 mt-2">Optimisée pour la « Montgomery ladder » : multiplication scalaire en temps constant, résistance side-channel intrinsèque. Curve25519.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-emerald-500/30 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2">Edwards (tordues)</div>
+          <div class="font-mono text-sm text-emerald-400">ax² + y² = 1 + dx²y²</div>
+          <p class="text-xs text-slate-400 mt-2">Loi d'addition unifiée et complète (pas de cas spéciaux), naturelle pour les signatures. Ed25519, Ed448.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🔍 4. Simulation : multiplication scalaire</h2>
+      <p class="text-slate-400 text-sm mb-4">Courbe jouet y² ≡ x³ + 2x + 3 (mod 97). Calcule k·G avec l'algorithme « doubler-et-additionner ».</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-5">
+        <div class="grid md:grid-cols-3 gap-3">
+          <div><label class="block text-xs mb-1">G.x</label><input id="gx" type="text" value="3" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm" /></div>
+          <div><label class="block text-xs mb-1">G.y</label><input id="gy" type="text" value="6" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm" /></div>
+          <div><label class="block text-xs mb-1">k (scalaire)</label><input id="k" type="text" value="7" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm" /></div>
+        </div>
+        <button id="ecc-mul" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg" data-en="⚡ Compute k·G">⚡ Calculer k·G</button>
+        <div id="ecc-result" class="hidden p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg font-mono text-emerald-400"></div>
+        <details>
+          <summary class="cursor-pointer text-slate-400 text-sm hover:text-white" data-en="Show intermediate steps">Voir les étapes intermédiaires</summary>
+          <div id="ecc-steps" class="mt-3 font-mono text-xs space-y-1 max-h-60 overflow-y-auto"></div>
+        </details>
+      </div>
+
+      <h3 class="text-xl font-bold mt-10 mb-4">🤝 Échange ECDH</h3>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-4">
+        <div class="grid md:grid-cols-2 gap-3">
+          <div><label class="block text-xs mb-1">Secret Alice (a)</label><input id="ecdh-a" type="text" value="5" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm" /></div>
+          <div><label class="block text-xs mb-1">Secret Bob (b)</label><input id="ecdh-b" type="text" value="11" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm" /></div>
+        </div>
+        <button id="ecdh-run" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg" data-en="Run ECDH">Exécuter ECDH</button>
+        <div id="ecdh-out" class="hidden text-sm font-mono space-y-2"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.code">💻 5. Code</span></h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code># Vraie crypto en prod : utiliser cryptography
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import hashes, serialization
+
+priv = ec.generate_private_key(ec.SECP256R1())
+pub  = priv.public_key()
+
+# ECDH
+alice = ec.generate_private_key(ec.SECP256R1())
+bob   = ec.generate_private_key(ec.SECP256R1())
+shared_alice = alice.exchange(ec.ECDH(), bob.public_key())
+shared_bob   = bob.exchange(ec.ECDH(), alice.public_key())
+assert shared_alice == shared_bob
+
+# Signature ECDSA
+sig = priv.sign(b"message", ec.ECDSA(hashes.SHA256()))
+pub.verify(sig, b"message", ec.ECDSA(hashes.SHA256()))</code></pre>
+      <pre id="code-js" class="hidden"><code>// Courbe jouet pédagogique — pour la vraie crypto, utiliser Web Crypto
+const P = 97n, A = 2n, B = 3n;
+
+const modinv = (a, m) => {
+  let [old_r, r] = [((a % m) + m) % m, m];
+  let [old_s, s] = [1n, 0n];
+  while (r !== 0n) {
+    const q = old_r / r;
+    [old_r, r] = [r, old_r - q*r];
+    [old_s, s] = [s, old_s - q*s];
+  }
+  return ((old_s % m) + m) % m;
+};
+
+function add(P1, P2) {
+  if (!P1) return P2; if (!P2) return P1;
+  if (P1.x === P2.x &amp;&amp; (P1.y + P2.y) % P === 0n) return null; // ∞
+  let m;
+  if (P1.x === P2.x &amp;&amp; P1.y === P2.y)
+    m = ((3n*P1.x*P1.x + A) * modinv(2n*P1.y, P)) % P;
+  else
+    m = ((P2.y - P1.y) * modinv((P2.x - P1.x + P) % P, P)) % P;
+  const x3 = ((m*m - P1.x - P2.x) % P + P) % P;
+  const y3 = ((m*(P1.x - x3) - P1.y) % P + P) % P;
+  return { x: x3, y: y3 };
+}
+
+function mul(k, G) {
+  let R = null, P = G;
+  while (k > 0n) {
+    if (k &amp; 1n) R = add(R, P);
+    P = add(P, P);
+    k >>= 1n;
+  }
+  return R;
+}</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.realworld">🌍 6. Cas réel & limites</span></h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Ubiquitous in 2026">✓ Omniprésent en 2026</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="TLS 1.3 by default (ECDHE, ECDSA)">TLS 1.3 par défaut (ECDHE, ECDSA)</li>
+            <li data-en="Bitcoin (secp256k1), Ethereum, every blockchain">Bitcoin (secp256k1), Ethereum, toutes blockchains</li>
+            <li data-en="Signal Protocol (Curve25519, Ed25519)">Signal Protocol (Curve25519, Ed25519)</li>
+            <li data-en="SSH ed25519 keys">Clés SSH ed25519</li>
+            <li data-en="WireGuard, Tor, Apple iMessage">WireGuard, Tor, Apple iMessage</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Pitfalls">✗ Pièges</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Bad RNG = key revealed (PlayStation 3 hack)">Mauvais générateur d'aléa = clé révélée (PlayStation 3 hack)</li>
+            <li data-en="Potentially &quot;backdoored&quot; curves (suspicion around Dual_EC_DRBG)">Courbes potentiellement « backdoorées » (méfiance autour de Dual_EC_DRBG)</li>
+            <li data-en="Side-channel attacks on scalar multiplication">Attaques side-channel sur scalar multiplication</li>
+            <li data-en="Broken by Shor on a quantum computer">Cassé par Shor sur ordinateur quantique</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Pollard rho (generic)">Pollard rho (générique)</div>
+          <p class="text-xs text-slate-300" data-en="Best classical algo for ECDLP: O(√n) → secp256k1 = 2¹²⁸ operations.">Meilleur algo classique pour ECDLP : O(√n) → curve256k1 = 2¹²⁸ opérations.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Side-channel on scalar multiplication">Side-channel sur multiplication scalaire</div>
+          <p class="text-xs text-slate-300" data-en="Timing, cache, EM emission → private key recovery (cf. OpenSSL attacks).">Timing, cache, EM emission → récupération de la clé privée (cf. attaques sur OpenSSL).</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="PlayStation 3 ECDSA hack (2010)">PlayStation 3 ECDSA hack (2010)</div>
+          <p class="text-xs text-slate-300" data-en="Sony reused the same nonce → fail0verflow recovers the master signing key.">Sony réutilisait le même nonce → fail0verflow récupère la master signing key.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Invalid curve attack">Invalid curve attack</div>
+          <p class="text-xs text-slate-300" data-en="If you accept a point not on the curve, it can sit in a small subgroup → leak.">Si on accepte un point pas sur la courbe, on peut le placer dans un petit sous-groupe → leak.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Dual_EC_DRBG (NSA backdoor)">Dual_EC_DRBG (NSA backdoor)</div>
+          <p class="text-xs text-slate-300" data-en="NSA-chosen constants allowing randomness prediction.">Constantes choisies par la NSA permettant la prédiction de l'aléa.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Shor's algorithm (quantum)">Algorithme de Shor (quantique)</div>
+          <p class="text-xs text-slate-300" data-en="Breaks ECDLP in polynomial time → all curves dead.">Casse ECDLP en temps polynomial → toutes courbes mortes.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    const P = 97n, A_ = 2n;
+    const modinv = (a, m) => {
+      let [old_r, r] = [((a % m) + m) % m, m];
+      let [old_s, s] = [1n, 0n];
+      while (r !== 0n) { const q = old_r / r; [old_r,r]=[r,old_r-q*r]; [old_s,s]=[s,old_s-q*s]; }
+      return ((old_s % m) + m) % m;
+    };
+    function add(P1, P2) {
+      if (!P1) return P2; if (!P2) return P1;
+      if (P1.x === P2.x && (P1.y + P2.y) % P === 0n) return null;
+      let m;
+      if (P1.x === P2.x && P1.y === P2.y)
+        m = ((3n*P1.x*P1.x + A_) * modinv(2n*P1.y, P)) % P;
+      else
+        m = ((P2.y - P1.y + P) * modinv((P2.x - P1.x + P) % P, P)) % P;
+      const x3 = ((m*m - P1.x - P2.x) % P + P*2n) % P;
+      const y3 = ((m*(P1.x - x3) - P1.y) % P + P*2n) % P;
+      return { x: x3, y: y3 };
+    }
+    function mul(k, G, steps=null) {
+      let R = null, Q = G;
+      let i = 0;
+      while (k > 0n) {
+        if (k & 1n) { R = add(R, Q); if (steps) steps.push(`bit ${i}=1 → R = ${R?`(${R.x},${R.y})`:'∞'}`); }
+        Q = add(Q, Q);
+        k >>= 1n; i++;
+      }
+      return R;
+    }
+    const fmt = pt => pt ? `(${pt.x}, ${pt.y})` : '∞';
+
+    document.getElementById('ecc-mul').addEventListener('click', () => {
+      const G = { x: BigInt(document.getElementById('gx').value), y: BigInt(document.getElementById('gy').value) };
+      const k = BigInt(document.getElementById('k').value);
+      const steps = [];
+      const Q = mul(k, G, steps);
+      document.getElementById('ecc-result').classList.remove('hidden');
+      document.getElementById('ecc-result').textContent = `${k} · G = ${fmt(Q)}`;
+      document.getElementById('ecc-steps').innerHTML = steps.map(s => `<div>${s}</div>`).join('');
+    });
+
+    document.getElementById('ecdh-run').addEventListener('click', () => {
+      const G = { x: 3n, y: 6n };
+      const a = BigInt(document.getElementById('ecdh-a').value);
+      const b = BigInt(document.getElementById('ecdh-b').value);
+      const A = mul(a, G);
+      const B = mul(b, G);
+      const K1 = mul(a, B);
+      const K2 = mul(b, A);
+      const out = document.getElementById('ecdh-out');
+      out.classList.remove('hidden');
+      out.innerHTML = `
+        <div class="p-3 bg-ink-900 border border-white/10 rounded">Alice : A = a·G = ${fmt(A)}</div>
+        <div class="p-3 bg-ink-900 border border-white/10 rounded">Bob   : B = b·G = ${fmt(B)}</div>
+        <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded">Clé partagée Alice (a·B) = ${fmt(K1)}</div>
+        <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded">Clé partagée Bob   (b·A) = ${fmt(K2)}</div>
+        <div class="p-3 ${K1&&K2&&K1.x===K2.x?'bg-emerald-500/10 border-emerald-500/30':'bg-red-500/10 border-red-500/30'} border rounded">${K1&&K2&&K1.x===K2.x?'✓ Identiques !':'❌'}</div>
+      `;
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Pourquoi ECC est préféré à RSA en 2026 ?", choices:["Plus facile à comprendre","Clés bien plus petites pour sécurité équivalente","Inventé par Bitcoin","Plus lent et plus sûr"], answer:1, explain:"Une clé ECC 256 bits équivaut à RSA 3072 bits — gain énorme pour TLS, mobile, IoT." },
+      { q:"Quelle courbe Bitcoin utilise-t-il ?", choices:["P-256","Curve25519","secp256k1","Ed448"], answer:2, explain:"secp256k1, particularité d'avoir des structures Koblitz facilitant certaines optimisations." },
+      { q:"Quel est le problème mathématique sous-jacent à ECC ?", choices:["Factorisation","Logarithme discret sur courbe (ECDLP)","SAT","Voyageur de commerce"], answer:1, explain:"Étant donné G et Q = k·G, retrouver k est ECDLP — exponentiellement difficile." },
+      { q:"Qu'est-ce qui peut casser ECC ?", choices:["GPU","Ordinateur quantique (Shor)","Brute force classique","Réseau de neurones"], answer:1, explain:"Shor casse ECC comme RSA. D'où la migration post-quantique (Kyber, Dilithium)." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('ecc',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('ecc-master')){CryptoLab.earnBadge('ecc-master','Maître ECC','🔺');CryptoLab.showToast('🔺 Badge débloqué : <u>Maître ECC</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

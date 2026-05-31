@@ -1,0 +1,461 @@
+/* ============================================================
+   CryptoLab — main stylesheet
+   ============================================================ */
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, sans-serif; }
+
+/* ---------- Background grid (subtle) ---------- */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(58,160,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58,160,255,0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ---------- Animated gradient hero ---------- */
+.animated-gradient {
+  background: linear-gradient(120deg, #1f7fe0, #7c3aed, #ec4899, #3aa0ff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientShift 8s ease infinite;
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ---------- Fade-up (entry) ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp .6s ease forwards; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.fade-in { animation: fadeIn .5s ease forwards; }
+
+/* ---------- Reveal on scroll (IntersectionObserver hook) ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Floating animation (subtle hover-up) ---------- */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.float { animation: float 3s ease-in-out infinite; }
+
+/* ---------- Pulse glow (for important elements) ---------- */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(58, 160, 255, 0.4); }
+  50%      { box-shadow: 0 0 30px 8px rgba(58, 160, 255, 0.2); }
+}
+.pulse-glow { animation: pulseGlow 2.5s ease-in-out infinite; }
+
+/* ---------- Spin (for loading / quantum visuals) ---------- */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin-slow { animation: spin 12s linear infinite; }
+
+/* ---------- Card hover lift ---------- */
+.lift {
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px -8px rgba(58, 160, 255, 0.25);
+}
+
+/* ---------- Typewriter (for crypto-themed text reveal) ---------- */
+@keyframes typewriter {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes blinkCaret {
+  0%, 100% { border-color: transparent; }
+  50%      { border-color: #3aa0ff; }
+}
+.typewriter {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #3aa0ff;
+  animation: typewriter 2s steps(40, end), blinkCaret .75s step-end infinite;
+}
+
+/* ---------- Encrypted text effect ---------- */
+@keyframes scramble {
+  0%   { letter-spacing: 0.4em; opacity: 0.4; }
+  50%  { letter-spacing: 0.1em; opacity: 0.8; }
+  100% { letter-spacing: normal; opacity: 1; }
+}
+.scramble { animation: scramble 1.2s ease-out forwards; }
+
+/* ---------- Shimmer (loading bar / placeholder) ---------- */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(58,160,255,0.15), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ---------- Scrollbar (modern dark) ---------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0b0f17; }
+::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 5px; transition: background .2s; }
+::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+/* ---------- Code blocks ---------- */
+pre {
+  background: #0b1220 !important;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', Monaco, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  position: relative;
+}
+code { font-family: 'JetBrains Mono', Monaco, monospace; }
+pre code { color: #e2e8f0; }
+
+/* Copy button on code blocks */
+.code-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.7rem;
+  background: rgba(58, 160, 255, 0.1);
+  border: 1px solid rgba(58, 160, 255, 0.3);
+  color: #3aa0ff;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .2s, background .2s;
+}
+pre:hover .code-copy { opacity: 1; }
+.code-copy:hover { background: rgba(58, 160, 255, 0.2); }
+
+/* ---------- Quiz feedback ---------- */
+.quiz-correct {
+  background: rgba(16,185,129,0.15) !important;
+  border-color: rgba(16,185,129,0.5) !important;
+  animation: pulseGreen 0.6s ease;
+}
+.quiz-wrong {
+  background: rgba(239,68,68,0.15) !important;
+  border-color: rgba(239,68,68,0.5) !important;
+  animation: shake 0.4s ease;
+}
+@keyframes pulseGreen {
+  0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+  100% { box-shadow: 0 0 0 12px rgba(16,185,129,0); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+/* ---------- Badges (earned) ---------- */
+.badge-earned {
+  background: linear-gradient(135deg, #f59e0b22, #f59e0b08);
+  border-color: rgba(245, 158, 11, 0.5);
+  animation: badgeGlow 3s ease-in-out infinite;
+}
+@keyframes badgeGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  50%      { box-shadow: 0 0 24px 4px rgba(245, 158, 11, 0.2); }
+}
+
+/* ---------- Toast notification ---------- */
+.toast-enter {
+  animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---------- Lang toggle button ---------- */
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 0.5rem;
+  background: rgba(255,255,255,0.04);
+  cursor: pointer;
+  transition: all .2s;
+}
+.lang-toggle:hover {
+  background: rgba(58, 160, 255, 0.15);
+  border-color: rgba(58, 160, 255, 0.4);
+}
+
+/* ---------- Math formula highlighting ---------- */
+.math-box {
+  background: linear-gradient(135deg, rgba(58,160,255,0.08), rgba(124, 58, 237, 0.05));
+  border: 1px solid rgba(58,160,255,0.25);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  position: relative;
+  overflow: hidden;
+}
+.math-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #3aa0ff, transparent);
+  animation: scanLine 4s linear infinite;
+}
+@keyframes scanLine {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ---------- Particle background helper ---------- */
+.particle-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------- Section heading underline animation ---------- */
+.section-heading {
+  position: relative;
+  display: inline-block;
+}
+.section-heading::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3aa0ff, #7c3aed);
+  transition: width .6s ease;
+}
+.section-heading.visible::after { width: 100%; }
+
+/* ---------- Print friendliness ---------- */
+@media print {
+  nav, footer, .quiz-section, button { display: none !important; }
+  body { background: white !important; color: black !important; }
+}
+
+/* ============================================================
+   FUN CRYPTO LOADER
+   Full-screen overlay shown on page load:
+   - Spinning + glowing rune logo
+   - "DECRYPTING…" text scrambling into place
+   - Cycling hex strip
+   - Animated progress bar
+   - Particle dots floating
+============================================================ */
+#cl-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, #0e1421 0%, #050810 100%);
+  overflow: hidden;
+  pointer-events: all;
+  transition: opacity .55s ease, visibility .55s ease;
+}
+#cl-loader.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Background grid + scanning bar */
+#cl-loader::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(58,160,255,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58,160,255,0.08) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 70%);
+  animation: clGridPulse 3s ease-in-out infinite;
+}
+@keyframes clGridPulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.9; }
+}
+#cl-loader::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  top: 50%;
+  background: linear-gradient(90deg, transparent, #3aa0ff, #c084fc, transparent);
+  filter: blur(1px);
+  box-shadow: 0 0 24px rgba(58,160,255,0.6);
+  animation: clScan 2.4s ease-in-out infinite;
+}
+@keyframes clScan {
+  0%   { transform: translateY(-180px); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY( 180px); opacity: 0; }
+}
+
+.cl-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  min-width: 320px;
+  max-width: 90vw;
+}
+
+/* Rune logo */
+.cl-logo {
+  display: inline-block;
+  font-size: 5rem;
+  line-height: 1;
+  background: linear-gradient(135deg, #3aa0ff, #c084fc, #ec4899, #3aa0ff);
+  background-size: 250% 250%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 30px rgba(58,160,255,0.55));
+  animation:
+    clSpin 6s linear infinite,
+    clShift 4s ease-in-out infinite;
+}
+@keyframes clSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes clShift {
+  0%, 100% { background-position: 0% 50%; filter: drop-shadow(0 0 30px rgba(58,160,255,0.55)); }
+  50%      { background-position: 100% 50%; filter: drop-shadow(0 0 40px rgba(192,132,252,0.7)); }
+}
+
+/* Text "DECRYPTING…" */
+.cl-text {
+  margin-top: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.35em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+.cl-text-decode {
+  background: linear-gradient(90deg, #3aa0ff, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+/* Hex strip cycling */
+.cl-hex {
+  margin-top: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(58,160,255,0.5);
+  letter-spacing: 0.15em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Progress bar */
+.cl-bar {
+  width: 320px;
+  max-width: 80vw;
+  height: 3px;
+  margin: 1.2rem auto 0;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.cl-bar-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #3aa0ff, #c084fc, #ec4899);
+  transform-origin: left;
+  animation: clFill 1.1s cubic-bezier(.55,.02,.3,.99) forwards;
+  box-shadow: 0 0 12px rgba(58,160,255,0.6);
+}
+@keyframes clFill {
+  0%   { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+/* Floating dots */
+.cl-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #3aa0ff;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #3aa0ff;
+  opacity: 0;
+  animation: clFloat 3s ease-in-out infinite;
+}
+@keyframes clFloat {
+  0%   { transform: translate(0,0) scale(0); opacity: 0; }
+  30%  { opacity: 0.9; }
+  100% { transform: translate(var(--dx, 100px), var(--dy, -80px)) scale(1.4); opacity: 0; }
+}
+
+/* Quick variant for subsequent page loads */
+#cl-loader.brief {
+  background: rgba(11, 15, 23, 0.92);
+  backdrop-filter: blur(6px);
+}
+#cl-loader.brief .cl-logo {
+  font-size: 3rem;
+  animation: clSpin 1.5s linear infinite, clShift 1.5s ease infinite;
+}
+#cl-loader.brief .cl-text,
+#cl-loader.brief .cl-hex,
+#cl-loader.brief .cl-bar,
+#cl-loader.brief .cl-dot {
+  display: none;
+}
+#cl-loader.brief::before,
+#cl-loader.brief::after { display: none; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #cl-loader .cl-logo,
+  #cl-loader::after,
+  #cl-loader::before { animation: none; }
+}

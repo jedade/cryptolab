@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zero-Knowledge Proofs — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl">🕵️</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">1985 · MIT</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Zero-Knowledge Proofs</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Proof without disclosure">Preuve sans divulgation</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Interactive protocol">Protocole interactif</span>
+      <span class="px-2 py-1 text-xs rounded bg-amber-500/10 border border-amber-500/30 text-amber-400" data-en="Advanced">Avancé</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Authors">Auteurs</div><div class="font-semibold" data-en="Goldwasser, Micali, Rackoff">Goldwasser, Micali, Rackoff</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Year">Année</div><div class="font-semibold">1985</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Acronym">Acronyme</div><div class="font-semibold">ZKP</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="A <strong>zero-knowledge proof</strong> lets a <em>prover</em> (Peggy) convince a <em>verifier</em> (Victor) that she knows a secret — <em>without revealing anything else than the truth of that statement</em>.">
+        Une <strong>preuve à divulgation nulle</strong> permet à un <em>prouveur</em> (Peggy)
+        de convaincre un <em>vérificateur</em> (Victor) qu'elle connaît un secret —
+        <em>sans révéler quoi que ce soit d'autre que la véracité de cette affirmation</em>.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="Three fundamental properties:">
+        Trois propriétés fondamentales :
+      </p>
+      <div class="grid md:grid-cols-3 gap-3 mt-3">
+        <div class="p-4 bg-emerald-500/5 border border-emerald-500/30 rounded-lg"><div class="text-emerald-400 font-semibold mb-1" data-en="Completeness">Complétude</div><p class="text-xs text-slate-400" data-en="If Peggy knows, Victor (almost) always accepts.">Si Peggy connaît, Victor accepte (presque) toujours.</p></div>
+        <div class="p-4 bg-amber-500/5 border border-amber-500/30 rounded-lg"><div class="text-amber-400 font-semibold mb-1" data-en="Soundness">Solidité (soundness)</div><p class="text-xs text-slate-400" data-en="If Peggy doesn't know, she can only cheat with negligible probability.">Si Peggy ne connaît pas, elle ne peut tricher qu'avec une probabilité négligeable.</p></div>
+        <div class="p-4 bg-brand-500/5 border border-brand-500/30 rounded-lg"><div class="text-brand-500 font-semibold mb-1">Zero-knowledge</div><p class="text-xs text-slate-400" data-en="Victor learns nothing other than the truth.">Victor n'apprend rien d'autre que la véracité.</p></div>
+      </div>
+    </section>
+
+    <section id="cave">
+      <h2 class="text-2xl font-bold mb-4">⚙️ 2. La caverne d'Ali Baba</h2>
+      <p class="text-slate-300 mb-4" data-en="Imagine a circular cave with a magic door at the end. The door opens with a password.">Imagine une caverne en boucle, avec une porte magique à l'extrémité. La porte s'ouvre sur un mot de passe.</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+        <ol class="text-slate-300 text-sm space-y-2 list-decimal list-inside">
+          <li data-en="Peggy enters the cave alone and randomly picks corridor <strong>A</strong> or <strong>B</strong>.">Peggy entre seule dans la caverne et choisit aléatoirement le couloir <strong>A</strong> ou <strong>B</strong>.</li>
+          <li data-en="Victor arrives at the entrance and shouts: &quot;Come out from <strong>A</strong>!&quot; or &quot;Come out from <strong>B</strong>!&quot; (at random).">Victor arrive à l'entrée et crie : « Sors par <strong>A</strong> ! » ou « Sors par <strong>B</strong> ! » (au hasard).</li>
+          <li data-en="If Peggy knows the magic word, she can always exit on the right side (using the door if needed).">Si Peggy connaît le mot magique, elle peut toujours sortir du bon côté (utiliser la porte si besoin).</li>
+          <li data-en="If she doesn't know, she succeeds with probability <strong>½</strong>.">Si elle ne le connaît pas, elle réussit avec probabilité <strong>½</strong>.</li>
+          <li data-en="After <em>n</em> rounds, cheating probability = <strong>1/2<sup>n</sup></strong> → quickly negligible.">Après <em>n</em> répétitions, la probabilité de tricher = <strong>1/2<sup>n</sup></strong> → bientôt négligeable.</li>
+        </ol>
+        <div class="mt-4 p-3 bg-brand-500/10 border border-brand-500/30 rounded text-sm" data-en="Victor ends up convinced Peggy knows the word — without ever hearing it.">
+          Victor finit convaincu que Peggy connaît le mot — sans jamais l'entendre.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🧮 3. Mathématiques (Schnorr simplifié)</h2>
+      <p class="text-slate-300 mb-3">Prouver qu'on connaît <em>x</em> tel que <strong>y = g<sup>x</sup> mod p</strong> :</p>
+      <div class="p-6 bg-gradient-to-br from-brand-500/10 to-transparent border border-brand-500/30 rounded-xl space-y-2">
+        <div class="text-center font-mono text-brand-500">1. Peggy choisit r aléatoire, envoie t = g<sup>r</sup> mod p</div>
+        <div class="text-center font-mono text-amber-400">2. Victor envoie un défi c aléatoire</div>
+        <div class="text-center font-mono text-emerald-400">3. Peggy répond s = r + c·x mod (p−1)</div>
+        <div class="text-center font-mono pt-2">Victor vérifie : g<sup>s</sup> ≡ t · y<sup>c</sup> (mod p)</div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4">
+        Si Peggy connaît x, l'équation est satisfaite. Sinon, elle aurait dû deviner c à l'avance —
+        improbable.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🔍 4. Simulation — Caverne d'Ali Baba</h2>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-4">
+        <div class="flex gap-3">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input id="knows" type="checkbox" checked class="accent-brand-500" />
+            <span>Peggy connaît le mot magique</span>
+          </label>
+        </div>
+        <div class="flex gap-2">
+          <button id="round1" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-sm rounded-lg" data-en="1 round">1 round</button>
+          <button id="round10" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-sm rounded-lg" data-en="10 rounds">10 rounds</button>
+          <button id="reset-rounds" class="px-4 py-2 bg-white/5 border border-white/10 text-sm rounded-lg" data-en="Reset">Reset</button>
+        </div>
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="p-3 bg-ink-900 rounded"><div class="text-xs text-slate-400">Rounds</div><div id="r-total" class="text-xl font-mono text-brand-500">0</div></div>
+          <div class="p-3 bg-ink-900 rounded"><div class="text-xs text-slate-400">Succès</div><div id="r-success" class="text-xl font-mono text-emerald-400">0</div></div>
+          <div class="p-3 bg-ink-900 rounded"><div class="text-xs text-slate-400">P(tricher)</div><div id="r-prob" class="text-xl font-mono text-amber-400">—</div></div>
+        </div>
+        <div id="r-log" class="font-mono text-xs space-y-1 max-h-48 overflow-y-auto"></div>
+      </div>
+
+      <h3 class="text-xl font-bold mt-10 mb-4">🔐 Simulation — Schnorr (log discret)</h3>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-4">
+        <div class="grid md:grid-cols-4 gap-3 text-sm">
+          <div><label class="block text-xs mb-1">p (premier)</label><input id="sch-p" value="23" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm" /></div>
+          <div><label class="block text-xs mb-1">g</label><input id="sch-g" value="5" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm" /></div>
+          <div><label class="block text-xs mb-1">x (secret)</label><input id="sch-x" value="7" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm" /></div>
+          <div><label class="block text-xs mb-1">c (défi)</label><input id="sch-c" value="3" class="w-full px-3 py-2 bg-ink-900 border border-white/10 rounded font-mono text-sm" /></div>
+        </div>
+        <button id="sch-run" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg" data-en="Run the protocol">Exécuter le protocole</button>
+        <div id="sch-out" class="hidden space-y-2 text-sm font-mono"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">💻 5. Code (Schnorr)</h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="js" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">JavaScript</button>
+      </div>
+      <pre id="code-python"><code>import secrets
+
+def schnorr(p, g, x):
+    # Peggy
+    r = secrets.randbelow(p-1)
+    t = pow(g, r, p)
+    # Victor
+    c = secrets.randbelow(p-1)
+    # Peggy répond
+    s = (r + c*x) % (p-1)
+    # Victor vérifie
+    y = pow(g, x, p)
+    lhs = pow(g, s, p)
+    rhs = (t * pow(y, c, p)) % p
+    return lhs == rhs
+
+assert schnorr(p=23, g=5, x=7)</code></pre>
+      <pre id="code-js" class="hidden"><code>function modpow(b,e,m){let r=1n;b=b%m;while(e>0n){if(e&amp;1n)r=(r*b)%m;e>>=1n;b=(b*b)%m;}return r;}
+
+function schnorr(p, g, x, c) {
+  // Peggy choisit r, calcule t = g^r mod p
+  const r = BigInt(Math.floor(Math.random() * Number(p-1n)));
+  const t = modpow(g, r, p);
+  // Peggy répond : s = r + c·x mod (p-1)
+  const s = (r + c*x) % (p - 1n);
+  // Victor vérifie : g^s == t · y^c mod p
+  const y = modpow(g, x, p);
+  const lhs = modpow(g, s, p);
+  const rhs = (t * modpow(y, c, p)) % p;
+  return { t, s, y, valid: lhs === rhs };
+}</code></pre>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4">🌍 6. Cas réel</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Modern uses">✓ Usages modernes</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Zcash, Monero — private transactions">Zcash, Monero — transactions privées</li>
+            <li data-en="Ethereum zk-Rollups (StarkNet, zkSync)">zk-Rollups Ethereum (StarkNet, zkSync)</li>
+            <li data-en="Decentralized identity (age proof without revealing date)">Identité décentralisée (preuve d'âge sans révéler la date)</li>
+            <li data-en="Passwordless authentication">Authentification sans mot de passe</li>
+            <li data-en="Private KYC compliance">Conformité KYC privée</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ Pitfalls">✗ Pièges</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="zk-SNARK: requires a <em>trusted setup</em> (multi-party ceremony)">zk-SNARK : nécessite un <em>trusted setup</em> (cérémonie multi-parties)</li>
+            <li data-en="Proofs costly to generate (memory, CPU)">Preuves coûteuses à générer (mémoire, CPU)</li>
+            <li data-en="Subtle implementations, prone to critical bugs">Implémentations subtiles, sujettes à bugs critiques</li>
+            <li data-en="The prover's randomness must stay secret">L'aléa du prouveur doit rester secret</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Compromised trusted setup (zk-SNARK)">Trusted setup compromis (zk-SNARK)</div>
+          <p class="text-xs text-slate-300" data-en="If all ceremony participants are compromised → forgeable proofs.">Si tous les participants à la cérémonie sont corrompus → preuves forgeable.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Bad prover randomness">Mauvais aléa du prouveur</div>
+          <p class="text-xs text-slate-300" data-en="Randomness (r) reuse → secret extraction (cf. Σ-protocol breaks).">Réutilisation de l'aléa (r) → extraction du secret (cf. cassures de schémas Σ).</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Soundness error too high">Soundness error trop élevée</div>
+          <p class="text-xs text-slate-300" data-en="Single Schnorr round → 50% cheat possible. Fiat-Shamir iterations critical.">Un seul round Schnorr → 50% de cheat possible. Itérations Fiat-Shamir critiques.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Circuit implementation bugs">Bugs d'implémentation des circuits</div>
+          <p class="text-xs text-slate-300" data-en="Snarky circuits: bugs allowed fake proofs (Zcash counterfeiting 2018-2019).">Snarky circuits : bugs ont permis de fausses preuves (Zcash counterfeiting 2018-2019).</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2 class="text-2xl font-bold mb-4"><span data-i18n="sec.quiz">🧠 7. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    let total = 0, success = 0;
+    const tEl = document.getElementById('r-total');
+    const sEl = document.getElementById('r-success');
+    const pEl = document.getElementById('r-prob');
+    const logEl = document.getElementById('r-log');
+
+    function playRound() {
+      const knows = document.getElementById('knows').checked;
+      const peggyChoice = Math.random() < 0.5 ? 'A' : 'B';
+      const victorAsks = Math.random() < 0.5 ? 'A' : 'B';
+      let ok;
+      if (knows) ok = true;            // Peggy peut toujours sortir du bon côté
+      else ok = peggyChoice === victorAsks;
+      total++;
+      if (ok) success++;
+      const div = document.createElement('div');
+      div.className = ok ? 'text-emerald-400' : 'text-red-400';
+      div.textContent = `Round ${total}: Peggy entre par ${peggyChoice}, Victor demande ${victorAsks} → ${ok ? '✓' : '✗'}`;
+      logEl.prepend(div);
+      tEl.textContent = total;
+      sEl.textContent = success;
+      pEl.textContent = '1 / 2^' + total + ' ≈ ' + (1/Math.pow(2,total)).toExponential(2);
+    }
+    document.getElementById('round1').addEventListener('click', playRound);
+    document.getElementById('round10').addEventListener('click', () => { for (let i=0; i<10; i++) playRound(); });
+    document.getElementById('reset-rounds').addEventListener('click', () => {
+      total=0; success=0; tEl.textContent=0; sEl.textContent=0; pEl.textContent='—'; logEl.innerHTML='';
+    });
+
+    function modpow(b,e,m){let r=1n;b=((b%m)+m)%m;while(e>0n){if(e&1n)r=(r*b)%m;e>>=1n;b=(b*b)%m;}return r;}
+    document.getElementById('sch-run').addEventListener('click', () => {
+      const p = BigInt(document.getElementById('sch-p').value);
+      const g = BigInt(document.getElementById('sch-g').value);
+      const x = BigInt(document.getElementById('sch-x').value);
+      const c = BigInt(document.getElementById('sch-c').value);
+      const r = BigInt(Math.floor(Math.random() * Number(p-1n)));
+      const t = modpow(g, r, p);
+      const s = (r + c*x) % (p - 1n);
+      const y = modpow(g, x, p);
+      const lhs = modpow(g, s, p);
+      const rhs = (t * modpow(y, c, p)) % p;
+      const out = document.getElementById('sch-out');
+      out.classList.remove('hidden');
+      out.innerHTML = `
+        <div class="p-3 bg-ink-900 border border-white/10 rounded">y = g^x mod p = ${y} (clé publique)</div>
+        <div class="p-3 bg-ink-900 border border-white/10 rounded">Peggy : r=${r} (secret), t = g^r mod p = ${t}</div>
+        <div class="p-3 bg-ink-900 border border-white/10 rounded">Peggy → Victor : s = r + c·x mod (p-1) = ${s}</div>
+        <div class="p-3 bg-ink-900 border border-white/10 rounded">Victor vérifie : g^s = ${lhs} &nbsp;|&nbsp; t·y^c = ${rhs}</div>
+        <div class="p-3 ${lhs===rhs?'bg-emerald-500/10 border-emerald-500/30':'bg-red-500/10 border-red-500/30'} border rounded">${lhs===rhs?'✓ Preuve acceptée — Peggy connaît bien x.':'❌ Preuve rejetée.'}</div>
+      `;
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-js').classList.toggle('hidden',tab.dataset.lang!=='js');
+      });
+    });
+
+    const questions = [
+      { q:"Quelles sont les 3 propriétés d'une preuve ZKP ?", choices:["Vitesse, taille, prix","Complétude, solidité, zero-knowledge","Hash, chiffrement, signature","Public, privé, partagé"], answer:1, explain:"Définies par Goldwasser-Micali-Rackoff en 1985." },
+      { q:"Dans la caverne d'Ali Baba, après 20 rounds réussis, quelle est la proba qu'un menteur ait triché ?", choices:["1/20","1/2","1/2²⁰ ≈ une chance sur un million","100%"], answer:2, explain:"Chaque round, P(triche) = ½. Après n rounds : 1/2ⁿ." },
+      { q:"Quel projet blockchain utilise massivement les ZKP ?", choices:["Bitcoin","Zcash et zk-Rollups Ethereum","Litecoin","Dogecoin"], answer:1, explain:"Zcash pour la confidentialité, StarkNet/zkSync pour la scalabilité L2." },
+      { q:"Que permet la transformation de Fiat-Shamir ?", choices:["Accélérer le chiffrement","Rendre une ZKP non-interactive","Casser ECC","Échanger des clés"], answer:1, explain:"Remplacer le défi aléatoire de Victor par un hash → preuve auto-contenue." }
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('zkp',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('zkp-master')){CryptoLab.earnBadge('zkp-master','Initié ZKP','🕵️');CryptoLab.showToast('🕵️ Badge débloqué : <u>Initié ZKP</u> !');}
+    });
+  </script>
+  <script src="../assets/js/i18n.js"></script>
+</body>
+</html>

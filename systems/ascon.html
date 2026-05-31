@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ascon (NIST Lightweight) — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="../assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="../timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="../cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="../maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="../implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="../glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="../badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <a href="../timeline.html" class="text-sm text-slate-400 hover:text-white"><span data-i18n="detail.back" data-en="← Back to timeline">← Retour à la timeline</span></a>
+    <div class="flex items-center gap-4 mt-4">
+      <span class="text-5xl float">🪶</span>
+      <div>
+        <div class="text-xs font-mono text-brand-500">2014 / Standard NIST 2023</div>
+        <h1 class="text-4xl md:text-5xl font-bold">Ascon — Cryptographie légère</h1>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4 flex-wrap">
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Lightweight AEAD">AEAD léger</span>
+      <span class="px-2 py-1 text-xs rounded bg-white/5 border border-white/10" data-en="Sponge">Sponge</span>
+      <span class="px-2 py-1 text-xs rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" data-en="IoT · RFID · MCU">IoT · RFID · MCU</span>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-16">
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.presentation">📖 1. Présentation</span></h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Authors">Auteurs</div><div class="font-semibold" data-en="Dobraunig, Eichlseder, Mendel, Schläffer">Dobraunig, Eichlseder, Mendel, Schläffer</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Design">Conception</div><div class="font-semibold" data-en="2014 (TU Graz / Infineon)">2014 (TU Graz / Infineon)</div></div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg"><div class="text-xs text-slate-400 mb-1" data-en="Standard">Standard</div><div class="font-semibold" data-en="NIST Lightweight 2023">NIST Lightweight 2023</div></div>
+      </div>
+      <p class="text-slate-300 leading-relaxed" data-en="<strong>Ascon</strong> is a family of AEAD and hashing algorithms optimized for ultra-constrained environments: IoT sensors, RFID badges, smart cards, microcontrollers. In 2023, after a 6-year competition with 56 candidates, NIST selected it as the <em>lightweight cryptography</em> standard — the IoT equivalent of the AES contest.">
+        <strong>Ascon</strong> est une famille d'algorithmes AEAD et de hachage optimisée pour les
+        environnements ultra-contraints : capteurs IoT, badges RFID, cartes à puce, microcontrôleurs.
+        En 2023, après une compétition de 6 ans et 56 candidats, le NIST l'a sélectionné comme standard
+        de <em>cryptographie légère</em> — équivalent IoT du concours AES.
+      </p>
+      <p class="text-slate-300 mt-3" data-en="Strengths: <strong>small hardware footprint</strong> (~2,600 GE in ASIC), <strong>low RAM</strong> (320-bit total state), <strong>side-channel resistance</strong> facilitated by its structure and a single permutation call to encrypt + authenticate.">
+        Atouts : <strong>petite empreinte hardware</strong> (≈2 600 GE en ASIC), <strong>faible RAM</strong>
+        (320 bits d'état total), <strong>résistance side-channel</strong> facilitée par sa structure
+        et un seul appel de permutation pour chiffrer + authentifier.
+      </p>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">⚙️ 2. La construction « sponge »</h2>
+      <p class="text-slate-300 mb-4" data-en="Ascon relies on the <em>sponge</em> paradigm (popularized by Keccak/SHA-3):">Ascon repose sur le paradigme <em>sponge</em> (popularisé par Keccak/SHA-3) :</p>
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl space-y-3 text-sm">
+        <div class="flex gap-3">
+          <span class="text-brand-500 font-bold">1.</span>
+          <div><strong>Initialisation</strong> : on construit un état de 320 bits = IV (64) ∥ clé (128) ∥ nonce (128) puis on applique une permutation p<sub>a</sub> (12 rounds).</div>
+        </div>
+        <div class="flex gap-3">
+          <span class="text-brand-500 font-bold">2.</span>
+          <div><strong>Associated data</strong> : on XOR chaque bloc d'AD dans la partie « rate » (64 bits) puis on applique p<sub>b</sub> (6 rounds).</div>
+        </div>
+        <div class="flex gap-3">
+          <span class="text-brand-500 font-bold">3.</span>
+          <div><strong>Plaintext</strong> : on XOR avec le rate, on extrait le ciphertext, on applique p<sub>b</sub>.</div>
+        </div>
+        <div class="flex gap-3">
+          <span class="text-brand-500 font-bold">4.</span>
+          <div><strong>Finalisation</strong> : on XOR à nouveau la clé, on applique p<sub>a</sub>, et on extrait le tag d'authentification (128 bits).</div>
+        </div>
+      </div>
+      <div class="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-sm text-emerald-300">
+        💡 Une <strong>seule primitive</strong> (la permutation) réalise à la fois chiffrement, authentification et hachage.
+        Idéal quand l'espace de code est compté en kilo-octets.
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🧮 3. Permutation Ascon-p</h2>
+      <p class="text-slate-300 mb-3">Chaque round = 3 couches sur l'état de 5 mots de 64 bits :</p>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-brand-500 font-semibold mb-2">Addition de constante</div>
+          <div class="font-mono text-xs text-emerald-400">x₂ ^= round_constant</div>
+          <p class="text-xs text-slate-400 mt-2">Casse les symétries.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-brand-500 font-semibold mb-2">Substitution (S-box 5 bits)</div>
+          <p class="text-xs text-slate-400 mt-2">Appliquée bit-tranche sur les 5 mots. Non-linéarité.</p>
+        </div>
+        <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+          <div class="text-brand-500 font-semibold mb-2">Diffusion linéaire</div>
+          <div class="font-mono text-xs text-emerald-400">xᵢ ^= rot(xᵢ, a) ^ rot(xᵢ, b)</div>
+          <p class="text-xs text-slate-400 mt-2">Mélange à l'intérieur de chaque mot.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">📋 4. Variantes</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead><tr class="text-left border-b border-white/10">
+            <th class="py-2 pr-4">Variante</th><th class="pr-4" data-en="Use">Usage</th><th class="pr-4" data-en="Key">Clé</th><th class="pr-4">Rate</th><th>Rounds (a/b)</th>
+          </tr></thead>
+          <tbody class="text-slate-300">
+            <tr class="border-b border-white/5"><td class="py-2 pr-4 font-mono text-emerald-400">Ascon-128 (AEAD)</td><td class="pr-4">AEAD standard</td><td class="pr-4">128</td><td class="pr-4">64</td><td>12/6</td></tr>
+            <tr class="border-b border-white/5"><td class="py-2 pr-4 font-mono text-emerald-400">Ascon-128a (AEAD)</td><td class="pr-4">Plus rapide</td><td class="pr-4">128</td><td class="pr-4">128</td><td>12/8</td></tr>
+            <tr class="border-b border-white/5"><td class="py-2 pr-4 font-mono text-brand-500">Ascon-80pq (AEAD)</td><td class="pr-4">Variante 160 bits anti-Grover</td><td class="pr-4">160</td><td class="pr-4">64</td><td>12/6</td></tr>
+            <tr class="border-b border-white/5"><td class="py-2 pr-4 font-mono text-purple-400">Ascon-Hash</td><td class="pr-4">Hash 256 bits</td><td class="pr-4">—</td><td class="pr-4">64</td><td>12/12</td></tr>
+            <tr><td class="py-2 pr-4 font-mono text-purple-400">Ascon-XOF</td><td class="pr-4">Extendable output (XOF)</td><td class="pr-4">—</td><td class="pr-4">64</td><td>12/12</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🔍 5. Pourquoi pas une simulation interactive ?</h2>
+      <div class="p-5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-sm text-amber-300">
+        Ascon n'est pas disponible dans Web Crypto à ce jour (2026). Pour une vraie démo, voir le code Python
+        ci-dessous avec la bibliothèque <code>ascon</code> ou la référence officielle.
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">💻 6. Code</h2>
+      <div class="flex gap-2 mb-3">
+        <button data-lang="python" class="code-tab px-3 py-1.5 text-sm rounded bg-brand-500 text-white">Python</button>
+        <button data-lang="c" class="code-tab px-3 py-1.5 text-sm rounded bg-white/5 border border-white/10">C (embarqué)</button>
+      </div>
+      <pre id="code-python"><code># pip install ascon
+import ascon, os
+
+key   = os.urandom(16)        # 128 bits pour Ascon-128
+nonce = os.urandom(16)        # 128 bits
+ad    = b"sensor:42"          # données associées (authentifiées mais non chiffrées)
+
+ciphertext = ascon.encrypt(key, nonce, ad, b"temperature=23.4C", variant="Ascon-128")
+plaintext  = ascon.decrypt(key, nonce, ad, ciphertext, variant="Ascon-128")
+print(plaintext)   # b"temperature=23.4C"
+
+# Hachage
+digest = ascon.hash(b"firmware.bin contents", variant="Ascon-Hash")
+print(digest.hex())</code></pre>
+      <pre id="code-c" class="hidden"><code>// Référence officielle https://github.com/ascon/ascon-c
+// Code typique pour MCU Cortex-M0 (~3 Ko Flash)
+#include "api.h"
+#include "ascon.h"
+
+int crypto_aead_encrypt(
+    unsigned char *c, unsigned long long *clen,
+    const unsigned char *m, unsigned long long mlen,
+    const unsigned char *ad, unsigned long long adlen,
+    const unsigned char *nsec,
+    const unsigned char *npub,
+    const unsigned char *k)
+{
+    state_t s;
+    ascon_initaead(&s, k, npub);
+    ascon_adata(&s, ad, adlen);
+    ascon_encrypt(&s, c, m, mlen);
+    ascon_final(&s, k);
+    /* Tag d'authentification 128 bits à la fin du chiffré */
+    STOREBYTES(c + mlen, s.x[3], 8);
+    STOREBYTES(c + mlen + 8, s.x[4], 8);
+    *clen = mlen + CRYPTO_ABYTES;
+    return 0;
+}</code></pre>
+    </section>
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading">🌍 7. Cas d'usage</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+          <div class="text-emerald-400 font-semibold mb-2" data-en="✓ Where AES is too heavy">✓ Là où AES est trop lourd</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="Wireless sensors (LoRaWAN, BLE, Zigbee)">Capteurs sans-fil (LoRaWAN, BLE, Zigbee)</li>
+            <li data-en="Smart cards, biometric passports">Cartes à puce, passeports biométriques</li>
+            <li data-en="Active RFID tags">Tags RFID actifs</li>
+            <li data-en="Secure firmware on Cortex-M0 / RISC-V tiny">Firmware sécurisé sur Cortex-M0 / RISC-V tiny</li>
+            <li data-en="Medical implants (pacemaker, insulin pumps)">Implants médicaux (pacemaker, pompes insuline)</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <div class="text-red-400 font-semibold mb-2" data-en="✗ What it doesn't replace">✗ Ce qu'il ne remplace pas</div>
+          <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li data-en="AES-NI on a server (AES is faster there)">AES-NI sur un serveur (AES y est plus rapide)</li>
+            <li data-en="Asymmetric (ECC for exchange/signature)">Asymétrique (ECC pour échange/signature)</li>
+            <li data-en="Bulk hashing (SHA-256 remains faster in big-CPU software)">Hashing volumineux (SHA-256 reste plus rapide en software gros CPU)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 💥 FAILLES connues -->
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="💥 Known flaws &amp; attacks">💥 Failles &amp; attaques connues</h2>
+      <p class="text-slate-400 text-sm mb-4" data-en="Specific vulnerabilities, known attacks, historical breaks.">Vulnérabilités spécifiques, attaques connues, cassures historiques.</p>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Nonce reuse">Réutilisation de nonce</div>
+          <p class="text-xs text-slate-300" data-en="Like any AEAD, total break if (key, nonce) repeated.">Comme tout AEAD, casse totale si (clé, nonce) répété.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Side-channel on the permutation">Side-channel sur la permutation</div>
+          <p class="text-xs text-slate-300" data-en="Naive software implementations vulnerable to cache-timing.">Implémentations naïves software vulnérables au cache-timing.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Reduced-round variant">Variante avec rounds réduits</div>
+          <p class="text-xs text-slate-300" data-en="Recommendation Ascon-128 (12/6 rounds) — any reduction compromises security.">Recommandation Ascon-128 (12/6 rounds) — toute baisse compromet la sécurité.</p>
+        </div>
+        <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+          <div class="font-semibold text-red-400 text-sm mb-1" data-en="Grover's algorithm (quantum)">Algorithme de Grover (quantique)</div>
+          <p class="text-xs text-slate-300" data-en="Ascon-128 → 64 bits post-quantum. Use Ascon-80pq (160-bit key) for long-term needs.">Ascon-128 → 64 bits post-quantique. Utiliser Ascon-80pq (clé 160 bits) si besoin long terme.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="reveal">
+      <h2 class="text-2xl font-bold mb-4 section-heading"><span data-i18n="sec.quiz">🧠 8. Quiz</span></h2>
+      <div id="quiz" class="space-y-4"></div>
+      <button id="quiz-submit" class="mt-6 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg"><span data-i18n="quiz.submit" data-en="Submit quiz">Valider le quiz</span></button>
+      <div id="quiz-result" class="mt-6 hidden"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script>
+    document.querySelectorAll('.code-tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.code-tab').forEach(t=>{t.classList.remove('bg-brand-500','text-white');t.classList.add('bg-white/5','border','border-white/10');});
+        tab.classList.add('bg-brand-500','text-white');tab.classList.remove('bg-white/5','border','border-white/10');
+        document.getElementById('code-python').classList.toggle('hidden',tab.dataset.lang!=='python');
+        document.getElementById('code-c').classList.toggle('hidden',tab.dataset.lang!=='c');
+      });
+    });
+
+    const questions = [
+      { q:"Pour quel domaine Ascon a-t-il été standardisé par le NIST ?", choices:["Cloud","Cryptographie légère (IoT, MCU)","Post-quantique","Blockchain"], answer:1, explain:"Compétition NIST Lightweight Cryptography → standard en 2023." },
+      { q:"Quelle construction sous-tend Ascon ?", choices:["Feistel","SPN","Sponge","ARX"], answer:2, explain:"Sponge comme SHA-3 — une seule permutation absorbe l'entrée et extrait la sortie." },
+      { q:"Quelle est la taille de la clé d'Ascon-128 ?", choices:["64","96","128","256"], answer:2, explain:"128 bits — alignée avec AES-128 pour usage symétrique classique." },
+      { q:"Ascon fournit-il aussi un hash ?", choices:["Non","Oui (Ascon-Hash, Ascon-XOF)","Seulement avec une extension","Uniquement via PBKDF2"], answer:1, explain:"La même permutation réalise AEAD, hash et XOF — d'où la compacité." },
+    ];
+
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q,i)=>{
+      const b = document.createElement('div');
+      b.className = 'p-5 bg-white/5 border border-white/10 rounded-xl';
+      b.innerHTML = `<div class="font-medium mb-3"><span class="text-brand-500 font-mono mr-2">${i+1}.</span>${q.q}</div>
+        <div class="space-y-2">${q.choices.map((c,j)=>`<label class="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition"><input type="radio" name="q${i}" value="${j}" class="accent-brand-500"/><span class="text-sm">${c}</span></label>`).join('')}</div>
+        <div class="quiz-explain hidden mt-3 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300"></div>`;
+      quizDiv.appendChild(b);
+    });
+    document.getElementById('quiz-submit').addEventListener('click',()=>{
+      let score=0;
+      questions.forEach((q,i)=>{
+        const sel=document.querySelector(`input[name="q${i}"]:checked`);
+        const labels=quizDiv.children[i].querySelectorAll('label');
+        labels.forEach(l=>l.classList.remove('quiz-correct','quiz-wrong'));
+        const ex=quizDiv.children[i].querySelector('.quiz-explain');
+        ex.classList.remove('hidden'); ex.innerHTML=`<strong class="text-brand-500" data-en="Explanation:">Explication :</strong> ${q.explain}`;
+        labels[q.answer].classList.add('quiz-correct');
+        if(sel){const ch=+sel.value;if(ch===q.answer)score++;else labels[ch].classList.add('quiz-wrong');}
+      });
+      const r=document.getElementById('quiz-result'); r.classList.remove('hidden');
+      const ok=score===questions.length;
+      r.className=`mt-6 p-5 rounded-xl border ${ok?'border-emerald-500/40 bg-emerald-500/10':score>=2?'border-amber-500/40 bg-amber-500/10':'border-red-500/40 bg-red-500/10'}`;
+      r.innerHTML=`<div class="font-semibold text-lg mb-1">Score : ${score}/${questions.length}</div><div class="text-sm text-slate-300">${ok?"🎉 Sans-faute !":score>=2?"👍 Pas mal.":"📚 Réessaie."}</div>`;
+      CryptoLab.recordScore('ascon',score,questions.length);
+      if(ok && !CryptoLab.hasBadge('ascon-master')){CryptoLab.earnBadge('ascon-master','Maître Ascon','🪶');CryptoLab.showToast('🪶 Badge débloqué : <u>Maître Ascon</u> !');}
+    });
+  </script>
+</body>
+</html>
