@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Timeline — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: {
+      colors: { brand: { 500:'#3aa0ff',600:'#1f7fe0' }, ink: { 900:'#0b0f17', 800:'#111827' } }
+    }}}
+  </script>
+  <script src="assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 font-bold text-lg">
+        <span class="text-brand-500">⟁</span> CryptoLab
+      </a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="timeline.html" class="text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-6xl mx-auto px-6 pt-16 pb-10 fade-up">
+    <h1 class="text-4xl md:text-5xl font-bold animated-gradient" data-i18n="timeline.title">🗺️ Timeline interactive</h1>
+    <p class="mt-4 text-slate-400 max-w-2xl" data-i18n="timeline.intro">
+      De l'Antiquité aux algorithmes post-quantiques — survole une période pour voir un aperçu,
+      clique pour explorer un cryptosystème en profondeur.
+    </p>
+  </header>
+
+  <!-- TIMELINE -->
+  <section class="max-w-6xl mx-auto px-6 pb-24">
+    <div class="relative">
+      <!-- Ligne centrale -->
+      <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-brand-500/0 via-brand-500/60 to-brand-500/0"></div>
+
+      <div id="timeline" class="space-y-12"></div>
+    </div>
+  </section>
+
+  <script src="assets/js/i18n.js"></script>
+  <script>
+    // Bilingual events
+    const EVENTS = [
+      { year:{fr:'~50 av. J.-C.',en:'~50 BC'}, side:'left', icon:'🏛️', href:'systems/cesar.html', available:true,
+        title:{fr:'Chiffre de César',en:'Caesar cipher'},
+        type:{fr:'Substitution',en:'Substitution'},
+        desc:{fr:"Jules César décale chaque lettre de l'alphabet d'un nombre fixe pour ses correspondances militaires.",
+              en:"Julius Caesar shifts each letter of the alphabet by a fixed amount for his military correspondence."} },
+      { year:{fr:'IXe siècle',en:'9th century'}, side:'right', icon:'📜', href:'systems/al-kindi.html', available:true,
+        title:{fr:"Al-Kindi & l'analyse fréquentielle",en:'Al-Kindi & frequency analysis'},
+        type:{fr:'Cryptanalyse',en:'Cryptanalysis'},
+        desc:{fr:"Le savant arabe Al-Kindi invente la première méthode systématique de cassage de chiffres.",
+              en:"Arab scholar Al-Kindi invents the first systematic method for breaking ciphers."} },
+      { year:{fr:'1553',en:'1553'}, side:'left', icon:'🗝️', href:'systems/vigenere.html', available:true,
+        title:{fr:'Chiffre de Vigenère',en:'Vigenère cipher'},
+        type:{fr:'Substitution polyalphabétique',en:'Polyalphabetic substitution'},
+        desc:{fr:"Un mot-clé fait varier le décalage à chaque lettre — incassable pendant 300 ans.",
+              en:"A keyword varies the shift at each letter — unbroken for 300 years."} },
+      { year:{fr:'1883',en:'1883'}, side:'right', icon:'📐', href:'#', available:false,
+        title:{fr:'Principe de Kerckhoffs',en:'Kerckhoffs principle'},
+        type:{fr:'Doctrine',en:'Doctrine'},
+        desc:{fr:"La sécurité d'un système doit reposer uniquement sur le secret de la clé, pas sur le secret de l'algorithme.",
+              en:"Security must rest solely on key secrecy, not on algorithm secrecy."} },
+      { year:{fr:'1918-1945',en:'1918-1945'}, side:'left', icon:'⚙️', href:'systems/enigma.html', available:true,
+        title:{fr:'Machine Enigma',en:'Enigma machine'},
+        type:{fr:'Rotors électromécaniques',en:'Electromechanical rotors'},
+        desc:{fr:"L'Allemagne nazie chiffre ses communications militaires. Cassée à Bletchley Park par Turing.",
+              en:"Nazi Germany encrypts its military communications. Broken at Bletchley Park by Turing."} },
+      { year:{fr:'1971',en:'1971'}, side:'right', icon:'🔀', href:'systems/feistel.html', available:true,
+        title:{fr:'Réseaux de Feistel',en:'Feistel networks'},
+        type:{fr:'Structure générique',en:'Generic structure'},
+        desc:{fr:"Horst Feistel (IBM) invente la structure qui sous-tendra DES, Blowfish, Twofish, Camellia.",
+              en:"Horst Feistel (IBM) invents the structure that will power DES, Blowfish, Twofish, Camellia."} },
+      { year:{fr:'1976',en:'1976'}, side:'left', icon:'🤝', href:'systems/diffie-hellman.html', available:true,
+        title:{fr:'Diffie-Hellman',en:'Diffie-Hellman'},
+        type:{fr:'Échange de clés',en:'Key exchange'},
+        desc:{fr:"Première méthode publique d'échange sécurisé d'une clé secrète sur un canal non sûr.",
+              en:"First public method to securely exchange a secret key over an insecure channel."} },
+      { year:{fr:'1977',en:'1977'}, side:'left', icon:'🔑', href:'systems/rsa.html', available:true,
+        title:{fr:'RSA',en:'RSA'},
+        type:{fr:'Asymétrique',en:'Asymmetric'},
+        desc:{fr:"Rivest, Shamir et Adleman publient le premier algorithme à clé publique opérationnel.",
+              en:"Rivest, Shamir and Adleman publish the first practical public-key algorithm."} },
+      { year:{fr:'1979',en:'1979'}, side:'right', icon:'🧩', href:'systems/mpc.html', available:true,
+        title:{fr:'Shamir Secret Sharing',en:'Shamir Secret Sharing'},
+        type:{fr:'Partage de secret',en:'Secret sharing'},
+        desc:{fr:"Adi Shamir invente le partage de secret à seuil (t,n) — base du MPC moderne.",
+              en:"Adi Shamir invents threshold (t,n) secret sharing — foundation of modern MPC."} },
+      { year:{fr:'1984',en:'1984'}, side:'left', icon:'🔬', href:'systems/quantique.html', available:true,
+        title:{fr:'BB84 — QKD',en:'BB84 — QKD'},
+        type:{fr:'Quantique',en:'Quantum'},
+        desc:{fr:"Bennett & Brassard proposent le premier protocole d'échange de clé fondé sur la physique quantique.",
+              en:"Bennett & Brassard propose the first key exchange protocol based on quantum physics."} },
+      { year:{fr:'1962',en:'1962'}, side:'right', icon:'🔷', href:'systems/petri.html', available:true,
+        title:{fr:'Réseaux de Petri',en:'Petri nets'},
+        type:{fr:'Modèles formels (vérif. protocoles)',en:'Formal models (protocol verification)'},
+        desc:{fr:"Carl Adam Petri publie sa thèse — utilisés ensuite pour vérifier formellement des protocoles cryptographiques (NS, TLS, 5G AKA).",
+              en:"Carl Adam Petri publishes his thesis — later used to formally verify cryptographic protocols (NS, TLS, 5G AKA)."} },
+      { year:{fr:'1985',en:'1985'}, side:'right', icon:'🔡', href:'systems/elgamal.html', available:true,
+        title:{fr:'ElGamal',en:'ElGamal'},
+        type:{fr:'Asymétrique · log discret',en:'Asymmetric · discrete log'},
+        desc:{fr:"Taher Elgamal propose un cryptosystème asymétrique basé sur le DLP — base de DSA, ECDSA, Schnorr.",
+              en:"Taher Elgamal proposes an asymmetric cryptosystem based on DLP — basis of DSA, ECDSA, Schnorr."} },
+      { year:{fr:'1985',en:'1985'}, side:'right', icon:'🔺', href:'systems/ecc.html', available:true,
+        title:{fr:'ECC — Courbes elliptiques',en:'ECC — Elliptic curves'},
+        type:{fr:'Asymétrique',en:'Asymmetric'},
+        desc:{fr:"Koblitz et Miller proposent ECC — sécurité RSA-équivalente avec des clés bien plus petites.",
+              en:"Koblitz and Miller propose ECC — RSA-equivalent security with much smaller keys."} },
+      { year:{fr:'1992',en:'1992'}, side:'left', icon:'✍️', href:'systems/ecdsa.html', available:true,
+        title:{fr:'ECDSA',en:'ECDSA'},
+        type:{fr:'Signature elliptique',en:'Elliptic signature'},
+        desc:{fr:"Vanstone adapte DSA aux courbes elliptiques. Devient le standard signatures pour Bitcoin, TLS.",
+              en:"Vanstone adapts DSA to elliptic curves. Becomes the signature standard for Bitcoin, TLS."} },
+      { year:{fr:'2001',en:'2001'}, side:'right', icon:'📨', href:'systems/ies.html', available:true,
+        title:{fr:'ECIES',en:'ECIES'},
+        type:{fr:'Chiffrement hybride normalisé',en:'Standardized hybrid encryption'},
+        desc:{fr:"Standard ANSI X9.63 : encapsulation ECDH + KDF + AES + HMAC. Utilisé partout en blockchain.",
+              en:"ANSI X9.63 standard: ECDH + KDF + AES + HMAC encapsulation. Used everywhere in blockchain."} },
+      { year:{fr:'2007',en:'2007'}, side:'left', icon:'🌀', href:'systems/edwards.html', available:true,
+        title:{fr:"Courbes d'Edwards",en:'Edwards curves'},
+        type:{fr:'Forme alternative ECC',en:'Alternative EC form'},
+        desc:{fr:"Harold Edwards publie une nouvelle forme de courbes. Bernstein l'adapte → Ed25519 (2011).",
+              en:"Harold Edwards publishes a new curve form. Bernstein adapts it → Ed25519 (2011)."} },
+      { year:{fr:'2012',en:'2012'}, side:'right', icon:'🌟', href:'systems/zk-snark.html', available:true,
+        title:{fr:'zk-SNARK',en:'zk-SNARK'},
+        type:{fr:'ZKP succincte non-interactive',en:'Succinct non-interactive ZKP'},
+        desc:{fr:"Bitansky-Chiesa-Genkin-Tromer formalisent les SNARKs. Base de Zcash (2016), rollups Ethereum.",
+              en:"Bitansky-Chiesa-Genkin-Tromer formalize SNARKs. Foundation of Zcash (2016), Ethereum rollups."} },
+      { year:{fr:'2018',en:'2018'}, side:'left', icon:'⭐', href:'systems/zk-snark.html', available:true,
+        title:{fr:'zk-STARK',en:'zk-STARK'},
+        type:{fr:'ZKP transparente post-quantique',en:'Transparent post-quantum ZKP'},
+        desc:{fr:"Ben-Sasson et al. : ZKP sans trusted setup, post-quantique. Base de StarkNet, zkSync.",
+              en:"Ben-Sasson et al.: ZKP with no trusted setup, post-quantum. Foundation of StarkNet, zkSync."} },
+      { year:{fr:'1987',en:'1987'}, side:'left', icon:'🪜', href:'systems/montgomery.html', available:true,
+        title:{fr:'Courbe de Montgomery',en:'Montgomery curve'},
+        type:{fr:'Optimisation ECC',en:'ECC optimization'},
+        desc:{fr:"Peter Montgomery introduit une forme y² = x³ + Ax² + x permettant la « Montgomery ladder » résistante aux side-channels.",
+              en:"Peter Montgomery introduces y² = x³ + Ax² + x form enabling the side-channel-resistant Montgomery ladder."} },
+      { year:{fr:'1985',en:'1985'}, side:'left', icon:'🕵️', href:'systems/zkp.html', available:true,
+        title:{fr:'Zero-Knowledge Proofs',en:'Zero-Knowledge Proofs'},
+        type:{fr:'Preuve sans divulgation',en:'Proof without disclosure'},
+        desc:{fr:"Goldwasser, Micali, Rackoff formalisent l'idée de prouver sans révéler.",
+              en:"Goldwasser, Micali, Rackoff formalize the idea of proving without revealing."} },
+      { year:{fr:'1991',en:'1991'}, side:'right', icon:'✉️', href:'#', available:false,
+        title:{fr:'PGP',en:'PGP'},
+        type:{fr:'Hybride',en:'Hybrid'},
+        desc:{fr:"Phil Zimmermann publie Pretty Good Privacy — la cryptographie pour les masses.",
+              en:"Phil Zimmermann releases Pretty Good Privacy — cryptography for the masses."} },
+      { year:{fr:'1999',en:'1999'}, side:'left', icon:'🧮', href:'systems/homomorphe.html', available:true,
+        title:{fr:'Paillier (homomorphe)',en:'Paillier (homomorphic)'},
+        type:{fr:'Homomorphe additif',en:'Additively homomorphic'},
+        desc:{fr:"Premier cryptosystème homomorphe additif — base des votes électroniques.",
+              en:"First additively homomorphic cryptosystem — basis of electronic voting."} },
+      { year:{fr:'2001',en:'2001'}, side:'right', icon:'🛡️', href:'systems/aes.html', available:true,
+        title:{fr:'AES',en:'AES'},
+        type:{fr:'Symétrique',en:'Symmetric'},
+        desc:{fr:"Le standard de chiffrement actuel — utilisé partout, du Wi-Fi aux disques durs chiffrés.",
+              en:"Today's encryption standard — used everywhere, from Wi-Fi to encrypted disks."} },
+      { year:{fr:'2001',en:'2001'}, side:'left', icon:'🧬', href:'systems/sha.html', available:true,
+        title:{fr:'SHA-2',en:'SHA-2'},
+        type:{fr:'Hash',en:'Hash'},
+        desc:{fr:"Famille de fonctions de hachage standardisées par le NIST — SHA-256, SHA-512.",
+              en:"Family of hash functions standardized by NIST — SHA-256, SHA-512."} },
+      { year:{fr:'2006',en:'2006'}, side:'right', icon:'🤝', href:'systems/montgomery.html', available:true,
+        title:{fr:'Curve25519 / X25519',en:'Curve25519 / X25519'},
+        type:{fr:'ECDH moderne',en:'Modern ECDH'},
+        desc:{fr:"D.J. Bernstein publie une courbe Montgomery ultra-rapide et résistante side-channel. Utilisée par Signal, WireGuard, TLS 1.3.",
+              en:"D.J. Bernstein publishes an ultra-fast side-channel-resistant Montgomery curve. Used by Signal, WireGuard, TLS 1.3."} },
+      { year:{fr:'2008',en:'2008'}, side:'left', icon:'🌊', href:'systems/chacha20.html', available:true,
+        title:{fr:'ChaCha20',en:'ChaCha20'},
+        type:{fr:'Chiffrement par flux',en:'Stream cipher'},
+        desc:{fr:"D.J. Bernstein conçoit un stream cipher ARX rapide en software pur — alternative à AES (TLS 1.3, WireGuard, OpenSSH).",
+              en:"D.J. Bernstein designs an ARX stream cipher fast in pure software — AES alternative (TLS 1.3, WireGuard, OpenSSH)."} },
+      { year:{fr:'2009',en:'2009'}, side:'right', icon:'🌀', href:'systems/homomorphe.html', available:true,
+        title:{fr:'FHE — Gentry',en:'FHE — Gentry'},
+        type:{fr:'Homomorphe complet',en:'Fully homomorphic'},
+        desc:{fr:"Craig Gentry démontre la faisabilité du chiffrement pleinement homomorphe.",
+              en:"Craig Gentry demonstrates the feasibility of fully homomorphic encryption."} },
+      { year:{fr:'2013',en:'2013'}, side:'left', icon:'💬', href:'#', available:false,
+        title:{fr:'Signal Protocol',en:'Signal Protocol'},
+        type:{fr:'E2EE moderne',en:'Modern E2EE'},
+        desc:{fr:"Double ratchet + X3DH — la base de WhatsApp, Signal, Messenger.",
+              en:"Double ratchet + X3DH — the foundation of WhatsApp, Signal, Messenger."} },
+      { year:{fr:'2023',en:'2023'}, side:'right', icon:'🪶', href:'systems/ascon.html', available:true,
+        title:{fr:'Ascon',en:'Ascon'},
+        type:{fr:'Cryptographie légère',en:'Lightweight cryptography'},
+        desc:{fr:"NIST standardise Ascon comme algorithme AEAD officiel pour IoT, RFID, microcontrôleurs.",
+              en:"NIST standardizes Ascon as official AEAD algorithm for IoT, RFID, microcontrollers."} },
+      { year:{fr:'2024',en:'2024'}, side:'left', icon:'⚛️', href:'systems/post-quantique.html', available:true,
+        title:{fr:'Cryptographie post-quantique',en:'Post-quantum cryptography'},
+        type:{fr:'Standards NIST',en:'NIST standards'},
+        desc:{fr:"Kyber (ML-KEM) et Dilithium (ML-DSA) standardisés — résistants aux ordinateurs quantiques.",
+              en:"Kyber (ML-KEM) and Dilithium (ML-DSA) standardized — resistant to quantum computers."} },
+    ];
+
+    const container = document.getElementById('timeline');
+    function renderTimeline() {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      container.innerHTML = '';
+      EVENTS.forEach((ev) => {
+        const sideLeft = ev.side === 'left';
+        const item = document.createElement('div');
+        item.className = `relative flex ${sideLeft ? 'md:flex-row' : 'md:flex-row-reverse'} flex-row items-start gap-6 reveal visible`;
+        item.innerHTML = `
+          <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full ${ev.available ? 'bg-brand-500 ring-4 ring-brand-500/20' : 'bg-slate-600 ring-4 ring-slate-600/20'} mt-6"></div>
+          <div class="hidden md:block w-1/2"></div>
+          <div class="ml-12 md:ml-0 w-full md:w-1/2 ${sideLeft ? 'md:pr-12' : 'md:pl-12'}">
+            <a href="${ev.available ? ev.href : '#'}" class="block group">
+              <div class="p-6 bg-white/5 border border-white/10 rounded-xl transition hover:border-brand-500/40 hover:bg-white/10 lift ${!ev.available ? 'opacity-60' : ''}">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="text-2xl">${ev.icon}</span>
+                  <div>
+                    <div class="text-xs font-mono text-brand-500">${ev.year[lang]}</div>
+                    <h3 class="font-bold text-lg group-hover:text-brand-500 transition">${ev.title[lang]}</h3>
+                  </div>
+                </div>
+                <div class="inline-block px-2 py-0.5 text-xs rounded bg-white/5 border border-white/10 text-slate-300 mb-3">${ev.type[lang]}</div>
+                <p class="text-sm text-slate-400">${ev.desc[lang]}</p>
+                <div class="mt-4 text-xs ${ev.available ? 'text-brand-500' : 'text-slate-500'}">
+                  ${ev.available ? (lang==='en'?'→ Explore':'→ Explorer') : (lang==='en'?'🔒 Coming soon':'🔒 Bientôt disponible')}
+                </div>
+              </div>
+            </a>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+    renderTimeline();
+    document.addEventListener('lang-changed', renderTimeline);
+  </script>
+</body>
+</html>

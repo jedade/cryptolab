@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glossaire — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="glossaire.html" class="text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <h1 class="text-4xl md:text-5xl font-bold" data-i18n="glossary.title">📚 Glossaire</h1>
+    <p class="mt-3 text-slate-400" data-i18n="glossary.intro">Tous les termes essentiels — définitions claires et détaillées, recherche en direct.</p>
+    <input id="search" type="text" data-i18n-attr="placeholder" data-i18n="common.search" placeholder="🔍 Rechercher…"
+           class="mt-6 w-full px-4 py-3 bg-ink-800 border border-white/10 rounded-lg focus:border-brand-500 focus:outline-none" />
+    <div class="mt-4 flex flex-wrap gap-2" id="cat-bar"></div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-24">
+    <div id="terms" class="grid md:grid-cols-2 gap-4"></div>
+    <div id="empty" class="hidden text-center text-slate-500 py-10" data-i18n="glossary.empty">Aucun terme ne correspond à ta recherche.</div>
+  </main>
+
+  <script src="assets/js/i18n.js"></script>
+  <script>
+    // ============================================================
+    // Glossary entries — bilingual, detailed, with categories
+    // ============================================================
+    const CATS = {
+      base:   { fr:'🧠 Fondamentaux',   en:'🧠 Fundamentals' },
+      keys:   { fr:'🔑 Clés & gestion', en:'🔑 Keys & management' },
+      sym:    { fr:'🔐 Symétrique',     en:'🔐 Symmetric' },
+      asym:   { fr:'🗝️ Asymétrique',    en:'🗝️ Asymmetric' },
+      hash:   { fr:'🧬 Hash & MAC',     en:'🧬 Hash & MAC' },
+      crypt:  { fr:'🔍 Cryptanalyse',   en:'🔍 Cryptanalysis' },
+      math:   { fr:'🧮 Maths',          en:'🧮 Math' },
+      mode:   { fr:"⚙️ Modes & padding", en:'⚙️ Modes & padding' },
+      proto:  { fr:'📡 Protocoles',     en:'📡 Protocols' },
+      pqc:    { fr:'⚛️ Post/Quantique', en:'⚛️ Post/Quantum' },
+      adv:    { fr:'🌀 Avancés',        en:'🌀 Advanced' },
+    };
+
+    const TERMS = [
+      // ───── FONDAMENTAUX ─────
+      { cat:'base', fr:{ term:'Cryptographie',
+          def:"Discipline qui conçoit des techniques pour protéger l'information contre la lecture, la modification ou l'usurpation par des tiers non autorisés. Elle repose sur des algorithmes et des clés. Quatre objectifs canoniques : confidentialité, intégrité, authentification, non-répudiation."},
+        en:{ term:'Cryptography',
+          def:"The discipline of designing techniques that protect information against unauthorized reading, modification or impersonation. Built on algorithms and keys. Four canonical goals: confidentiality, integrity, authentication, non-repudiation." }},
+
+      { cat:'base', fr:{ term:'Cryptanalyse',
+          def:"Science complémentaire qui étudie comment casser les cryptosystèmes — pour évaluer leur solidité ou les attaquer. Méthodes : analyse statistique, attaques différentielles, side-channels, brute force, etc."},
+        en:{ term:'Cryptanalysis',
+          def:"The complementary science that studies how to break cryptosystems — to evaluate their strength or attack them. Methods include statistical analysis, differential attacks, side-channels, brute force, etc." }},
+
+      { cat:'base', fr:{ term:'Cryptologie',
+          def:"Domaine académique englobant à la fois la cryptographie (construire) et la cryptanalyse (casser). En français, le mot désigne souvent l'ensemble du champ scientifique."},
+        en:{ term:'Cryptology',
+          def:"The academic field encompassing both cryptography (building) and cryptanalysis (breaking). In English, often used interchangeably with cryptography." }},
+
+      { cat:'base', fr:{ term:'Cryptosystème',
+          def:"Quintuplet formel (M, C, K, E, D) : ensemble des messages clairs M, des chiffrés C, des clés K, et des fonctions de chiffrement E et déchiffrement D. Un cryptosystème complet inclut aussi les protocoles d'usage (génération, distribution, rotation des clés)."},
+        en:{ term:'Cryptosystem',
+          def:"A formal quintuple (M, C, K, E, D): the sets of plaintexts M, ciphertexts C, keys K, plus encryption (E) and decryption (D) functions. A complete cryptosystem also includes usage protocols (key generation, distribution, rotation)." }},
+
+      { cat:'base', fr:{ term:'Confidentialité',
+          def:"Garantie que l'information n'est lisible que par les parties autorisées. Assurée par le chiffrement (symétrique ou asymétrique)."},
+        en:{ term:'Confidentiality',
+          def:"Guarantee that information is readable only by authorized parties. Achieved through encryption (symmetric or asymmetric)." }},
+
+      { cat:'base', fr:{ term:'Intégrité',
+          def:"Garantie que l'information n'a pas été altérée durant son stockage ou sa transmission. Assurée par les fonctions de hachage, MAC, signatures, AEAD."},
+        en:{ term:'Integrity',
+          def:"Guarantee that information has not been altered during storage or transmission. Achieved via hash functions, MACs, signatures, AEAD." }},
+
+      { cat:'base', fr:{ term:'Authentification',
+          def:"Vérification de l'identité d'une entité (personne, service, message). Distinguer authentification d'entité (qui es-tu ?) et authentification de message (qui a envoyé ça ?)."},
+        en:{ term:'Authentication',
+          def:"Verification of an entity's identity (person, service, message). Distinguish entity authentication (who are you?) from message authentication (who sent this?)." }},
+
+      { cat:'base', fr:{ term:'Non-répudiation',
+          def:"Propriété empêchant un émetteur de nier avoir envoyé un message. Assurée par les signatures numériques (clé privée). Indispensable en contractualisation électronique."},
+        en:{ term:'Non-repudiation',
+          def:"Property preventing a sender from denying they sent a message. Achieved with digital signatures (private key). Critical for electronic contracts." }},
+
+      { cat:'base', fr:{ term:'Principe de Kerckhoffs',
+          def:"Énoncé par Auguste Kerckhoffs en 1883 : « la sécurité d'un cryptosystème ne doit pas reposer sur le secret de l'algorithme, seulement sur le secret de la clé ». Doctrine fondatrice — à l'opposé de la « sécurité par l'obscurité »."},
+        en:{ term:'Kerckhoffs principle',
+          def:"Stated by Auguste Kerckhoffs (1883): the security of a cryptosystem must rest on the secrecy of the key, not the algorithm. A founding doctrine — opposite of 'security through obscurity'." }},
+
+      // ───── CLÉS ─────
+      { cat:'keys', fr:{ term:'Clé',
+          def:"Information secrète paramétrant l'algorithme. Sa taille (en bits) détermine généralement la résistance au brute force : doubler la taille double la sécurité, pas le calcul nécessaire pour casser."},
+        en:{ term:'Key',
+          def:"Secret parameter for the algorithm. Its size (in bits) generally determines brute-force resistance: doubling key size doubles security, not the work to break." }},
+
+      { cat:'keys', fr:{ term:'Clé publique',
+          def:"En cryptographie asymétrique : clé librement publiable (annuaire, certificat). Sert à chiffrer (à destination du propriétaire) ou à vérifier une signature (provenance authentifiée)."},
+        en:{ term:'Public key',
+          def:"In asymmetric cryptography: a key meant to be public (directory, certificate). Used to encrypt to the owner or to verify the owner's signature." }},
+
+      { cat:'keys', fr:{ term:'Clé privée',
+          def:"En cryptographie asymétrique : clé tenue strictement secrète par son propriétaire. Sert à déchiffrer (ce qui a été chiffré avec la publique) ou à signer (sa propre identité)."},
+        en:{ term:'Private key',
+          def:"In asymmetric cryptography: key kept strictly secret by its owner. Used to decrypt (what was encrypted with the public key) or to sign (the owner's identity)." }},
+
+      { cat:'keys', fr:{ term:'KDF (Key Derivation Function)',
+          def:"Fonction transformant un secret quelconque (mot de passe, output DH) en une clé cryptographique de taille fixe. Exemples : PBKDF2, scrypt, Argon2, HKDF."},
+        en:{ term:'KDF (Key Derivation Function)',
+          def:"Function that turns an arbitrary secret (password, DH output) into a fixed-size cryptographic key. Examples: PBKDF2, scrypt, Argon2, HKDF." }},
+
+      { cat:'keys', fr:{ term:'Sel (salt)',
+          def:"Valeur aléatoire publique ajoutée à un hash de mot de passe pour rendre les rainbow tables inutiles et différencier deux utilisateurs ayant le même mot de passe."},
+        en:{ term:'Salt',
+          def:"Public random value mixed into a password hash to defeat rainbow tables and ensure two users with the same password get different hashes." }},
+
+      { cat:'keys', fr:{ term:'Poivre (pepper)',
+          def:"Valeur secrète stockée séparément (HSM, code), ajoutée au hash en plus du sel. Si la BDD fuit mais pas le pepper, les hashes restent attaquables uniquement par celui qui détient le pepper."},
+        en:{ term:'Pepper',
+          def:"Secret value stored separately (HSM, code) added to the hash alongside the salt. If the DB leaks but not the pepper, hashes are only crackable by whoever holds the pepper." }},
+
+      { cat:'keys', fr:{ term:'IV (Initialization Vector)',
+          def:"Donnée publique, non-secrète, mais aléatoire/unique, utilisée pour démarrer un chiffrement en bloc (CBC, CFB) ou un compteur (CTR, GCM). Réutiliser un IV avec la même clé en GCM ou CTR est catastrophique."},
+        en:{ term:'IV (Initialization Vector)',
+          def:"Public, non-secret but random/unique value used to start a block cipher mode (CBC, CFB) or a counter (CTR, GCM). Reusing an IV with the same key in GCM or CTR is catastrophic." }},
+
+      { cat:'keys', fr:{ term:'Nonce',
+          def:"« Number used ONCE » — valeur garantie unique pour une clé donnée. Peut être un compteur, un timestamp, ou un grand aléa. Évite les attaques par rejeu."},
+        en:{ term:'Nonce',
+          def:"\"Number used ONCE\" — value guaranteed unique per key. Can be a counter, timestamp, or large random. Prevents replay attacks." }},
+
+      { cat:'keys', fr:{ term:'Forward secrecy (PFS)',
+          def:"Propriété d'un protocole : si la clé long-terme est compromise plus tard, les sessions passées restent illisibles. Obtenue par échange de clés éphémères (ECDHE)."},
+        en:{ term:'Forward secrecy (PFS)',
+          def:"Protocol property: if the long-term key is later compromised, past sessions remain unreadable. Achieved with ephemeral key exchange (ECDHE)." }},
+
+      // ───── SYMÉTRIQUE ─────
+      { cat:'sym', fr:{ term:'Chiffrement symétrique',
+          def:"Une même clé sert à chiffrer et à déchiffrer. Rapide (Go/s), idéal pour de gros volumes. Problème : il faut un canal sûr pour partager la clé. Exemples : AES, ChaCha20, 3DES."},
+        en:{ term:'Symmetric encryption',
+          def:"Same key for encryption and decryption. Fast (GB/s), ideal for large data. Caveat: needs a secure channel to share the key. Examples: AES, ChaCha20, 3DES." }},
+
+      { cat:'sym', fr:{ term:'Chiffrement par blocs',
+          def:"Traite des blocs de taille fixe (64, 128 bits) via une suite de rounds (substitution + permutation). Combiné à un « mode d'opération » (CBC, GCM, CTR) pour chiffrer un message complet."},
+        en:{ term:'Block cipher',
+          def:"Processes fixed-size blocks (64, 128 bits) through several rounds (substitution + permutation). Combined with a mode of operation (CBC, GCM, CTR) to encrypt a full message." }},
+
+      { cat:'sym', fr:{ term:'Chiffrement par flux',
+          def:"Génère un flux pseudo-aléatoire (keystream) à partir de la clé, qu'on XOR octet par octet avec le message. Naturellement adapté aux flux audio/vidéo. Exemples : ChaCha20, RC4."},
+        en:{ term:'Stream cipher',
+          def:"Generates a pseudo-random keystream from the key, then XORs it byte-by-byte with the message. Naturally suited to audio/video streams. Examples: ChaCha20, RC4." }},
+
+      { cat:'sym', fr:{ term:'Réseau de Feistel',
+          def:"Structure pour chiffrement par blocs : on divise le bloc en deux moitiés L, R. À chaque round : L' = R, R' = L XOR F(R, K_i). Magie : la fonction F n'a pas besoin d'être inversible — le déchiffrement utilise la même structure. Inventé par Horst Feistel chez IBM. Cœur de DES, Blowfish, Twofish."},
+        en:{ term:'Feistel network',
+          def:"Structure for block ciphers: split block into halves L, R. Each round: L' = R, R' = L XOR F(R, K_i). Magic: F need not be invertible — decryption uses the same structure. Invented by Horst Feistel at IBM. Core of DES, Blowfish, Twofish." }},
+
+      { cat:'sym', fr:{ term:'SPN (Substitution-Permutation Network)',
+          def:"Alternative au Feistel : chaque round = couche de substitution (S-box) + couche de permutation linéaire. Utilisé par AES. Plus parallélisable que Feistel mais demande un inversible."},
+        en:{ term:'SPN (Substitution-Permutation Network)',
+          def:"Alternative to Feistel: each round = substitution layer (S-box) + linear permutation layer. Used by AES. More parallelizable than Feistel but requires invertibility." }},
+
+      { cat:'sym', fr:{ term:'S-box',
+          def:"Table de substitution non-linéaire transformant un petit groupe de bits (4, 6, 8) en un autre. Cœur de la résistance aux attaques différentielles et linéaires. Celle d'AES est l'inverse multiplicatif dans GF(2⁸)."},
+        en:{ term:'S-box',
+          def:"Non-linear substitution table mapping small bit groups (4, 6, 8) to others. Core of resistance against differential and linear cryptanalysis. AES's S-box is the multiplicative inverse in GF(2⁸)." }},
+
+      // ───── ASYMÉTRIQUE ─────
+      { cat:'asym', fr:{ term:'Chiffrement asymétrique',
+          def:"Utilise une paire de clés mathématiquement liées. Ce qui est chiffré avec l'une se déchiffre avec l'autre. ~1000× plus lent que symétrique → réservé à l'échange de clés et aux signatures. Exemples : RSA, ECC."},
+        en:{ term:'Asymmetric encryption',
+          def:"Uses a pair of mathematically linked keys. What one encrypts, the other decrypts. ~1000× slower than symmetric → mostly used for key exchange and signatures. Examples: RSA, ECC." }},
+
+      { cat:'asym', fr:{ term:'Chiffrement hybride',
+          def:"Approche combinée : on génère une clé symétrique aléatoire, on chiffre le message avec (rapide), puis on chiffre cette clé avec la clé publique du destinataire (asymétrique). C'est ce que fait TLS, PGP, Signal."},
+        en:{ term:'Hybrid encryption',
+          def:"Combined approach: generate a random symmetric key, encrypt the message with it (fast), then encrypt that key with the recipient's public key (asymmetric). What TLS, PGP, Signal all do." }},
+
+      { cat:'asym', fr:{ term:'Signature numérique',
+          def:"Donnée produite avec la clé privée, vérifiable avec la clé publique correspondante. Prouve l'origine et l'intégrité (et empêche la répudiation). Exemples : RSA-PSS, ECDSA, Ed25519."},
+        en:{ term:'Digital signature',
+          def:"Data produced with a private key, verifiable with the matching public key. Proves origin and integrity (and prevents repudiation). Examples: RSA-PSS, ECDSA, Ed25519." }},
+
+      { cat:'asym', fr:{ term:'PKI (Public Key Infrastructure)',
+          def:"Système hiérarchique de certificats (X.509) émis par des autorités (CA) qui attestent qu'une clé publique appartient bien à une identité. Sous-tend HTTPS, S/MIME, code signing."},
+        en:{ term:'PKI (Public Key Infrastructure)',
+          def:"Hierarchical system of certificates (X.509) issued by authorities (CAs) that attest a public key belongs to a given identity. Underpins HTTPS, S/MIME, code signing." }},
+
+      { cat:'asym', fr:{ term:'KEM (Key Encapsulation Mechanism)',
+          def:"Variante moderne du chiffrement asymétrique : ne chiffre pas un message arbitraire mais encapsule une clé symétrique aléatoire. Plus simple à analyser que le chiffrement direct. Kyber est un KEM."},
+        en:{ term:'KEM (Key Encapsulation Mechanism)',
+          def:"Modern flavor of asymmetric encryption: doesn't encrypt an arbitrary message but encapsulates a random symmetric key. Easier to analyze than direct encryption. Kyber is a KEM." }},
+
+      // ───── HASH ─────
+      { cat:'hash', fr:{ term:'Hash cryptographique',
+          def:"Fonction H : {0,1}* → {0,1}^n qui résume une donnée arbitraire en une empreinte fixe (256, 512 bits…). Propriétés : déterministe, rapide, sens unique, résistante aux collisions, effet avalanche."},
+        en:{ term:'Cryptographic hash',
+          def:"Function H : {0,1}* → {0,1}^n that condenses arbitrary data into a fixed-size digest (256, 512 bits…). Properties: deterministic, fast, one-way, collision-resistant, avalanche effect." }},
+
+      { cat:'hash', fr:{ term:'Collision',
+          def:"Deux entrées différentes M₁ ≠ M₂ produisant le même hash H(M₁) = H(M₂). Toujours mathématiquement existantes (principe des tiroirs), mais doivent être pratiquement infaisables à trouver. MD5 et SHA-1 sont concrètement cassés sur ce critère."},
+        en:{ term:'Collision',
+          def:"Two distinct inputs M₁ ≠ M₂ producing the same hash H(M₁) = H(M₂). Always exist mathematically (pigeonhole), but must be practically infeasible to find. MD5 and SHA-1 are concretely broken on this." }},
+
+      { cat:'hash', fr:{ term:'MAC (Message Authentication Code)',
+          def:"Tag court calculé avec une clé secrète partagée, attestant intégrité ET authentification d'un message. Différent d'une signature : symétrique, donc pas de non-répudiation. Exemples : HMAC, Poly1305."},
+        en:{ term:'MAC (Message Authentication Code)',
+          def:"Short tag computed with a shared secret key, asserting message integrity AND authentication. Different from a signature: symmetric, hence no non-repudiation. Examples: HMAC, Poly1305." }},
+
+      { cat:'hash', fr:{ term:'HMAC',
+          def:"Construction standard (RFC 2104) qui transforme un hash (SHA-256, etc.) en MAC sûr. Formule : HMAC(K, m) = H((K⊕opad) ∥ H((K⊕ipad) ∥ m)). Résiste à la length-extension attack."},
+        en:{ term:'HMAC',
+          def:"Standard construction (RFC 2104) that turns a hash (SHA-256, etc.) into a secure MAC. Formula: HMAC(K, m) = H((K⊕opad) ∥ H((K⊕ipad) ∥ m)). Defeats the length-extension attack." }},
+
+      { cat:'hash', fr:{ term:'Effet avalanche',
+          def:"Propriété d'un bon hash : changer 1 bit d'entrée modifie environ 50% des bits de sortie. Empêche toute relation déductible entre l'entrée et la sortie."},
+        en:{ term:'Avalanche effect',
+          def:"Property of a good hash: flipping 1 input bit changes about 50% of the output bits. Prevents any deducible relationship between input and output." }},
+
+      // ───── CRYPTANALYSE ─────
+      { cat:'crypt', fr:{ term:'Analyse fréquentielle',
+          def:"Cryptanalyse exploitant la fréquence des lettres dans une langue (E ≈ 14.7% en français). Casse les chiffres de substitution simple. Premier travail systématique : Al-Kindi, IXe siècle."},
+        en:{ term:'Frequency analysis',
+          def:"Cryptanalysis exploiting letter frequency in a language (E ≈ 12.7% in English). Breaks simple substitution ciphers. First systematic treatment: Al-Kindi, 9th century." }},
+
+      { cat:'crypt', fr:{ term:'Brute force',
+          def:"Attaque exhaustive : tester toutes les clés possibles. Coût : 2^n pour une clé de n bits. Justifie AES-128 (2¹²⁸ ≈ 10³⁸ — hors de portée) mais pas DES-56 (cassé en heures depuis 1998)."},
+        en:{ term:'Brute force',
+          def:"Exhaustive attack: try every possible key. Cost: 2^n for an n-bit key. Justifies AES-128 (2¹²⁸ ≈ 10³⁸ — infeasible) but not DES-56 (broken in hours since 1998)." }},
+
+      { cat:'crypt', fr:{ term:'Attaque MITM (Man-in-the-Middle)',
+          def:"L'attaquant intercepte la communication, se fait passer pour chaque partie auprès de l'autre. Diffie-Hellman brut y est vulnérable — d'où l'usage de signatures pour authentifier l'échange."},
+        en:{ term:'MITM (Man-in-the-Middle) attack',
+          def:"Attacker intercepts the communication and impersonates each party to the other. Plain Diffie-Hellman is vulnerable — hence the use of signatures to authenticate the exchange." }},
+
+      { cat:'crypt', fr:{ term:'Side-channel attack',
+          def:"Attaque l'IMPLÉMENTATION et non l'algorithme : mesure du temps, consommation électrique, émissions EM, sons, cache CPU. Peut récupérer une clé AES via des µs de variation."},
+        en:{ term:'Side-channel attack',
+          def:"Attacks the IMPLEMENTATION rather than the algorithm: timing, power, EM emissions, sound, CPU cache. Can recover an AES key from microsecond variations." }},
+
+      { cat:'crypt', fr:{ term:'Attaque par rejeu (replay)',
+          def:"L'attaquant capture un message légitime et le rejoue plus tard pour induire une action. Contre-mesure : nonces, timestamps, numéros de séquence."},
+        en:{ term:'Replay attack',
+          def:"Attacker captures a legitimate message and replays it later to trigger an action. Mitigation: nonces, timestamps, sequence numbers." }},
+
+      { cat:'crypt', fr:{ term:'Cribs (mots probables)',
+          def:"Fragment de plaintext deviné (\"Wettervorhersage\", \"Heil Hitler\"). Permet de tester des hypothèses de clé. Outil-clé de Turing contre Enigma."},
+        en:{ term:'Crib (probable word)',
+          def:"Guessed plaintext fragment (\"Wettervorhersage\", \"Heil Hitler\"). Lets you test key hypotheses. Turing's key tool against Enigma." }},
+
+      // ───── MATHS ─────
+      { cat:'math', fr:{ term:'Arithmétique modulaire',
+          def:"Arithmétique sur les entiers « modulo n » : on ne garde que le reste de la division par n. Notation : a ≡ b (mod n) signifie « a et b ont le même reste ». Langue universelle de la cryptographie."},
+        en:{ term:'Modular arithmetic',
+          def:"Arithmetic on integers \"modulo n\": only keep the remainder of division by n. Notation: a ≡ b (mod n) means \"a and b have the same remainder\". The universal language of cryptography." }},
+
+      { cat:'math', fr:{ term:'Inverse modulaire',
+          def:"L'inverse de a modulo n est x tel que a·x ≡ 1 (mod n). Existe si et seulement si pgcd(a, n) = 1. Calculé via l'algorithme d'Euclide étendu."},
+        en:{ term:'Modular inverse',
+          def:"The inverse of a modulo n is x such that a·x ≡ 1 (mod n). Exists iff gcd(a, n) = 1. Computed via the extended Euclidean algorithm." }},
+
+      { cat:'math', fr:{ term:'Indicatrice d\'Euler φ(n)',
+          def:"Nombre d'entiers de 1 à n premiers avec n. Pour n = p·q (deux premiers distincts), φ(n) = (p-1)(q-1). Cœur du calcul de la clé privée RSA."},
+        en:{ term:"Euler's totient φ(n)",
+          def:"Number of integers from 1 to n coprime with n. For n = p·q (two distinct primes), φ(n) = (p-1)(q-1). Core of RSA private key generation." }},
+
+      { cat:'math', fr:{ term:'Théorème d\'Euler',
+          def:"Si pgcd(a, n) = 1, alors a^φ(n) ≡ 1 (mod n). Justifie pourquoi RSA fonctionne : m^(ed) ≡ m^(1 + kφ(n)) ≡ m (mod n)."},
+        en:{ term:"Euler's theorem",
+          def:"If gcd(a, n) = 1, then a^φ(n) ≡ 1 (mod n). Justifies why RSA works: m^(ed) ≡ m^(1 + kφ(n)) ≡ m (mod n)." }},
+
+      { cat:'math', fr:{ term:'Logarithme discret (DLP)',
+          def:"Étant donné g, p, et h = g^x mod p, retrouver x est le problème du log discret. Conjecturé difficile pour les bons groupes. Sécurité de DH, DSA, ElGamal."},
+        en:{ term:'Discrete logarithm (DLP)',
+          def:"Given g, p, and h = g^x mod p, recovering x is the discrete log problem. Conjectured hard for well-chosen groups. Underlies DH, DSA, ElGamal." }},
+
+      { cat:'math', fr:{ term:'Corps fini (Galois field GF)',
+          def:"Ensemble fini où les 4 opérations +, −, ×, ÷ sont définies. GF(p) = entiers mod p (premier). GF(2^n) = polynômes binaires mod un irréductible. AES travaille dans GF(2⁸)."},
+        en:{ term:'Finite field (Galois field GF)',
+          def:"Finite set where +, −, ×, ÷ are defined. GF(p) = integers mod prime p. GF(2^n) = binary polynomials mod an irreducible polynomial. AES operates in GF(2⁸)." }},
+
+      { cat:'math', fr:{ term:'Nombre premier',
+          def:"Entier > 1 divisible uniquement par 1 et lui-même. Brique fondamentale de RSA, DH, ECC. Tests : Miller-Rabin (probabiliste, rapide), AKS (déterministe, lent)."},
+        en:{ term:'Prime number',
+          def:"Integer > 1 divisible only by 1 and itself. Fundamental brick of RSA, DH, ECC. Primality tests: Miller-Rabin (probabilistic, fast), AKS (deterministic, slow)." }},
+
+      { cat:'math', fr:{ term:'Courbe elliptique',
+          def:"Équation y² = x³ + ax + b sur un corps fini. Les points (avec un point à l'infini) forment un groupe abélien sous une addition géométrique. Base de ECC, ECDH, ECDSA."},
+        en:{ term:'Elliptic curve',
+          def:"Equation y² = x³ + ax + b over a finite field. Points (with a point at infinity) form an abelian group under geometric addition. Foundation of ECC, ECDH, ECDSA." }},
+
+      // ───── MODES ─────
+      { cat:'mode', fr:{ term:'ECB (Electronic Codebook)',
+          def:"Mode le plus simple : chaque bloc chiffré indépendamment. À ÉVITER : blocs de plaintext identiques donnent des chiffrés identiques (le « pingouin Tux » est l'exemple classique)."},
+        en:{ term:'ECB (Electronic Codebook)',
+          def:"Simplest mode: each block encrypted independently. AVOID: identical plaintext blocks yield identical ciphertext blocks (the famous \"Tux penguin\" example)." }},
+
+      { cat:'mode', fr:{ term:'CBC (Cipher Block Chaining)',
+          def:"Chaque bloc clair est XOR avec le chiffré précédent avant chiffrement (1er bloc : IV). Diffuse les motifs. Vulnérable aux attaques de padding (POODLE) si mal authentifié."},
+        en:{ term:'CBC (Cipher Block Chaining)',
+          def:"Each plaintext block is XORed with the previous ciphertext before encryption (first block: IV). Diffuses patterns. Vulnerable to padding attacks (POODLE) without proper authentication." }},
+
+      { cat:'mode', fr:{ term:'CTR (Counter)',
+          def:"Chiffre un compteur incrémental (IV ∥ counter) puis XOR avec le clair. Parallélisable, pas de padding. Réutiliser un (clé, counter) = catastrophe."},
+        en:{ term:'CTR (Counter)',
+          def:"Encrypts an incremental counter (IV ∥ counter) then XORs with plaintext. Parallelizable, no padding. Reusing (key, counter) = catastrophe." }},
+
+      { cat:'mode', fr:{ term:'GCM (Galois/Counter Mode)',
+          def:"CTR + tag d'authentification calculé via Galois Hash. AEAD le plus utilisé (TLS 1.3). Très rapide. Limite : 2^32 blocs / clé maximum, IV unique requis."},
+        en:{ term:'GCM (Galois/Counter Mode)',
+          def:"CTR + authentication tag computed via Galois Hash. Most used AEAD mode (TLS 1.3). Very fast. Limits: max 2^32 blocks / key, unique IV required." }},
+
+      { cat:'mode', fr:{ term:'AEAD',
+          def:"Authenticated Encryption with Associated Data — schéma combinant chiffrement et authentification en une seule primitive. Standards : AES-GCM, ChaCha20-Poly1305, Ascon."},
+        en:{ term:'AEAD',
+          def:"Authenticated Encryption with Associated Data — scheme combining encryption and authentication in a single primitive. Standards: AES-GCM, ChaCha20-Poly1305, Ascon." }},
+
+      { cat:'mode', fr:{ term:'Padding',
+          def:"Remplissage qui complète un message à un multiple de la taille de bloc. PKCS#7 est le plus courant : remplir avec n octets valant n. Les erreurs de padding doivent être indistinguables pour éviter les attaques oracle."},
+        en:{ term:'Padding',
+          def:"Filling that pads a message to a multiple of the block size. PKCS#7 is most common: pad with n bytes valued n. Padding errors must be indistinguishable to prevent oracle attacks." }},
+
+      // ───── PROTOCOLES ─────
+      { cat:'proto', fr:{ term:'TLS (Transport Layer Security)',
+          def:"Protocole hybride (handshake asymétrique pour échanger une clé, puis symétrique pour le trafic) qui sécurise HTTPS, SMTP, IMAP, etc. Version actuelle : TLS 1.3 (2018). Utilise ECDHE + AES-GCM ou ChaCha20-Poly1305."},
+        en:{ term:'TLS (Transport Layer Security)',
+          def:"Hybrid protocol (asymmetric handshake to exchange a key, then symmetric for traffic) securing HTTPS, SMTP, IMAP, etc. Current version: TLS 1.3 (2018). Uses ECDHE + AES-GCM or ChaCha20-Poly1305." }},
+
+      { cat:'proto', fr:{ term:'Signal Protocol',
+          def:"Protocole de messagerie chiffrée bout-en-bout. Combinaison X3DH (échange initial) + Double Ratchet (renouvellement permanent des clés). Utilisé par Signal, WhatsApp, Messenger."},
+        en:{ term:'Signal Protocol',
+          def:"End-to-end encrypted messaging protocol. Combines X3DH (initial exchange) + Double Ratchet (continuous key renewal). Used by Signal, WhatsApp, Messenger." }},
+
+      { cat:'proto', fr:{ term:'PGP / GnuPG',
+          def:"Pretty Good Privacy (Zimmermann, 1991). Standard de chiffrement / signature d'e-mails et fichiers. Modèle de confiance décentralisé (web of trust). Souvent jugé daté ; alternative moderne : age."},
+        en:{ term:'PGP / GnuPG',
+          def:"Pretty Good Privacy (Zimmermann, 1991). Standard for encrypting/signing emails and files. Decentralized trust model (web of trust). Often considered dated; modern alternative: age." }},
+
+      // ───── POST/QUANTIQUE ─────
+      { cat:'pqc', fr:{ term:'Algorithme de Shor',
+          def:"Algorithme quantique (Shor, 1994) qui factorise un entier ou calcule un log discret en temps polynomial. Casse RSA, DH, ECC dès qu'un ordinateur quantique tolérant aux fautes existe."},
+        en:{ term:"Shor's algorithm",
+          def:"Quantum algorithm (Shor, 1994) that factors an integer or computes a discrete log in polynomial time. Breaks RSA, DH, ECC as soon as a fault-tolerant quantum computer exists." }},
+
+      { cat:'pqc', fr:{ term:'Algorithme de Grover',
+          def:"Algorithme quantique (Grover, 1996) qui accélère la recherche exhaustive : √n au lieu de n. Conséquence : AES-128 → 64 bits de sécurité ; AES-256 → 128 bits → toujours sûr."},
+        en:{ term:"Grover's algorithm",
+          def:"Quantum algorithm (Grover, 1996) that speeds up brute search: √n instead of n. Consequence: AES-128 → 64 bits of security; AES-256 → 128 bits → still safe." }},
+
+      { cat:'pqc', fr:{ term:'LWE (Learning With Errors)',
+          def:"Problème mathématique : étant donné A et b = A·s + e mod q (e petit bruit), retrouver s. Difficile y compris pour un ordinateur quantique. Fondation de Kyber et Dilithium."},
+        en:{ term:'LWE (Learning With Errors)',
+          def:"Mathematical problem: given A and b = A·s + e mod q (e small noise), recover s. Hard even for quantum computers. Foundation of Kyber and Dilithium." }},
+
+      { cat:'pqc', fr:{ term:'QKD (Quantum Key Distribution)',
+          def:"Distribution d'une clé symétrique via canal quantique (photons polarisés). Sécurité information-théorique : toute interception est physiquement détectable. Protocoles : BB84, E91."},
+        en:{ term:'QKD (Quantum Key Distribution)',
+          def:"Symmetric key distribution over a quantum channel (polarized photons). Information-theoretic security: any eavesdropping is physically detectable. Protocols: BB84, E91." }},
+
+      { cat:'pqc', fr:{ term:'Théorème de non-clonage',
+          def:"Résultat fondamental (Wootters & Zurek, 1982) : aucun opérateur unitaire ne peut copier un état quantique inconnu. C'est ce qui rend QKD inconditionnellement sûr."},
+        en:{ term:'No-cloning theorem',
+          def:"Fundamental result (Wootters & Zurek, 1982): no unitary operator can copy an unknown quantum state. This is what makes QKD unconditionally secure." }},
+
+      // ───── AVANCÉS ─────
+      { cat:'adv', fr:{ term:'Zero-Knowledge Proof (ZKP)',
+          def:"Protocole où un prouveur convainc un vérificateur qu'il connaît un secret SANS le révéler. Propriétés : complétude, solidité, zero-knowledge. Variantes modernes : zk-SNARK, zk-STARK, Bulletproofs."},
+        en:{ term:'Zero-Knowledge Proof (ZKP)',
+          def:"Protocol where a prover convinces a verifier they know a secret WITHOUT revealing it. Properties: completeness, soundness, zero-knowledge. Modern variants: zk-SNARK, zk-STARK, Bulletproofs." }},
+
+      { cat:'adv', fr:{ term:'Chiffrement homomorphe',
+          def:"Cryptosystème permettant d'effectuer des calculs directement sur les chiffrés. PHE : une opération (RSA ×, Paillier +). SHE : limité. FHE : illimité (Gentry, 2009). Très lent mais révolutionnaire."},
+        en:{ term:'Homomorphic encryption',
+          def:"Cryptosystem allowing computation directly on ciphertext. PHE: one operation (RSA ×, Paillier +). SHE: limited. FHE: unlimited (Gentry, 2009). Very slow but revolutionary." }},
+
+      { cat:'adv', fr:{ term:'MPC (Multi-Party Computation)',
+          def:"Plusieurs parties calculent ensemble une fonction f(x₁, x₂, …) sans révéler leurs x_i. Briques : partage de secret (Shamir), garbled circuits (Yao), oblivious transfer."},
+        en:{ term:'MPC (Multi-Party Computation)',
+          def:"Multiple parties jointly compute f(x₁, x₂, …) without revealing their x_i. Building blocks: secret sharing (Shamir), garbled circuits (Yao), oblivious transfer." }},
+
+      { cat:'adv', fr:{ term:'Partage de secret (Shamir)',
+          def:"Schéma (t, n) : divise un secret en n parts telles que t parts suffisent à le reconstruire, t-1 ne révèlent rien. Basé sur l'interpolation polynomiale de Lagrange. Sécurité information-théorique."},
+        en:{ term:'Secret sharing (Shamir)',
+          def:"(t, n) scheme: splits a secret into n shares such that t shares suffice to reconstruct, t-1 reveal nothing. Based on Lagrange polynomial interpolation. Information-theoretic security." }},
+
+      { cat:'adv', fr:{ term:'Oracle de chiffrement',
+          def:"Modèle d'attaque où l'attaquant peut soumettre des plaintexts et obtenir leurs chiffrés (ou inversement). Sert à formaliser les attaques CPA (Chosen Plaintext) et CCA (Chosen Ciphertext)."},
+        en:{ term:'Encryption oracle',
+          def:"Attack model where the attacker can submit plaintexts and obtain their ciphertexts (or vice versa). Formalizes CPA (Chosen Plaintext) and CCA (Chosen Ciphertext) attacks." }},
+
+      // ───── SPÉCIFIQUE ─────
+      { cat:'asym', fr:{ term:'RSA',
+          def:"Cryptosystème asymétrique (Rivest-Shamir-Adleman, 1977). Sécurité = difficulté de factoriser n = p·q. Tailles courantes : 2048-4096 bits. Lent ; combiné à AES en pratique."},
+        en:{ term:'RSA',
+          def:"Asymmetric cryptosystem (Rivest-Shamir-Adleman, 1977). Security = hardness of factoring n = p·q. Common sizes: 2048-4096 bits. Slow; paired with AES in practice." }},
+
+      { cat:'sym', fr:{ term:'AES',
+          def:"Advanced Encryption Standard (Daemen-Rijmen, 2001). Chiffrement par blocs de 128 bits, clés 128/192/256, structure SPN à 10/12/14 rounds. Standard mondial — NSA approuvé TOP SECRET en 256."},
+        en:{ term:'AES',
+          def:"Advanced Encryption Standard (Daemen-Rijmen, 2001). 128-bit block cipher, 128/192/256-bit keys, SPN structure with 10/12/14 rounds. World standard — NSA-approved TOP SECRET in 256." }},
+
+      { cat:'sym', fr:{ term:'ChaCha20',
+          def:"Chiffrement par flux conçu par D.J. Bernstein (2008). 256 bits, optimisé pour le software (alternative à AES quand pas de jeu d'instructions AES-NI). Combiné à Poly1305 dans TLS 1.3, WireGuard."},
+        en:{ term:'ChaCha20',
+          def:"Stream cipher designed by D.J. Bernstein (2008). 256-bit, software-optimized (AES alternative when no AES-NI). Paired with Poly1305 in TLS 1.3, WireGuard." }},
+
+      { cat:'asym', fr:{ term:'Curve25519',
+          def:"Courbe elliptique de Montgomery sur le premier 2²⁵⁵−19, conçue par D.J. Bernstein (2006). Optimisée pour ECDH (X25519). Très rapide, résistante aux side-channels, utilisée par Signal, WireGuard, SSH, TLS 1.3."},
+        en:{ term:'Curve25519',
+          def:"Montgomery elliptic curve over the prime 2²⁵⁵−19, designed by D.J. Bernstein (2006). Optimized for ECDH (X25519). Very fast, side-channel resistant, used by Signal, WireGuard, SSH, TLS 1.3." }},
+
+      { cat:'asym', fr:{ term:'Ed25519',
+          def:"Schéma de signature (EdDSA) basé sur la courbe Edwards Edwards25519 (équivalente à Curve25519). Signatures de 64 octets, ultra-rapide, déterministe. Standard moderne pour SSH, Git, Tor, certificats."},
+        en:{ term:'Ed25519',
+          def:"Signature scheme (EdDSA) based on the Edwards curve Edwards25519 (equivalent to Curve25519). 64-byte signatures, ultra-fast, deterministic. Modern standard for SSH, Git, Tor, certificates." }},
+
+      { cat:'sym', fr:{ term:'Ascon',
+          def:"Famille AEAD légère (Dobraunig et al., 2014). Gagnant de la compétition NIST Lightweight Cryptography (2023). Pour IoT, RFID, microcontrôleurs. Construction éponge, très petit en hardware."},
+        en:{ term:'Ascon',
+          def:"Lightweight AEAD family (Dobraunig et al., 2014). Winner of NIST Lightweight Cryptography competition (2023). For IoT, RFID, microcontrollers. Sponge construction, tiny hardware footprint." }},
+    ];
+
+    function categories(lang) {
+      const used = new Set(TERMS.map(t => t.cat));
+      return Object.keys(CATS).filter(k => used.has(k));
+    }
+
+    let activeCat = 'all';
+    let activeSearch = '';
+
+    function render() {
+      const grid = document.getElementById('terms');
+      const empty = document.getElementById('empty');
+      const lang = CryptoLabI18n.lang;
+      grid.innerHTML = '';
+      const f = activeSearch.toLowerCase().trim();
+      const matches = TERMS
+        .map(t => ({ ...t, ...t[lang] }))
+        .filter(t => activeCat === 'all' || t.cat === activeCat)
+        .filter(t => !f || t.term.toLowerCase().includes(f) || t.def.toLowerCase().includes(f));
+      matches.sort((a,b) => a.term.localeCompare(b.term, lang));
+      empty.classList.toggle('hidden', matches.length > 0);
+      matches.forEach((t, i) => {
+        const card = document.createElement('div');
+        card.className = 'p-5 bg-white/5 border border-white/10 rounded-xl lift reveal';
+        card.style.animationDelay = `${Math.min(i * 30, 600)}ms`;
+        const catLabel = CATS[t.cat] ? CATS[t.cat][lang] : '';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2 mb-2">
+            <div class="font-bold text-brand-500">${t.term}</div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-white/5 border border-white/10 text-slate-400 whitespace-nowrap">${catLabel}</span>
+          </div>
+          <div class="text-sm text-slate-300 leading-relaxed">${t.def}</div>
+        `;
+        grid.appendChild(card);
+      });
+      // Rebind reveal observer for new cards
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+    }
+
+    function renderCats() {
+      const bar = document.getElementById('cat-bar');
+      const lang = CryptoLabI18n.lang;
+      const items = [{ key:'all', label: lang==='fr'?'Tout':'All' }]
+        .concat(categories().map(k => ({ key:k, label: CATS[k][lang] })));
+      bar.innerHTML = items.map(it =>
+        `<button data-cat="${it.key}" class="cat-btn px-3 py-1.5 text-xs rounded-full border transition ${
+          activeCat === it.key
+            ? 'bg-brand-500 text-white border-brand-500'
+            : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
+        }">${it.label}</button>`
+      ).join('');
+      bar.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => { activeCat = btn.dataset.cat; renderCats(); render(); });
+      });
+    }
+
+    document.getElementById('search').addEventListener('input', e => { activeSearch = e.target.value; render(); });
+    document.addEventListener('lang-changed', () => { renderCats(); render(); });
+    renderCats(); render();
+  </script>
+</body>
+</html>

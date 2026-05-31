@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mathématiques de la cryptographie — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <script src="assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="maths.html" class="text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <h1 class="text-4xl md:text-5xl font-bold animated-gradient" data-i18n="maths.title">🧮 Les mathématiques de la cryptographie</h1>
+    <p class="mt-4 text-slate-400 max-w-3xl" data-i18n="maths.intro">Sans maths, pas de crypto moderne. Voici les outils que tu rencontreras partout — chaque concept est expliqué, illustré, et accompagné d'exemples Python pratiques.</p>
+
+    <nav class="mt-8 grid sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+      <a href="#modular" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="1. Modular arithmetic">1. Arithmétique modulaire</a>
+      <a href="#primes" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="2. Prime numbers">2. Nombres premiers</a>
+      <a href="#gcd" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="3. Euclid & inverse">3. Euclide &amp; inverse</a>
+      <a href="#euler" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="4. Euler &amp; Fermat">4. Euler &amp; Fermat</a>
+      <a href="#groups" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="5. Groups &amp; fields">5. Groupes &amp; corps</a>
+      <a href="#dlog" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="6. Discrete logarithm">6. Logarithme discret</a>
+      <a href="#ec" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="7. Elliptic curves">7. Courbes elliptiques</a>
+      <a href="#gf" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="8. Galois fields">8. Corps de Galois</a>
+      <a href="#lattices" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="9. Lattices">9. Réseaux euclidiens</a>
+      <a href="#entropy" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="10. Entropy &amp; randomness">10. Entropie &amp; aléa</a>
+      <a href="#complexity" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="11. Complexity">11. Complexité</a>
+      <a href="#probability" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="12. Probabilities (birthday)">12. Probabilités (birthday)</a>
+    </nav>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-20">
+
+    <section id="modular" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="1. Modular arithmetic — the language of crypto">1. Arithmétique modulaire — le langage de la crypto</h2>
+      <p class="text-slate-300" data-en='We write <em>a ≡ b (mod n)</em> when <em>a</em> and <em>b</em> have the same remainder dividing by <em>n</em>. Integers are "folded" onto a circle of length <em>n</em>. Standard operations (+, −, ×) still apply, but division requires an inverse.'>
+        On dit que <em>a ≡ b (mod n)</em> si <em>a</em> et <em>b</em> ont le même reste dans la division par <em>n</em>. Les entiers sont « repliés » sur un cercle de longueur <em>n</em>. Toutes les opérations classiques (+, −, ×) restent valides, mais la division demande l'existence d'un inverse.
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500">17 + 9 ≡ 2 (mod 24)  &nbsp;·&nbsp; 7 × 8 ≡ 1 (mod 11)  &nbsp;·&nbsp; (−1) ≡ 25 (mod 26)</div>
+      </div>
+      <h3 class="text-lg font-semibold mt-6 mb-3" data-en="🎯 Application">🎯 Application</h3>
+      <p class="text-slate-300 text-sm mb-3" data-en="Caesar cipher: C(x) = (x + k) mod 26. RSA: c = m<sup>e</sup> mod n. Diffie-Hellman: A = g<sup>a</sup> mod p.">
+        Le chiffre de César : C(x) = (x + k) mod 26. RSA : c = m<sup>e</sup> mod n. Diffie-Hellman : A = g<sup>a</sup> mod p.
+      </p>
+      <h3 class="text-lg font-semibold mb-3" data-en="🐍 Python">🐍 Python</h3>
+      <pre><code># Python has the % operator and pow(base, exp, mod)
+print((17 + 9) % 24)       # 2
+print(pow(7, -1, 11))      # 8  (inverse of 7 mod 11)
+print(pow(2, 100, 1_000))  # 376  (fast modular exponentiation)</code></pre>
+    </section>
+
+    <section id="primes" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="2. Prime numbers — the fundamental bricks">2. Nombres premiers — les briques fondamentales</h2>
+      <p class="text-slate-300" data-en='A prime <em>p</em> is divisible only by 1 and itself. RSA security rests on the fact that multiplying two large primes is trivial, but factoring their product is conjectured exponential. Modern tests: <strong>Miller-Rabin</strong> (probabilistic, ultra-fast), <strong>AKS</strong> (deterministic, slow), <strong>ECPP</strong> (primality certificate).'>
+        Un nombre premier <em>p</em> est divisible seulement par 1 et lui-même. La sécurité de RSA repose sur le fait que multiplier deux grands premiers est trivial, mais factoriser leur produit est conjecturé exponentiel. Tests modernes : <strong>Miller-Rabin</strong> (probabiliste, ultra-rapide), <strong>AKS</strong> (déterministe, lent), <strong>ECPP</strong> (certificat de primalité).
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500" data-en="π(n) ≈ n / ln(n)  (prime number theorem — prime density near n)">π(n) ≈ n / ln(n)  &nbsp;&nbsp;(théorème des nombres premiers — densité de premiers près de n)</div>
+      </div>
+      <h3 class="text-lg font-semibold mt-6 mb-3" data-en="🎯 Application">🎯 Application</h3>
+      <p class="text-slate-300 text-sm mb-3" data-en="Finding a 2048-bit prime takes only ~1s: draw a large random odd integer, test it with Miller-Rabin 40 times. Error ≤ 2⁻⁸⁰.">
+        Trouver un premier de 2048 bits ne prend que ~1s : on tire un grand entier aléatoire impair, on le teste Miller-Rabin 40 fois. Erreur ≤ 2⁻⁸⁰.
+      </p>
+      <h3 class="text-lg font-semibold mb-3" data-en="🐍 Python">🐍 Python</h3>
+      <pre><code>from sympy import isprime, nextprime, randprime
+
+print(isprime(2**521 - 1))           # True — Mersenne prime
+print(nextprime(10**10))             # 10000000019
+print(randprime(2**1023, 2**1024))   # 1024-bit prime
+
+# Miller-Rabin (essence)
+import random
+def miller_rabin(n, k=40):
+    if n < 2 or n % 2 == 0: return n == 2
+    r, d = 0, n - 1
+    while d % 2 == 0: d //= 2; r += 1
+    for _ in range(k):
+        a = random.randrange(2, n - 1)
+        x = pow(a, d, n)
+        if x in (1, n - 1): continue
+        for _ in range(r - 1):
+            x = pow(x, 2, n)
+            if x == n - 1: break
+        else:
+            return False
+    return True</code></pre>
+    </section>
+
+    <section id="gcd" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="3. Extended Euclid &amp; modular inverse">3. Algorithme d'Euclide étendu &amp; inverse modulaire</h2>
+      <p class="text-slate-300" data-en="The <strong>Euclidean</strong> algorithm computes gcd(a, b) in O(log min(a,b)). The <em>extended</em> version also finds <em>x, y</em> such that ax + by = gcd(a, b) — hence the modular inverse: if gcd(a, n) = 1, then there exists x with a·x ≡ 1 (mod n).">
+        L'algorithme d'<strong>Euclide</strong> calcule pgcd(a, b) en O(log(min(a,b))). La version <em>étendue</em> trouve aussi <em>x, y</em> tels que ax + by = pgcd(a, b) — d'où l'inverse modulaire : si pgcd(a, n) = 1, alors a·x ≡ 1 (mod n).
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500">gcd(252, 105) = gcd(105, 42) = gcd(42, 21) = 21</div>
+        <div class="text-emerald-400 mt-2" data-en="3 · 4 = 12 ≡ 1 (mod 11) → inverse of 3 mod 11 = 4">3 · 4 = 12 ≡ 1 (mod 11) → inverse de 3 mod 11 = 4</div>
+      </div>
+      <h3 class="text-lg font-semibold mt-6 mb-3" data-en="🎯 Application">🎯 Application</h3>
+      <p class="text-slate-300 text-sm mb-3" data-en="RSA private key generation: d ≡ e⁻¹ (mod φ(n)). Without extended Euclid, RSA would be impractical.">
+        Génération de la clé privée RSA : d ≡ e⁻¹ (mod φ(n)). Sans Euclide étendu, RSA serait inutilisable.
+      </p>
+      <pre><code>def ext_gcd(a, b):
+    if a == 0: return b, 0, 1
+    g, x1, y1 = ext_gcd(b % a, a)
+    return g, y1 - (b // a) * x1, x1
+
+def modinv(a, m):
+    g, x, _ = ext_gcd(a % m, m)
+    if g != 1: raise ValueError("No inverse")
+    return x % m
+
+print(modinv(17, 3120))   # 2753  (RSA private key d for e=17, φ=3120)</code></pre>
+    </section>
+
+    <section id="euler" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="4. Euler and Fermat theorems">4. Théorèmes d'Euler et de Fermat</h2>
+      <p class="text-slate-300" data-en="<strong>Fermat's theorem</strong>: if p is prime and gcd(a, p) = 1, then a^(p−1) ≡ 1 (mod p). Generalized by <strong>Euler</strong>: for any n and a coprime with n, a^φ(n) ≡ 1 (mod n), where φ(n) is <em>Euler's totient</em> (count of integers from 1 to n coprime with n).">
+        <strong>Théorème de Fermat</strong> : si p premier et pgcd(a, p) = 1, alors a^(p−1) ≡ 1 (mod p). Généralisation par <strong>Euler</strong> : pour tout n et a copremier avec n, a^φ(n) ≡ 1 (mod n), où φ(n) est l'<em>indicatrice d'Euler</em> (nombre d'entiers de 1 à n copremiers avec n).
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500" data-en="φ(p) = p − 1  ·  φ(p·q) = (p−1)(q−1)  for distinct primes p, q">φ(p) = p − 1  &nbsp;·&nbsp;  φ(p·q) = (p−1)(q−1)  pour p, q premiers distincts</div>
+        <div class="text-emerald-400 mt-2" data-en="a^φ(n) ≡ 1 (mod n)  ⇒  m^(ed) = m^(1 + kφ(n)) ≡ m (mod n)  ← core of RSA">a^φ(n) ≡ 1 (mod n)  ⇒  m^(ed) = m^(1 + kφ(n)) ≡ m (mod n)  ← cœur de RSA</div>
+      </div>
+      <h3 class="text-lg font-semibold mt-6 mb-3" data-en="🎯 Application">🎯 Application</h3>
+      <p class="text-slate-300 text-sm mb-3" data-en="The whole correctness of RSA rests on Euler. And Fermat's test is the ancestor of probabilistic primality tests.">
+        Toute la correction de RSA repose sur Euler. Et le test de Fermat est l'ancêtre des tests de primalité probabilistes.
+      </p>
+      <pre><code>from sympy import totient
+print(totient(35))                # 24 = (5-1)*(7-1)
+print(pow(11, totient(35), 35))   # 1 ✓
+# Decrypt RSA :
+n, e, p, q = 3233, 17, 61, 53
+phi = (p-1)*(q-1)                 # 3120
+d = pow(e, -1, phi)               # 2753
+m = 65
+c = pow(m, e, n)                  # 2790
+m2 = pow(c, d, n)                 # 65 ✓</code></pre>
+    </section>
+
+    <section id="groups" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="5. Groups, rings, fields">5. Groupes, anneaux, corps</h2>
+      <p class="text-slate-300" data-en="A <strong>group</strong> (G, ⋆): associative operation, identity element, every element has an inverse. <strong>Abelian</strong> if ⋆ commutes. A <strong>ring</strong> adds a second operation (× distributive over +). A <strong>field</strong> is a ring where every nonzero element has a multiplicative inverse (you can divide).">
+        Un <strong>groupe</strong> (G, ⋆) : opération associative, élément neutre, chaque élément a un inverse. <strong>Abélien</strong> si ⋆ est commutative. Un <strong>anneau</strong> ajoute une seconde opération (× distributive sur +). Un <strong>corps</strong> est un anneau où tout élément non nul a un inverse multiplicatif (on peut diviser).
+      </p>
+      <div class="grid sm:grid-cols-3 gap-3 mt-4">
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500">(ℤ/nℤ, +)</div>
+          <p class="text-xs text-slate-400 mt-1" data-en="Abelian group — additions modulo n.">Groupe abélien — additions modulo n.</p>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500">(ℤ/pℤ)*</div>
+          <p class="text-xs text-slate-400 mt-1" data-en="Multiplicative group of invertibles. Cyclic of order p−1. Foundation of DH.">Groupe multiplicatif des inversibles. Cyclique d'ordre p−1. Base de DH.</p>
+        </div>
+        <div class="p-4 bg-white/5 border border-white/10 rounded-lg">
+          <div class="font-semibold text-brand-500">(E(𝔽<sub>p</sub>), +)</div>
+          <p class="text-xs text-slate-400 mt-1" data-en="Points of an elliptic curve over 𝔽<sub>p</sub>. Core of ECC.">Points d'une courbe elliptique sur 𝔽<sub>p</sub>. Cœur d'ECC.</p>
+        </div>
+      </div>
+      <p class="text-slate-300 text-sm mt-4" data-en="Why it matters: asymmetric cryptography essentially operates in cyclic groups where the discrete logarithm is conjectured hard.">
+        Pourquoi c'est important ? La cryptographie asymétrique opère essentiellement dans des groupes cycliques où le logarithme discret est conjecturé difficile.
+      </p>
+    </section>
+
+    <section id="dlog" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="6. Discrete logarithm (DLP)">6. Logarithme discret (DLP)</h2>
+      <p class="text-slate-300" data-en="Given a generator <em>g</em> of a cyclic group of order <em>n</em> and an element <em>h</em>, finding the unique <em>x ∈ [0, n−1]</em> such that g<sup>x</sup> = h is called the <strong>discrete logarithm problem</strong>. Conjectured exponential for well-chosen groups.">
+        Étant donné un générateur <em>g</em> d'un groupe cyclique d'ordre <em>n</em> et un élément <em>h</em>, trouver l'unique <em>x ∈ [0, n−1]</em> tel que g<sup>x</sup> = h est appelé le <strong>problème du logarithme discret</strong>. Conjecturé exponentiel pour les groupes bien choisis.
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500">Diffie-Hellman, ElGamal, DSA, Schnorr</div>
+        <div class="text-emerald-400 mt-2" data-en="DH: A = g<sup>a</sup> mod p  ·  recovering a from A = DLP">DH : A = g<sup>a</sup> mod p &nbsp; · &nbsp; retrouver a à partir de A = DLP</div>
+      </div>
+      <p class="text-slate-300 text-sm mt-3" data-en="Best known algorithms: Pollard rho (O(√n)), Baby-step Giant-step, GNFS for 𝔽<sub>p</sub>* groups with small p. None polynomial — except on quantum computers (Shor).">
+        Meilleurs algorithmes connus : Pollard rho (O(√n)), Baby-step Giant-step, GNFS pour les groupes 𝔽<sub>p</sub>* avec petit p. Aucun n'est polynomial — sauf pour les ordinateurs quantiques (Shor).
+      </p>
+      <pre><code># Baby-step giant-step for DLP (group of order n)
+import math
+
+def dlp(g, h, p):
+    n = p - 1
+    m = math.isqrt(n) + 1
+    table = {pow(g, j, p): j for j in range(m)}
+    inv = pow(g, -m, p)
+    val = h
+    for i in range(m):
+        if val in table:
+            return i * m + table[val]
+        val = (val * inv) % p
+
+print(dlp(5, 8, 23))   # 6 : 5^6 mod 23 = 8</code></pre>
+    </section>
+
+    <section id="ec" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="7. Elliptic curves">7. Courbes elliptiques</h2>
+      <p class="text-slate-300" data-en="An elliptic curve is the set of points (x, y) satisfying y² = x³ + ax + b over a finite field, plus a 'point at infinity'. Point addition (chord-and-tangent rule) makes it an abelian group. The DLP on this group is conjectured harder than the classical DLP → shorter keys for equivalent security.">
+        Une courbe elliptique est l'ensemble des points (x, y) vérifiant y² = x³ + ax + b sur un corps fini, plus un « point à l'infini ». L'addition de points (règle de la corde-tangente) en fait un groupe abélien. Le DLP sur ce groupe est conjecturé plus difficile que le DLP classique → clés plus courtes pour la même sécurité.
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500">y² = x³ + ax + b  (mod p)</div>
+        <div class="text-emerald-400 mt-2" data-en="256-bit ECC ≈ 3072-bit RSA  ≈  128 bits AES of security">256 bits ECC ≈ 3072 bits RSA  ≈  128 bits AES de sécurité</div>
+      </div>
+      <p class="text-slate-300 text-sm mt-3" data-en='See the <a href="systems/ecc.html" class="text-brand-500 hover:underline">ECC</a> page for detailed addition/doubling formulas, and <a href="systems/montgomery.html" class="text-brand-500 hover:underline">Montgomery</a> for the optimized form.'>
+        Voir la page <a href="systems/ecc.html" class="text-brand-500 hover:underline">ECC</a> pour les formules détaillées d'addition et de doublement, et <a href="systems/montgomery.html" class="text-brand-500 hover:underline">Montgomery</a> pour la forme optimisée.
+      </p>
+    </section>
+
+    <section id="gf" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="8. Galois fields GF(2ⁿ)">8. Corps de Galois GF(2ⁿ)</h2>
+      <p class="text-slate-300" data-en="For AES we work in <strong>GF(2⁸)</strong>: the 256 binary polynomials of degree ≤ 7, added/multiplied modulo the irreducible polynomial x⁸ + x⁴ + x³ + x + 1 (0x11B). These operations are the byte-level equivalent of '+ and ×'.">
+        Pour AES on travaille dans <strong>GF(2⁸)</strong> : les 256 polynômes binaires de degré ≤ 7, additionnés/multipliés modulo le polynôme irréductible x⁸ + x⁴ + x³ + x + 1 (0x11B). Ces opérations sont l'équivalent du « + et × » mais sur des octets.
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500" data-en="a + b = a XOR b  ·  a · b = binary polynomials mod x⁸ + x⁴ + x³ + x + 1">a + b = a XOR b &nbsp;·&nbsp; a · b = polynômes binaires modulo x⁸ + x⁴ + x³ + x + 1</div>
+      </div>
+      <pre><code># GF(2⁸) multiplication — used in AES MixColumns
+def gmul(a, b):
+    p = 0
+    for _ in range(8):
+        if b & 1: p ^= a
+        hi = a & 0x80
+        a = (a << 1) & 0xFF
+        if hi: a ^= 0x1B    # reduction modulo x⁸ + x⁴ + x³ + x + 1
+        b >>= 1
+    return p
+
+print(hex(gmul(0x57, 0x83)))  # 0xc1 — FIPS 197 example</code></pre>
+    </section>
+
+    <section id="lattices" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="9. Lattices">9. Réseaux euclidiens (lattices)</h2>
+      <p class="text-slate-300" data-en="A <strong>lattice</strong> is the set of all integer combinations of a set of vectors (its <em>basis</em>). On these lattices, the <strong>SVP</strong> (Shortest Vector) and <strong>CVP</strong> (Closest Vector) problems are NP-hard. Post-quantum cryptography (Kyber, Dilithium) relies on their 'noisy' version: LWE (Learning With Errors).">
+        Un <strong>réseau</strong> est l'ensemble de toutes les combinaisons entières d'un ensemble de vecteurs (sa <em>base</em>). Sur ces réseaux, les problèmes <strong>SVP</strong> (Shortest Vector) et <strong>CVP</strong> (Closest Vector) sont NP-difficiles. La cryptographie post-quantique (Kyber, Dilithium) repose sur leur version « bruitée » : LWE (Learning With Errors).
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500">b = A · s + e (mod q)  ← LWE</div>
+        <div class="text-emerald-400 mt-2" data-en="Without noise: recovering s is easy. With noise: conjectured hard (even quantum).">Sans bruit : retrouver s = facile. Avec bruit : conjecturé difficile (y compris quantique).</div>
+      </div>
+      <p class="text-slate-300 text-sm mt-3" data-en='See the <a href="systems/post-quantique.html" class="text-brand-500 hover:underline">Post-quantum</a> page for a simulation.'>
+        Voir la page <a href="systems/post-quantique.html" class="text-brand-500 hover:underline">Post-quantique</a> pour une simulation.
+      </p>
+    </section>
+
+    <section id="entropy" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="10. Entropy &amp; cryptographic randomness">10. Entropie &amp; aléa cryptographique</h2>
+      <p class="text-slate-300" data-en="Shannon entropy measures the unpredictability of a source in bits. An n-bit key must have <em>real</em> n bits of entropy to resist brute force. Hence the use of CSPRNGs: <code>/dev/urandom</code> (Linux), <code>BCryptGenRandom</code> (Windows), <code>SecRandomCopyBytes</code> (macOS), <code>os.urandom</code> in Python.">
+        L'entropie de Shannon mesure l'imprévisibilité d'une source en bits. Une clé n-bits doit avoir <em>vraiment</em> n bits d'entropie pour résister au brute force. D'où l'usage de CSPRNG : <code>/dev/urandom</code> (Linux), <code>BCryptGenRandom</code> (Windows), <code>SecRandomCopyBytes</code> (macOS), <code>os.urandom</code> en Python.
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500">H(X) = − Σ p<sub>i</sub> · log₂(p<sub>i</sub>)</div>
+      </div>
+      <pre><code>import os, secrets
+
+# Best practice: SECRETS (default CSPRNG)
+key = secrets.token_bytes(32)     # 256 bits of entropy
+token = secrets.token_urlsafe(32) # URL-safe base64
+
+# Bad practice: standard random (NOT cryptographic)
+# import random ; key = random.getrandbits(256)   # predictable !</code></pre>
+    </section>
+
+    <section id="complexity" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="11. Algorithmic complexity">11. Complexité algorithmique</h2>
+      <p class="text-slate-300" data-en="A cryptosystem's security = the gap between legitimate use (polynomial cost) and attack cost (expected exponential). A 2¹²⁸-operation attack is <em>infeasible</em>: the entire universe computing at 10²⁰ ops/s would still need 10²⁰ years.">
+        La sécurité d'un cryptosystème = écart entre le coût de l'utilisation légitime (polynomial) et le coût de l'attaque (espéré exponentiel). Une attaque à 2¹²⁸ opérations est <em>infaisable</em> : tout l'univers calculant à 10²⁰ ops/s mettrait encore 10²⁰ ans.
+      </p>
+      <div class="grid grid-cols-3 gap-3 mt-4 text-center text-sm">
+        <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded">
+          <div class="font-mono text-emerald-400 text-lg">2⁸⁰</div>
+          <div class="text-xs text-slate-400" data-en="No longer safe">Plus vraiment safe</div>
+        </div>
+        <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded">
+          <div class="font-mono text-amber-400 text-lg">2¹²⁸</div>
+          <div class="text-xs text-slate-400" data-en="Standard (AES-128, ECC 256)">Standard (AES-128, ECC 256)</div>
+        </div>
+        <div class="p-3 bg-brand-500/10 border border-brand-500/30 rounded">
+          <div class="font-mono text-brand-500 text-lg">2²⁵⁶</div>
+          <div class="text-xs text-slate-400" data-en="Overkill (post-Grover safe)">Overkill (post-Grover safe)</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="probability" class="reveal scroll-mt-24">
+      <h2 class="text-2xl font-bold mb-4 section-heading" data-en="12. Birthday paradox">12. Paradoxe des anniversaires</h2>
+      <p class="text-slate-300" data-en="In a group of just 23 people, two have more than 50% probability of sharing a birthday. Cryptographic generalization: in a space of <em>N</em> possible hashes, a collision appears with 50% probability after ~√N draws. <strong>That's why an n-bit hash provides only n/2 bits of collision security</strong> (SHA-256 → 128 bits collision).">
+        Dans un groupe de seulement 23 personnes, deux ont plus de 50% de chances de partager un anniversaire. Généralisation cryptographique : dans un espace de <em>N</em> hashes possibles, une collision apparaît avec probabilité 50% après ~√N tirages. <strong>C'est pourquoi un hash de n bits offre seulement n/2 bits de sécurité collision</strong> (SHA-256 → 128 bits collision).
+      </p>
+      <div class="math-box mt-4 text-center">
+        <div class="text-brand-500" data-en="P(collision with k draws in N) ≈ 1 − e<sup>−k²/(2N)</sup>">P(collision avec k tirages dans N) ≈ 1 − e<sup>−k²/(2N)</sup></div>
+      </div>
+      <pre><code># Empirical verification
+import hashlib, secrets
+
+seen = {}
+i = 0
+while True:
+    i += 1
+    h = hashlib.sha256(secrets.token_bytes(8)).digest()[:3]   # truncated to 24 bits
+    if h in seen:
+        print(f"Collision after {i} draws (expected ~{int((2**24)**0.5)})")
+        break
+    seen[h] = i</code></pre>
+    </section>
+
+    <section class="reveal text-center pt-10">
+      <p class="text-slate-400 text-sm" data-en="To go further:">Cette page est un point de départ. Pour aller plus loin :</p>
+      <div class="mt-4 flex flex-wrap justify-center gap-3 text-sm">
+        <a href="cryptosystemes.html" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 rounded-lg" data-en="📚 Cryptosystems catalogue">📚 Catalogue des cryptosystèmes</a>
+        <a href="implementations.html" class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg" data-en="💻 Implementations">💻 Implémentations</a>
+        <a href="glossaire.html" class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg" data-en="📖 Glossary">📖 Glossaire</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/i18n.js"></script>
+</body>
+</html>

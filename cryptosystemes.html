@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cryptosystèmes — Catalogue complet — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <script>
+    tailwind.config = { darkMode:'class', theme:{ extend:{
+      colors:{ brand:{500:'#3aa0ff',600:'#1f7fe0'}, ink:{900:'#0b0f17',800:'#111827'} }
+    }}}
+  </script>
+  <script src="assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="cryptosystemes.html" class="text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="implementations.html" class="hover:text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-6xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <h1 class="text-4xl md:text-5xl font-bold animated-gradient" data-i18n="catalog.title">📚 Catalogue des cryptosystèmes</h1>
+    <p class="mt-4 text-slate-400 max-w-3xl" data-i18n="catalog.intro">
+      L'ensemble du paysage cryptographique organisé par catégorie. Clique sur une fiche
+      disponible pour explorer en profondeur (théorie, maths, simulation, code, quiz).
+    </p>
+    <!-- Filtre rapide -->
+    <div class="mt-6 flex flex-wrap gap-2" id="filter-bar">
+      <button data-filter="all" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-brand-500 text-white"><span data-flbl="all">Tout</span></button>
+      <button data-filter="sym" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="sym">Symétrique</span></button>
+      <button data-filter="asym" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="asym">Asymétrique</span></button>
+      <button data-filter="hash" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="hash">Hash / MAC</span></button>
+      <button data-filter="hybrid" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="hybrid">Hybride</span></button>
+      <button data-filter="zkp" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="zkp">ZKP</span></button>
+      <button data-filter="pqc" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="pqc">Post-quantique</span></button>
+      <button data-filter="qc" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="qc">Quantique</span></button>
+      <button data-filter="he" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="he">Homomorphe</span></button>
+      <button data-filter="mpc" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="mpc">MPC / Seuil</span></button>
+      <button data-filter="light" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="light">Légère</span></button>
+      <button data-filter="cracked" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="cracked">Cassée / historique</span></button>
+      <button data-filter="formal" class="filter-btn px-3 py-1.5 text-sm rounded-full bg-white/5 border border-white/10 hover:bg-white/10"><span data-flbl="formal">Vérif. formelle</span></button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 pb-24 space-y-14" id="categories"></main>
+
+  <script>
+    // ============================================================
+    //  Catalogue complet
+    //  status: 'ready' (page disponible), 'soon' (à venir), 'concept' (notion)
+    //  cat: sym | asym | hash | hybrid | zkp | pqc | qc | he | mpc | light | cracked
+    // ============================================================
+    const CATEGORIES = [
+      {
+        id: 'sym',
+        title: '🔐 Cryptographie symétrique',
+        intro: "Une même clé partagée chiffre et déchiffre. Rapide, idéal pour de gros volumes — mais nécessite un canal sûr pour échanger la clé.",
+        subgroups: [
+          { name:"Substitution (historiques)", items:[
+            { name:'Chiffre de César',       year:'~50 av. J.-C.', href:'systems/cesar.html',    status:'ready',  desc:"Décalage fixe de l'alphabet — le plus ancien."},
+            { name:'Chiffre de Vigenère',    year:'1553',          href:'systems/vigenere.html', status:'ready',  desc:"Polyalphabétique via mot-clé."},
+            { name:'Chiffre de Playfair',    year:'1854',          href:'#',                     status:'soon',   desc:"Substitution de digrammes via grille 5×5."},
+            { name:'ROT13',                  year:'1980s',         href:'#',                     status:'soon',   desc:"César avec k=13, omniprésent sur Usenet."},
+          ]},
+          { name:"Chiffrement par blocs", items:[
+            { name:'DES',                    year:'1977',          href:'#',                     status:'soon',   desc:"Premier standard moderne, 56 bits — déprécié."},
+            { name:'3DES (Triple DES)',      year:'1998',          href:'#',                     status:'soon',   desc:"DES appliqué 3 fois — toléré pour legacy."},
+            { name:'AES (Rijndael)',         year:'2001',          href:'systems/aes.html',      status:'ready',  desc:"Standard mondial — 128/192/256 bits, ultra-rapide."},
+            { name:'Réseau de Feistel',      year:'1971',          href:'systems/feistel.html',  status:'ready',  desc:"Structure générique — base de DES, Blowfish, Twofish, Camellia."},
+            { name:'Blowfish',               year:'1993',          href:'#',                     status:'soon',   desc:"Bruce Schneier — libre, blocs 64 bits, structure Feistel."},
+            { name:'Twofish',                year:'1998',          href:'#',                     status:'soon',   desc:"Successeur de Blowfish, finaliste AES."},
+            { name:'Serpent',                year:'1998',          href:'#',                     status:'soon',   desc:"Finaliste AES, considéré ultra-sécurisé."},
+            { name:'Camellia',               year:'2000',          href:'#',                     status:'soon',   desc:"Mitsubishi/NTT — standard japonais & européen."},
+          ]},
+          { name:"Chiffrement par flux", items:[
+            { name:'RC4',                    year:'1987',          href:'#',                     status:'soon',   desc:"Très utilisé (WEP, TLS) — aujourd'hui cassé."},
+            { name:'ChaCha20',               year:'2008',          href:'systems/chacha20.html', status:'ready',  desc:"D.J. Bernstein — TLS 1.3, WireGuard, OpenSSH. Stream cipher ARX."},
+            { name:'Salsa20',                year:'2005',          href:'#',                     status:'soon',   desc:"Précurseur de ChaCha20."},
+            { name:'ChaCha20-Poly1305',      year:'2014',          href:'systems/chacha20.html', status:'ready',  desc:"AEAD standard combinant ChaCha20 + Poly1305 (RFC 8439)."},
+          ]},
+          { name:"Modes d'opération", items:[
+            { name:'ECB',                    year:'—',             href:'#',                     status:'soon',   desc:"À ÉVITER : blocs identiques → chiffrés identiques."},
+            { name:'CBC',                    year:'—',             href:'#',                     status:'soon',   desc:"Chaîne de blocs avec IV."},
+            { name:'CTR',                    year:'—',             href:'#',                     status:'soon',   desc:"Compteur — parallélisable, populaire."},
+            { name:'GCM',                    year:'—',             href:'#',                     status:'soon',   desc:"AEAD : chiffre + authentifie. Standard TLS."},
+          ]},
+        ]
+      },
+      {
+        id: 'asym',
+        title: '🔑 Cryptographie asymétrique (clé publique)',
+        intro: "Une paire de clés liées mathématiquement : la clé publique chiffre / vérifie, la clé privée déchiffre / signe. Résout le problème d'échange de clés.",
+        subgroups: [
+          { name:"Échange de clés", items:[
+            { name:'Diffie-Hellman (DH)',    year:'1976',          href:'systems/diffie-hellman.html', status:'ready', desc:"Premier protocole public d'échange de clés."},
+            { name:'ECDH',                   year:'2000s',         href:'systems/ecc.html',      status:'ready',  desc:"Diffie-Hellman sur courbes elliptiques."},
+            { name:'X25519',                 year:'2006',          href:'systems/montgomery.html', status:'ready', desc:"ECDH moderne sur Curve25519 (TLS 1.3, Signal, WireGuard)."},
+          ]},
+          { name:"Chiffrement & signature", items:[
+            { name:'RSA',                    year:'1977',          href:'systems/rsa.html',      status:'ready',  desc:"Le plus connu — basé sur la factorisation."},
+            { name:'ElGamal',                year:'1985',          href:'systems/elgamal.html',  status:'ready',  desc:"Asymétrique basé sur le log discret — base de DSA."},
+            { name:'ECC (courbes elliptiques)', year:'1985',       href:'systems/ecc.html',      status:'ready',  desc:"Sécurité équivalente RSA avec clés bien plus petites — catalogue complet des courbes."},
+            { name:'Curve25519 / X25519',    year:'2006',          href:'systems/montgomery.html', status:'ready', desc:"Courbe Montgomery + Montgomery ladder — résistante side-channel."},
+            { name:'DSA',                    year:'1991',          href:'#',                     status:'soon',   desc:"Digital Signature Algorithm — standard NIST."},
+            { name:'ECDSA',                  year:'1992',          href:'systems/ecdsa.html',    status:'ready',  desc:"DSA sur courbes — Bitcoin, TLS, certificats."},
+            { name:'EdDSA / Ed25519',        year:'2011',          href:'systems/ecdsa.html',    status:'ready',  desc:"Signature moderne basée sur Edwards — déterministe, 64 octets."},
+            { name:"Courbes d'Edwards",      year:'2007',          href:'systems/edwards.html',  status:'ready',  desc:"Forme alternative avec loi d'addition unifiée — base d'Ed25519."},
+            { name:'ECIES',                  year:'2001',          href:'systems/ies.html',      status:'ready',  desc:"Schéma de chiffrement hybride standardisé (ANSI X9.63) — blockchain."},
+            { name:'Schnorr',                year:'1989',          href:'#',                     status:'soon',   desc:"Signature élégante — Bitcoin Taproot (2021)."},
+          ]},
+          { name:"Identité & PKI", items:[
+            { name:'Certificats X.509',      year:'1988',          href:'#',                     status:'soon',   desc:"Format des certificats TLS / S/MIME."},
+            { name:'PKI (Public Key Infrastructure)', year:'—',    href:'#',                     status:'soon',   desc:"AC, CRL, OCSP — chaîne de confiance."},
+            { name:'Web of Trust (PGP)',     year:'1991',          href:'#',                     status:'soon',   desc:"Alternative décentralisée aux AC."},
+          ]},
+        ]
+      },
+      {
+        id: 'hash',
+        title: '🧬 Fonctions de hachage & MAC',
+        intro: "Fonctions à sens unique : produisent une empreinte de taille fixe. Indispensables pour intégrité, signatures, mots de passe, blockchain.",
+        subgroups: [
+          { name:"Hash cryptographiques", items:[
+            { name:'MD5',                    year:'1991',          href:'#',                     status:'soon',   desc:"🛑 Cassé (collisions). Encore utilisé en checksum non-sécurité."},
+            { name:'SHA-1',                  year:'1995',          href:'#',                     status:'soon',   desc:"🛑 Cassé (SHAttered, 2017)."},
+            { name:'SHA-2 (SHA-256/512)',    year:'2001',          href:'systems/sha.html',      status:'ready',  desc:"Standard actuel — TLS, Bitcoin, signatures."},
+            { name:'SHA-3 (Keccak)',         year:'2015',          href:'#',                     status:'soon',   desc:"Construction éponge, alternative à SHA-2."},
+            { name:'BLAKE2 / BLAKE3',        year:'2012/20',       href:'#',                     status:'soon',   desc:"Plus rapide que SHA, sécurité équivalente."},
+          ]},
+          { name:"MAC (authentification)", items:[
+            { name:'HMAC',                   year:'1996',          href:'#',                     status:'soon',   desc:"MAC basé sur un hash — RFC 2104."},
+            { name:'Poly1305',               year:'2005',          href:'#',                     status:'soon',   desc:"MAC ultra-rapide, paire avec ChaCha20."},
+            { name:'CMAC / GMAC',            year:'—',             href:'#',                     status:'soon',   desc:"MAC basés sur AES."},
+          ]},
+          { name:"Hachage de mots de passe", items:[
+            { name:'PBKDF2',                 year:'2000',          href:'#',                     status:'soon',   desc:"Itérations + sel — RFC 2898."},
+            { name:'bcrypt',                 year:'1999',          href:'#',                     status:'soon',   desc:"Adaptable, coût configurable."},
+            { name:'scrypt',                 year:'2009',          href:'#',                     status:'soon',   desc:"Coût mémoire — résiste aux ASICs."},
+            { name:'Argon2',                 year:'2015',          href:'#',                     status:'soon',   desc:"🏆 Gagnant PHC — recommandé OWASP."},
+          ]},
+        ]
+      },
+      {
+        id: 'hybrid',
+        title: '🤝 Chiffrement hybride',
+        intro: "Combine le meilleur des deux mondes : asymétrique pour échanger une clé de session, symétrique pour chiffrer les données (rapide).",
+        subgroups: [
+          { name:"Protocoles & systèmes", items:[
+            { name:'TLS / HTTPS',            year:'1995–2018',     href:'#',                     status:'soon',   desc:"Le hybride le plus utilisé au monde."},
+            { name:'PGP / GnuPG',            year:'1991',          href:'#',                     status:'soon',   desc:"E-mails chiffrés et signés."},
+            { name:'S/MIME',                 year:'1995',          href:'#',                     status:'soon',   desc:"Standard e-mail basé sur X.509."},
+            { name:'Age',                    year:'2019',          href:'#',                     status:'soon',   desc:"Moderne, simple — successeur de PGP par F. Valsorda."},
+            { name:'Signal Protocol',        year:'2013',          href:'#',                     status:'soon',   desc:"Double ratchet + X3DH — WhatsApp, Signal."},
+            { name:'Noise Protocol Framework', year:'2016',        href:'#',                     status:'soon',   desc:"Framework de protocoles — WireGuard, Lightning."},
+          ]},
+        ]
+      },
+      {
+        id: 'zkp',
+        title: '🕵️ Preuves à divulgation nulle (ZKP)',
+        intro: "Prouver qu'on connaît une information SANS la révéler. Fondement des blockchains privées, identités vérifiables, votes anonymes.",
+        subgroups: [
+          { name:"Fondamentaux", items:[
+            { name:'Introduction aux ZKP',   year:'1985',          href:'systems/zkp.html',      status:'ready',  desc:"Goldwasser, Micali, Rackoff — le concept original."},
+            { name:'Caverne d\'Ali Baba',    year:'—',             href:'systems/zkp.html#cave', status:'ready',  desc:"L'analogie pédagogique de référence."},
+            { name:'Sigma protocoles',       year:'—',             href:'#',                     status:'soon',   desc:"Schnorr, Chaum-Pedersen — briques de base."},
+          ]},
+          { name:"Systèmes modernes", items:[
+            { name:'zk-SNARK',               year:'2012',          href:'systems/zk-snark.html', status:'ready',  desc:"Compact mais nécessite trusted setup. Zcash, rollups Ethereum."},
+            { name:'zk-STARK',               year:'2018',          href:'systems/zk-snark.html', status:'ready',  desc:"Transparent, post-quantique — StarkWare, zkSync."},
+            { name:'Bulletproofs',           year:'2018',          href:'#',                     status:'soon',   desc:"Pas de trusted setup, preuves courtes — Monero."},
+            { name:'PLONK',                  year:'2019',          href:'#',                     status:'soon',   desc:"Universel — base de nombreux rollups Ethereum."},
+            { name:'Halo / Halo2',           year:'2019/20',       href:'#',                     status:'soon',   desc:"Récursif, sans trusted setup — Zcash."},
+          ]},
+        ]
+      },
+      {
+        id: 'pqc',
+        title: '⚛️ Cryptographie post-quantique',
+        intro: "Algorithmes résistants aux ordinateurs quantiques (qui casseraient RSA/ECC via Shor). Standardisation NIST 2024+.",
+        subgroups: [
+          { name:"Chiffrement / KEM", items:[
+            { name:'CRYSTALS-Kyber (ML-KEM)', year:'2024',         href:'systems/post-quantique.html', status:'ready', desc:"🏆 Standard NIST — base réseaux euclidiens."},
+            { name:'Classic McEliece',       year:'1978/2024',     href:'#',                     status:'soon',   desc:"Codes correcteurs — clés énormes mais robuste."},
+            { name:'BIKE',                   year:'2017',          href:'#',                     status:'soon',   desc:"Codes quasi-cycliques."},
+            { name:'HQC',                    year:'2017',          href:'#',                     status:'soon',   desc:"Codes — finaliste NIST round 4."},
+          ]},
+          { name:"Signatures", items:[
+            { name:'CRYSTALS-Dilithium (ML-DSA)', year:'2024',     href:'systems/post-quantique.html#dilithium', status:'ready', desc:"🏆 Standard NIST signatures, basé sur réseaux."},
+            { name:'FALCON',                 year:'2024',          href:'#',                     status:'soon',   desc:"Signatures compactes — NTRU + Fast Fourier."},
+            { name:'SPHINCS+',               year:'2024',          href:'#',                     status:'soon',   desc:"Basé uniquement sur des hashs — très conservateur."},
+            { name:'XMSS / LMS',             year:'2018/19',       href:'#',                     status:'soon',   desc:"Signatures stateful basées sur des arbres de Merkle."},
+          ]},
+          { name:"Familles mathématiques", items:[
+            { name:'Réseaux euclidiens (lattices)', year:'—',      href:'#',                     status:'concept',desc:"LWE, NTRU, Ring-LWE."},
+            { name:'Codes correcteurs',      year:'—',             href:'#',                     status:'concept',desc:"McEliece, Niederreiter."},
+            { name:'Isogenies',              year:'—',             href:'#',                     status:'concept',desc:"SIDH/SIKE — ⚠️ cassé en 2022."},
+            { name:'Polynômes multivariés',  year:'—',             href:'#',                     status:'concept',desc:"Rainbow, GeMSS — plusieurs cassés."},
+          ]},
+        ]
+      },
+      {
+        id: 'qc',
+        title: '🔬 Cryptographie quantique',
+        intro: "Utilise les lois de la physique quantique pour garantir la sécurité — pas seulement résister aux ordinateurs quantiques.",
+        subgroups: [
+          { name:"QKD — Distribution quantique de clé", items:[
+            { name:'BB84',                   year:'1984',          href:'systems/quantique.html', status:'ready', desc:"Bennett-Brassard — premier protocole QKD."},
+            { name:'E91',                    year:'1991',          href:'systems/quantique.html#e91', status:'ready', desc:"Artur Ekert — basé sur l'intrication."},
+            { name:'B92',                    year:'1992',          href:'#',                     status:'soon',   desc:"Variante simplifiée de BB84."},
+            { name:'MDI-QKD',                year:'2012',          href:'#',                     status:'soon',   desc:"Measurement-Device-Independent QKD."},
+          ]},
+          { name:"Concepts", items:[
+            { name:"No-cloning theorem",     year:'1982',          href:'#',                     status:'concept',desc:"On ne peut pas copier un état quantique inconnu."},
+            { name:"Intrication (entanglement)", year:'—',         href:'#',                     status:'concept',desc:"Corrélations non-classiques — base d'E91."},
+            { name:"Algorithme de Shor",     year:'1994',          href:'#',                     status:'concept',desc:"⚠️ Factorise en temps polynomial → casse RSA."},
+            { name:"Algorithme de Grover",   year:'1996',          href:'#',                     status:'concept',desc:"Accélère brute force √n → AES-128 → ~64 bits."},
+          ]},
+        ]
+      },
+      {
+        id: 'he',
+        title: '🧮 Chiffrement homomorphe',
+        intro: "Permet des calculs DIRECTEMENT sur des données chiffrées — sans jamais les déchiffrer. Révolutionne le cloud confidentiel.",
+        subgroups: [
+          { name:"Familles", items:[
+            { name:"Partiellement homomorphe (PHE)", year:'—',     href:'systems/homomorphe.html', status:'ready', desc:"Une seule opération (+ OU ×)."},
+            { name:'RSA (multiplicatif)',    year:'1977',          href:'#',                     status:'soon',   desc:"E(a)·E(b) = E(a·b) mod n."},
+            { name:'Paillier (additif)',     year:'1999',          href:'systems/homomorphe.html#paillier', status:'ready', desc:"E(a)·E(b) = E(a+b). Votes électroniques."},
+            { name:"Partiellement (SHE)",    year:'—',             href:'#',                     status:'concept',desc:"Quelques opérations limitées."},
+            { name:'BGV / BFV',              year:'2011/12',       href:'#',                     status:'soon',   desc:"Schémas SHE sur réseaux euclidiens."},
+            { name:'CKKS',                   year:'2017',          href:'#',                     status:'soon',   desc:"Approximatif — calculs sur réels (ML privé)."},
+            { name:"Pleinement homomorphe (FHE)", year:'2009',     href:'#',                     status:'soon',   desc:"Gentry — toutes opérations. TFHE, FHEW."},
+          ]},
+          { name:"Cas d'usage", items:[
+            { name:"Cloud computing confidentiel", year:'—',       href:'#',                     status:'concept',desc:"Calculer sur la donnée client sans la voir."},
+            { name:"Machine learning privé", year:'—',             href:'#',                     status:'concept',desc:"Inférence sur données chiffrées (CKKS)."},
+            { name:"Statistiques médicales", year:'—',             href:'#',                     status:'concept',desc:"Études inter-hôpitaux sans partage brut."},
+          ]},
+        ]
+      },
+      {
+        id: 'mpc',
+        title: '🤖 Calcul multi-parties & cryptographie à seuil',
+        intro: "Plusieurs participants calculent ensemble une fonction sans révéler leurs entrées. Sépare le secret pour qu'aucune partie unique ne le détienne.",
+        subgroups: [
+          { name:"Partage de secret", items:[
+            { name:'Shamir Secret Sharing',  year:'1979',          href:'systems/mpc.html',      status:'ready',  desc:"Partage un secret en N parts, k suffisent."},
+            { name:'Blakley',                year:'1979',          href:'#',                     status:'soon',   desc:"Géométrique : intersection d'hyperplans."},
+            { name:'VSS / PVSS',             year:'1985+',         href:'#',                     status:'soon',   desc:"Vérifiable — Feldman, Pedersen."},
+          ]},
+          { name:"Calcul multi-parties (MPC)", items:[
+            { name:"Garbled circuits (Yao)", year:'1986',          href:'#',                     status:'soon',   desc:"2 parties — fonction arbitraire chiffrée."},
+            { name:'GMW',                    year:'1987',          href:'#',                     status:'soon',   desc:"N parties via partage secret."},
+            { name:'SPDZ',                   year:'2012',          href:'#',                     status:'soon',   desc:"MPC moderne préprocessing-online."},
+            { name:'Threshold signatures',   year:'—',             href:'#',                     status:'soon',   desc:"t-of-n signatures — TSS, FROST."},
+          ]},
+          { name:"Concepts liés", items:[
+            { name:"Oblivious Transfer (OT)", year:'1981',         href:'#',                     status:'concept',desc:"Brique de base du MPC."},
+            { name:"Private Set Intersection (PSI)", year:'—',     href:'#',                     status:'concept',desc:"Intersection de jeux de données privés."},
+          ]},
+        ]
+      },
+      {
+        id: 'light',
+        title: '🪶 Cryptographie légère (IoT, embarqué)',
+        intro: "Algorithmes optimisés pour environnements ultra-contraints : capteurs, RFID, cartes à puce, microcontrôleurs.",
+        subgroups: [
+          { name:"Chiffrement par blocs léger", items:[
+            { name:'PRESENT',                year:'2007',          href:'#',                     status:'soon',   desc:"ISO/IEC 29192-2 — 80 bits, 31 rounds."},
+            { name:'SPECK / SIMON',          year:'2013',          href:'#',                     status:'soon',   desc:"NSA — controversé mais très compact."},
+            { name:'GIFT',                   year:'2017',          href:'#',                     status:'soon',   desc:"Amélioration de PRESENT."},
+            { name:'PRINCE',                 year:'2012',          href:'#',                     status:'soon',   desc:"Latence ultra-faible (un seul cycle)."},
+          ]},
+          { name:"AEAD léger (NIST)", items:[
+            { name:'ASCON',                  year:'2014/2023',     href:'systems/ascon.html',    status:'ready',  desc:"🏆 Gagnant NIST Lightweight Crypto — IoT, RFID, MCU."},
+            { name:'GIFT-COFB',              year:'2019',          href:'#',                     status:'soon',   desc:"Finaliste NIST LWC."},
+            { name:'Romulus',                year:'2019',          href:'#',                     status:'soon',   desc:"Finaliste NIST LWC, basé sur Skinny."},
+          ]},
+        ]
+      },
+      {
+        id: 'cracked',
+        title: '🏛️ Systèmes historiques & cassés',
+        intro: "L'histoire des grandes cassures cryptographiques — chaque échec a fait avancer la discipline.",
+        subgroups: [
+          { name:"Chiffres historiques", items:[
+            { name:'Scytale spartiate',      year:'~Ve s. av. J.-C.', href:'#',                  status:'soon',   desc:"Bâton + bandelette — chiffrement par transposition."},
+            { name:'Chiffre de César',       year:'~50 av. J.-C.', href:'systems/cesar.html',    status:'ready',  desc:"Substitution mono-alphabétique."},
+            { name:"Chiffre des Templiers",  year:'XIIe siècle',   href:'#',                     status:'soon',   desc:"Substitution géométrique."},
+            { name:'Chiffre de Vigenère',    year:'1553',          href:'systems/vigenere.html', status:'ready',  desc:"Polyalphabétique — cassé par Kasiski."},
+            { name:'Chiffre de Hill',        year:'1929',          href:'#',                     status:'soon',   desc:"Algèbre linéaire matricielle mod 26."},
+          ]},
+          { name:"Machines mécaniques", items:[
+            { name:'Enigma',                 year:'1918–1945',     href:'systems/enigma.html',   status:'ready',  desc:"Rotors électromécaniques — Bletchley Park."},
+            { name:'Lorenz SZ40',            year:'1940s',         href:'#',                     status:'soon',   desc:"Communications Hitler-état-major — cassée à Colossus."},
+            { name:'Purple',                 year:'1940',          href:'#',                     status:'soon',   desc:"Chiffrement diplomatique japonais."},
+          ]},
+          { name:"Cassés à l'ère moderne", items:[
+            { name:'MD5',                    year:'cassé 2004',    href:'#',                     status:'soon',   desc:"Collisions trouvées par Wang."},
+            { name:'SHA-1',                  year:'cassé 2017',    href:'#',                     status:'soon',   desc:"SHAttered — Google."},
+            { name:'DES',                    year:'cassé 1998',    href:'#',                     status:'soon',   desc:"EFF DES Cracker en 56 heures."},
+            { name:'RC4 (WEP)',              year:'cassé 2001',    href:'#',                     status:'soon',   desc:"Wi-Fi WEP brisé en minutes."},
+            { name:'SIKE (post-Q candidat)', year:'cassé 2022',    href:'#',                     status:'soon',   desc:"Castryck & Decru — 1h sur un laptop."},
+          ]},
+        ]
+      },
+      {
+        id: 'formal',
+        title: '🔷 Vérification formelle de protocoles',
+        intro: "Modèles mathématiques pour analyser et vérifier la sécurité des protocoles cryptographiques — pas du chiffrement, mais des outils de preuve.",
+        subgroups: [
+          { name:"Modèles & outils", items:[
+            { name:'Réseaux de Petri',       year:'1962',          href:'systems/petri.html',    status:'ready',  desc:"Modèles graphiques de concurrence — détection de failles de protocoles (NS, 5G AKA)."},
+            { name:'ProVerif (Inria)',       year:'2001',          href:'#',                     status:'soon',   desc:"Pi-calcul + bibliothèque crypto symbolique — TLS, Signal, EMV."},
+            { name:'Tamarin Prover',         year:'2012',          href:'#',                     status:'soon',   desc:"Multiset rewriting — vérification de TLS 1.3, 5G AKA, WPA3."},
+            { name:'Scyther',                year:'2007',          href:'#',                     status:'soon',   desc:"Outil interactif d'analyse de protocoles (Cas Cremers)."},
+            { name:'CSP / FDR',              year:'1985',          href:'#',                     status:'soon',   desc:"Communicating Sequential Processes — Lowe casse Needham-Schroeder en 1995."},
+          ]},
+        ]
+      },
+      {
+        id: 'concepts',
+        title: '🧠 Notions transversales',
+        intro: "Concepts fondamentaux qui traversent toutes les familles cryptographiques.",
+        subgroups: [
+          { name:"Fondations", items:[
+            { name:'Principe de Kerckhoffs', year:'1883',          href:'#',                     status:'concept',desc:"La sécurité doit reposer sur la clé, pas sur l'algo secret."},
+            { name:'Entropie & aléa',        year:'—',             href:'#',                     status:'concept',desc:"PRNG, CSPRNG, sources d'entropie."},
+            { name:'Arithmétique modulaire', year:'—',             href:'#',                     status:'concept',desc:"Le langage de la crypto à clé publique."},
+            { name:'Complexité algorithmique', year:'—',           href:'#',                     status:'concept',desc:"P, NP, problèmes difficiles supposés."},
+          ]},
+          { name:"Modèles d'attaque", items:[
+            { name:'Ciphertext-only',        year:'—',             href:'#',                     status:'concept',desc:"L'attaquant n'a que le chiffré."},
+            { name:'Known/Chosen plaintext', year:'—',             href:'#',                     status:'concept',desc:"L'attaquant connaît / choisit des couples."},
+            { name:'Chosen ciphertext',      year:'—',             href:'#',                     status:'concept',desc:"Modèle CCA — le plus fort en pratique."},
+            { name:'Side-channel attacks',   year:'—',             href:'#',                     status:'concept',desc:"Timing, consommation, EM — casse l'implémentation."},
+            { name:'Man-in-the-middle',      year:'—',             href:'#',                     status:'concept',desc:"L'attaquant intercepte et relaie."},
+          ]},
+          { name:"Propriétés recherchées", items:[
+            { name:'Confidentialité',        year:'—',             href:'#',                     status:'concept',desc:"Seul le destinataire lit."},
+            { name:'Intégrité',              year:'—',             href:'#',                     status:'concept',desc:"Le message n'a pas été altéré."},
+            { name:'Authentification',       year:'—',             href:'#',                     status:'concept',desc:"L'émetteur est bien celui qu'il prétend."},
+            { name:'Non-répudiation',        year:'—',             href:'#',                     status:'concept',desc:"L'émetteur ne peut pas nier avoir envoyé."},
+            { name:'Forward secrecy',        year:'—',             href:'#',                     status:'concept',desc:"Compromettre la clé long-terme ne révèle pas le passé."},
+          ]},
+        ]
+      },
+    ];
+
+    // ============================================================
+    // i18n table — translates titles, intros, subgroups, descriptions, statuses
+    // Algorithm names (proper nouns) stay as-is.
+    // ============================================================
+    const T = {
+      // Filter labels
+      'flbl.all':{fr:'Tout',en:'All'},
+      'flbl.sym':{fr:'Symétrique',en:'Symmetric'},
+      'flbl.asym':{fr:'Asymétrique',en:'Asymmetric'},
+      'flbl.hash':{fr:'Hash / MAC',en:'Hash / MAC'},
+      'flbl.hybrid':{fr:'Hybride',en:'Hybrid'},
+      'flbl.zkp':{fr:'ZKP',en:'ZKP'},
+      'flbl.pqc':{fr:'Post-quantique',en:'Post-quantum'},
+      'flbl.qc':{fr:'Quantique',en:'Quantum'},
+      'flbl.he':{fr:'Homomorphe',en:'Homomorphic'},
+      'flbl.mpc':{fr:'MPC / Seuil',en:'MPC / Threshold'},
+      'flbl.light':{fr:'Légère',en:'Lightweight'},
+      'flbl.cracked':{fr:'Cassée / historique',en:'Broken / historical'},
+      'flbl.formal':{fr:'Vérif. formelle',en:'Formal verification'},
+      'formal.t':{fr:'🔷 Vérification formelle de protocoles',en:'🔷 Formal protocol verification'},
+      'formal.i':{fr:"Modèles mathématiques pour analyser et vérifier la sécurité des protocoles cryptographiques — pas du chiffrement, mais des outils de preuve.",en:"Mathematical models to analyze and verify the security of cryptographic protocols — not encryption, but proof tools."},
+      'sg.formal_tools':{fr:'Modèles & outils',en:'Models & tools'},
+
+      // Status
+      'st.ready':{fr:'✓ Disponible',en:'✓ Available'},
+      'st.soon':{fr:'🔒 Bientôt',en:'🔒 Coming'},
+      'st.concept':{fr:'📖 Notion',en:'📖 Concept'},
+
+      // Category titles
+      'sym.t':{fr:'🔐 Cryptographie symétrique',en:'🔐 Symmetric cryptography'},
+      'sym.i':{fr:"Une même clé partagée chiffre et déchiffre. Rapide, idéal pour de gros volumes — mais nécessite un canal sûr pour échanger la clé.",
+               en:"One shared key both encrypts and decrypts. Fast, ideal for bulk data — but needs a secure channel to share the key."},
+      'asym.t':{fr:'🔑 Cryptographie asymétrique (clé publique)',en:'🔑 Asymmetric cryptography (public key)'},
+      'asym.i':{fr:"Une paire de clés liées mathématiquement : la clé publique chiffre / vérifie, la clé privée déchiffre / signe. Résout le problème d'échange de clés.",
+                en:"A mathematically linked key pair: public key encrypts/verifies, private key decrypts/signs. Solves the key exchange problem."},
+      'hash.t':{fr:'🧬 Fonctions de hachage & MAC',en:'🧬 Hash functions & MACs'},
+      'hash.i':{fr:"Fonctions à sens unique : produisent une empreinte de taille fixe. Indispensables pour intégrité, signatures, mots de passe, blockchain.",
+                en:"One-way functions producing a fixed-size digest. Essential for integrity, signatures, passwords, blockchain."},
+      'hybrid.t':{fr:'🤝 Chiffrement hybride',en:'🤝 Hybrid encryption'},
+      'hybrid.i':{fr:"Combine le meilleur des deux mondes : asymétrique pour échanger une clé de session, symétrique pour chiffrer les données (rapide).",
+                  en:"Combines the best of both worlds: asymmetric for session key exchange, symmetric for fast data encryption."},
+      'zkp.t':{fr:'🕵️ Preuves à divulgation nulle (ZKP)',en:'🕵️ Zero-Knowledge Proofs (ZKP)'},
+      'zkp.i':{fr:"Prouver qu'on connaît une information SANS la révéler. Fondement des blockchains privées, identités vérifiables, votes anonymes.",
+               en:"Prove you know something WITHOUT revealing it. Foundation of private blockchains, verifiable identity, anonymous voting."},
+      'pqc.t':{fr:'⚛️ Cryptographie post-quantique',en:'⚛️ Post-quantum cryptography'},
+      'pqc.i':{fr:"Algorithmes résistants aux ordinateurs quantiques (qui casseraient RSA/ECC via Shor). Standardisation NIST 2024+.",
+               en:"Algorithms resistant to quantum computers (which would break RSA/ECC via Shor). NIST standardization 2024+."},
+      'qc.t':{fr:'🔬 Cryptographie quantique',en:'🔬 Quantum cryptography'},
+      'qc.i':{fr:"Utilise les lois de la physique quantique pour garantir la sécurité — pas seulement résister aux ordinateurs quantiques.",
+              en:"Uses the laws of quantum physics to guarantee security — not just resist quantum computers."},
+      'he.t':{fr:'🧮 Chiffrement homomorphe',en:'🧮 Homomorphic encryption'},
+      'he.i':{fr:"Permet des calculs DIRECTEMENT sur des données chiffrées — sans jamais les déchiffrer. Révolutionne le cloud confidentiel.",
+              en:"Enables computation DIRECTLY on encrypted data — without ever decrypting. Revolutionizes confidential cloud."},
+      'mpc.t':{fr:'🤖 Calcul multi-parties & cryptographie à seuil',en:'🤖 Multi-party computation & threshold cryptography'},
+      'mpc.i':{fr:"Plusieurs participants calculent ensemble une fonction sans révéler leurs entrées. Sépare le secret pour qu'aucune partie unique ne le détienne.",
+               en:"Multiple participants jointly compute a function without revealing their inputs. Splits the secret so no single party holds it."},
+      'light.t':{fr:'🪶 Cryptographie légère (IoT, embarqué)',en:'🪶 Lightweight cryptography (IoT, embedded)'},
+      'light.i':{fr:"Algorithmes optimisés pour environnements ultra-contraints : capteurs, RFID, cartes à puce, microcontrôleurs.",
+                 en:"Algorithms optimized for ultra-constrained environments: sensors, RFID, smart cards, microcontrollers."},
+      'cracked.t':{fr:'🏛️ Systèmes historiques & cassés',en:'🏛️ Historical & broken systems'},
+      'cracked.i':{fr:"L'histoire des grandes cassures cryptographiques — chaque échec a fait avancer la discipline.",
+                   en:"The history of major cryptographic breaks — every failure advanced the discipline."},
+      'concepts.t':{fr:'🧠 Notions transversales',en:'🧠 Cross-cutting concepts'},
+      'concepts.i':{fr:"Concepts fondamentaux qui traversent toutes les familles cryptographiques.",
+                    en:"Fundamental concepts that span every cryptographic family."},
+
+      // Subgroup names
+      'sg.subst_hist':{fr:'Substitution (historiques)',en:'Substitution (historical)'},
+      'sg.block':{fr:'Chiffrement par blocs',en:'Block ciphers'},
+      'sg.stream':{fr:'Chiffrement par flux',en:'Stream ciphers'},
+      'sg.modes':{fr:"Modes d'opération",en:'Modes of operation'},
+      'sg.kex':{fr:'Échange de clés',en:'Key exchange'},
+      'sg.encsig':{fr:'Chiffrement & signature',en:'Encryption & signature'},
+      'sg.idpki':{fr:'Identité & PKI',en:'Identity & PKI'},
+      'sg.crypthash':{fr:'Hash cryptographiques',en:'Cryptographic hashes'},
+      'sg.mac':{fr:'MAC (authentification)',en:'MAC (authentication)'},
+      'sg.pwhash':{fr:'Hachage de mots de passe',en:'Password hashing'},
+      'sg.protos':{fr:'Protocoles & systèmes',en:'Protocols & systems'},
+      'sg.fund':{fr:'Fondamentaux',en:'Fundamentals'},
+      'sg.modern':{fr:'Systèmes modernes',en:'Modern systems'},
+      'sg.kem':{fr:'Chiffrement / KEM',en:'Encryption / KEM'},
+      'sg.sigs':{fr:'Signatures',en:'Signatures'},
+      'sg.maths':{fr:'Familles mathématiques',en:'Mathematical families'},
+      'sg.qkd':{fr:'QKD — Distribution quantique de clé',en:'QKD — Quantum Key Distribution'},
+      'sg.concepts_q':{fr:'Concepts',en:'Concepts'},
+      'sg.families':{fr:'Familles',en:'Families'},
+      'sg.usages_he':{fr:"Cas d'usage",en:'Use cases'},
+      'sg.ss':{fr:'Partage de secret',en:'Secret sharing'},
+      'sg.mpc':{fr:'Calcul multi-parties (MPC)',en:'Multi-party computation (MPC)'},
+      'sg.related':{fr:'Concepts liés',en:'Related concepts'},
+      'sg.block_light':{fr:'Chiffrement par blocs léger',en:'Lightweight block ciphers'},
+      'sg.aead_light':{fr:'AEAD léger (NIST)',en:'Lightweight AEAD (NIST)'},
+      'sg.hist':{fr:'Chiffres historiques',en:'Historical ciphers'},
+      'sg.machines':{fr:'Machines mécaniques',en:'Mechanical machines'},
+      'sg.modern_break':{fr:"Cassés à l'ère moderne",en:'Broken in the modern era'},
+      'sg.foundations':{fr:'Fondations',en:'Foundations'},
+      'sg.attacks':{fr:"Modèles d'attaque",en:'Attack models'},
+      'sg.props':{fr:'Propriétés recherchées',en:'Sought properties'},
+    };
+
+    function t(key) {
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      return (T[key] && T[key][lang]) || (T[key] && T[key].fr) || key;
+    }
+
+    // Helper to wrap a description : if string, use it; if object {fr, en} use lang
+    function loc(v) {
+      if (typeof v === 'string') return v;
+      const lang = (window.CryptoLabI18n && window.CryptoLabI18n.lang) || 'fr';
+      return v[lang] || v.fr || '';
+    }
+
+    // ============================================================
+    // Patch category entries: use translation keys for titles/intros/subgroup names
+    // and bilingualize a few item descriptions (the most visible ones).
+    // ============================================================
+    const CAT_KEY = ['sym','asym','hash','hybrid','zkp','pqc','qc','he','mpc','light','cracked','formal','concepts'];
+    CATEGORIES.forEach((cat, i) => {
+      const k = CAT_KEY[i];
+      cat.titleKey = `${k}.t`;
+      cat.introKey = `${k}.i`;
+    });
+    // Subgroup key map (heuristic based on subgroup name)
+    const SUBGROUP_KEY = {
+      'Substitution (historiques)':'sg.subst_hist',
+      'Chiffrement par blocs':'sg.block',
+      'Chiffrement par flux':'sg.stream',
+      "Modes d'opération":'sg.modes',
+      'Échange de clés':'sg.kex',
+      'Chiffrement & signature':'sg.encsig',
+      'Identité & PKI':'sg.idpki',
+      'Hash cryptographiques':'sg.crypthash',
+      'MAC (authentification)':'sg.mac',
+      'Hachage de mots de passe':'sg.pwhash',
+      'Protocoles & systèmes':'sg.protos',
+      'Fondamentaux':'sg.fund',
+      'Systèmes modernes':'sg.modern',
+      'Chiffrement / KEM':'sg.kem',
+      'Signatures':'sg.sigs',
+      'Familles mathématiques':'sg.maths',
+      'QKD — Distribution quantique de clé':'sg.qkd',
+      'Concepts':'sg.concepts_q',
+      'Familles':'sg.families',
+      "Cas d'usage":'sg.usages_he',
+      'Partage de secret':'sg.ss',
+      'Calcul multi-parties (MPC)':'sg.mpc',
+      'Concepts liés':'sg.related',
+      'Chiffrement par blocs léger':'sg.block_light',
+      'AEAD léger (NIST)':'sg.aead_light',
+      'Chiffres historiques':'sg.hist',
+      'Machines mécaniques':'sg.machines',
+      "Cassés à l'ère moderne":'sg.modern_break',
+      'Modèles & outils':'sg.formal_tools',
+      'Fondations':'sg.foundations',
+      "Modèles d'attaque":'sg.attacks',
+      'Propriétés recherchées':'sg.props',
+    };
+
+    const root = document.getElementById('categories');
+    function renderCatalog() {
+      root.innerHTML = '';
+      CATEGORIES.forEach(cat => {
+        const section = document.createElement('section');
+        section.dataset.cat = cat.id;
+        section.className = 'cat-section scroll-mt-20';
+        section.id = cat.id;
+        let html = `
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold">${t(cat.titleKey)}</h2>
+            <p class="text-slate-400 mt-2 max-w-3xl">${t(cat.introKey)}</p>
+          </div>
+        `;
+        cat.subgroups.forEach(sub => {
+          const subName = SUBGROUP_KEY[sub.name] ? t(SUBGROUP_KEY[sub.name]) : sub.name;
+          html += `
+            <div class="mb-8">
+              <h3 class="text-sm font-semibold text-brand-500 uppercase tracking-wider mb-3">${subName}</h3>
+              <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                ${sub.items.map(it => {
+                  const isReady = it.status === 'ready';
+                  const statusLabel = t('st.' + it.status);
+                  const statusCls = it.status === 'ready' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                  : it.status === 'concept' ? 'bg-purple-500/10 border-purple-500/30 text-purple-300'
+                                  : 'bg-white/5 border-white/10 text-slate-400';
+                  const cardCls = isReady
+                    ? 'group p-5 bg-white/5 border border-white/10 rounded-xl hover:border-brand-500/60 hover:bg-white/10 transition lift'
+                    : 'p-5 bg-white/[0.02] border border-white/5 rounded-xl opacity-70';
+                  const wrapStart = isReady ? `<a href="${it.href}" class="${cardCls} block">` : `<div class="${cardCls}">`;
+                  const wrapEnd = isReady ? `</a>` : `</div>`;
+                  return `${wrapStart}
+                    <div class="flex justify-between items-start gap-2 mb-2">
+                      <div class="font-semibold ${isReady ? 'group-hover:text-brand-500 transition' : ''}">${it.name}</div>
+                      <span class="text-xs font-mono text-slate-500 whitespace-nowrap">${it.year}</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-3 leading-relaxed">${loc(it.desc)}</p>
+                    <span class="inline-block text-[10px] px-2 py-0.5 rounded border ${statusCls}">${statusLabel}</span>
+                  ${wrapEnd}`;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        });
+        section.innerHTML = html;
+        root.appendChild(section);
+      });
+      // Update filter button labels
+      document.querySelectorAll('[data-flbl]').forEach(el => {
+        el.textContent = t('flbl.' + el.getAttribute('data-flbl'));
+      });
+    }
+
+    renderCatalog();
+    document.addEventListener('lang-changed', renderCatalog);
+
+    // Filter
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.classList.remove('bg-brand-500','text-white');
+          b.classList.add('bg-white/5','border','border-white/10');
+        });
+        btn.classList.add('bg-brand-500','text-white');
+        btn.classList.remove('bg-white/5','border','border-white/10');
+        const f = btn.dataset.filter;
+        document.querySelectorAll('.cat-section').forEach(s => {
+          s.classList.toggle('hidden', f !== 'all' && s.dataset.cat !== f);
+        });
+      });
+    });
+  </script>
+  <script src="assets/js/i18n.js"></script>
+</body>
+</html>

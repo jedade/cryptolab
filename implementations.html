@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Implémentations — CryptoLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#3aa0ff',600:'#1f7fe0'},ink:{900:'#0b0f17',800:'#111827'}}}}}</script>
+  <style>
+    .impl-section { scroll-margin-top: 5rem; }
+    .impl-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: border-color .25s;
+    }
+    .impl-card:hover { border-color: rgba(58,160,255,0.3); }
+    .pro-box { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); }
+    .con-box { background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.25); }
+    .fail-box { background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.3); }
+    .ctx-box { background:rgba(58,160,255,0.06); border:1px solid rgba(58,160,255,0.25); }
+  </style>
+  <script src="assets/js/loader.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+</head>
+<body class="bg-ink-900 text-slate-100 min-h-screen">
+  <nav class="border-b border-white/10 backdrop-blur sticky top-0 z-30 bg-ink-900/80">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 font-bold text-lg"><span class="text-brand-500">⟁</span> CryptoLab</a>
+      <div class="hidden md:flex items-center gap-5 text-sm text-slate-300">
+        <a href="timeline.html" class="hover:text-white" data-i18n="nav.timeline">Timeline</a>
+        <a href="cryptosystemes.html" class="hover:text-white" data-i18n="nav.cryptosystems">Cryptosystèmes</a>
+        <a href="maths.html" class="hover:text-white" data-i18n="nav.maths">Mathématiques</a>
+        <a href="implementations.html" class="text-white" data-i18n="nav.implementations">Implémentations</a>
+        <a href="glossaire.html" class="hover:text-white" data-i18n="nav.glossary">Glossaire</a>
+        <a href="badges.html" class="hover:text-white" data-i18n="nav.badges">🏆 Mes badges</a>
+        <a href="https://jedade.github.io/jediel-adefoulou.github.io/" target="_blank" rel="noopener" class="hover:text-white" data-i18n="nav.about">👤 Qui suis-je</a>
+        <button data-lang-toggle class="lang-toggle"><span class="lang-toggle-label">🇫🇷 FR</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="max-w-5xl mx-auto px-6 pt-14 pb-8 fade-up">
+    <h1 class="text-4xl md:text-5xl font-bold animated-gradient" data-i18n="impl.title">💻 Implémentations réelles</h1>
+    <p class="mt-4 text-slate-400 max-w-3xl" data-en="Production-grade implementations for the most-used cryptosystems. For each, we explain the context, when to use it, its advantages, disadvantages, known vulnerabilities — then the commented code.">
+      Implémentations de qualité production pour les cryptosystèmes les plus utilisés. Pour chacun on
+      explique le contexte, quand l'utiliser, ses avantages, inconvénients, failles connues — puis le
+      code commenté.
+    </p>
+
+    <div class="mt-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg text-sm text-amber-300" data-en="⚠️ <strong>Golden rule:</strong> NEVER roll your own crypto in production. Use audited libraries (Python <code>cryptography</code>, Go stdlib <code>crypto/*</code>, Rust <code>RustCrypto</code>, JS <code>libsodium-wrappers</code>). The code below shows how to <em>use them correctly</em>.">
+      ⚠️ <strong>Règle d'or :</strong> N'IMPLÉMENTE JAMAIS toi-même de la crypto en prod. Utilise une
+      bibliothèque auditée (Python <code>cryptography</code>, Go stdlib <code>crypto/*</code>, Rust
+      <code>RustCrypto</code>, JS <code>libsodium-wrappers</code>). Le code ci-dessous montre comment
+      <em>les utiliser correctement</em>.
+    </div>
+
+    <nav class="mt-8 grid sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+      <a href="#aes-gcm" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift">🛡️ AES-256-GCM</a>
+      <a href="#chacha-poly" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift">🌊 ChaCha20-Poly1305</a>
+      <a href="#rsa" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift">🔑 RSA-OAEP &amp; PSS</a>
+      <a href="#x25519" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift">🪜 X25519 + Ed25519</a>
+      <a href="#hybrid" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="🤝 Hybrid E2E encryption">🤝 Chiffrement hybride E2E</a>
+      <a href="#argon2" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="🔐 Argon2 password hashing">🔐 Hash de mots de passe (Argon2)</a>
+      <a href="#hmac" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift">🧬 HMAC &amp; HKDF</a>
+      <a href="#jwt" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="🪪 Ed25519-signed JWT">🪪 JWT signé Ed25519</a>
+      <a href="#file" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 lift" data-en="📦 Streaming file encryption">📦 Chiffrement de fichier streaming</a>
+    </nav>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 pb-20 space-y-20">
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- AES-256-GCM                                                  -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <section id="aes-gcm" class="impl-section reveal">
+      <h2 class="text-3xl font-bold mb-4 section-heading">🛡️ AES-256-GCM</h2>
+      <p class="text-sm text-slate-400 mb-6" data-en="Symmetric AEAD · the world default since 2001">Symétrique AEAD · standard mondial depuis 2001</p>
+
+      <div class="impl-card mb-6">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="📖 Context">📖 Contexte</h3>
+        <p class="text-sm text-slate-300 leading-relaxed mb-3" data-en="<strong>AES-GCM</strong> (Galois/Counter Mode) is the cryptographic primitive that powers HTTPS, Wi-Fi (WPA2/3), VPN, encrypted disks, end-to-end messaging. It performs <strong>two things at once</strong>: encryption (confidentiality) AND authentication (integrity + origin). A wrong byte in the ciphertext is detected and rejected — impossible to silently tamper with.">
+          <strong>AES-GCM</strong> (Galois/Counter Mode) est la primitive cryptographique qui sous-tend
+          HTTPS, le Wi-Fi (WPA2/3), les VPN, les disques chiffrés, les messageries E2E. Elle réalise
+          <strong>deux choses en même temps</strong> : chiffrement (confidentialité) ET authentification
+          (intégrité + origine). Un octet altéré dans le chiffré est détecté et rejeté — impossible
+          d'altérer silencieusement.
+        </p>
+        <p class="text-sm text-slate-300 leading-relaxed" data-en="Internally: AES encrypts a counter incremented per 16-byte block (CTR mode), then a Galois Hash computes a 128-bit authentication tag that depends on the key, ciphertext, IV and optional associated data (AAD).">
+          En interne : AES chiffre un compteur incrémenté par bloc de 16 octets (mode CTR), puis un
+          Galois Hash calcule un tag d'authentification de 128 bits qui dépend de la clé, du chiffré,
+          de l'IV et des données associées optionnelles (AAD).
+        </p>
+      </div>
+
+      <div class="impl-card mb-6 ctx-box">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="🎯 When to use it">🎯 Quand l'utiliser</h3>
+        <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
+          <li data-en="Encrypting tokens, cookies, payloads stored in a database">Chiffrer des tokens, cookies, payloads stockés en base de données</li>
+          <li data-en="Encrypted communications when AES-NI is available (server, modern desktop)">Communications chiffrées quand AES-NI est disponible (serveur, desktop moderne)</li>
+          <li data-en="File / disk encryption (LUKS, BitLocker, FileVault internally use AES-XTS, a sibling)">Chiffrement de fichiers / disques (LUKS, BitLocker, FileVault utilisent en interne AES-XTS, son cousin)</li>
+          <li data-en="Any case where you have a shared key and want to encrypt + authenticate">Tous les cas où on a une clé partagée et qu'on veut chiffrer + authentifier</li>
+        </ul>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="impl-card pro-box">
+          <h3 class="font-semibold mb-2 text-emerald-400" data-en="✅ Advantages">✅ Avantages</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Ultra-fast with AES-NI (~5 GB/s per core)">Ultra-rapide avec AES-NI (~5 Go/s par cœur)</li>
+            <li data-en="AEAD: encryption + auth in one call">AEAD : chiffrement + auth en un seul appel</li>
+            <li data-en="Standardized everywhere (NIST, IETF, FIPS)">Standardisé partout (NIST, IETF, FIPS)</li>
+            <li data-en="Parallelizable (CTR-based)">Parallélisable (basé sur CTR)</li>
+            <li data-en="NSA approved up to TOP SECRET in 256 bits">NSA approuvé jusqu'au TOP SECRET en 256 bits</li>
+          </ul>
+        </div>
+        <div class="impl-card con-box">
+          <h3 class="font-semibold mb-2 text-amber-400" data-en="⚠️ Disadvantages">⚠️ Inconvénients</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Slow without AES-NI (mobile, embedded) → prefer ChaCha20">Lent sans AES-NI (mobile, embarqué) → préférer ChaCha20</li>
+            <li data-en="2³² block limit per (key, IV) before nonce reuse risk">Limite 2³² blocs par (clé, IV) avant risque de réutilisation</li>
+            <li data-en="No forward secrecy on its own — needs ephemeral key exchange">Pas de forward secrecy seul — nécessite échange éphémère</li>
+            <li data-en="Software implementations vulnerable to cache timing attacks">Implémentations software vulnérables aux attaques timing-cache</li>
+          </ul>
+        </div>
+        <div class="impl-card fail-box">
+          <h3 class="font-semibold mb-2 text-red-400" data-en="💥 Known flaws / attacks">💥 Failles connues</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="<strong>Nonce reuse</strong>: 2 ciphertexts with same (key, IV) → key recovery (CVE many)"><strong>Réutilisation de nonce</strong> : 2 chiffrés avec même (clé, IV) → récupération de clé</li>
+            <li data-en="<strong>Forbidden Attack</strong> (Joux 2016): nonce reuse in TLS implementations"><strong>Forbidden Attack</strong> (Joux 2016) : réutilisation de nonce sur TLS</li>
+            <li data-en="<strong>Cache-timing</strong> on software AES (Bernstein 2005)"><strong>Cache-timing</strong> sur AES software (Bernstein 2005)</li>
+            <li data-en="<strong>Grover (quantum)</strong>: AES-128 → 64 bits → AES-256 mandatory long-term"><strong>Grover (quantique)</strong> : AES-128 → 64 bits → AES-256 obligatoire à long terme</li>
+            <li data-en="Short tags (< 96 bits) allow forgery">Tags courts (&lt; 96 bits) permettent forgery</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3" data-en="💻 Production code (Python)">💻 Code de production (Python)</h3>
+      <pre><code># pip install cryptography
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+import os
+
+# 1. KEY: 32 bytes = 256 bits. Store in a KMS / Vault, never in plain config.
+key = AESGCM.generate_key(bit_length=256)
+aead = AESGCM(key)
+
+# 2. NONCE: 12 bytes, UNIQUE per (key, message).
+#    Random is safe up to ~2^32 messages per key.
+nonce = os.urandom(12)
+
+# 3. AAD (associated data): authenticated but NOT encrypted
+#    (e.g. metadata, user id, content type — anything that should be bound to ciphertext).
+aad = b'user_id=42&type=document'
+
+# 4. ENCRYPT → ciphertext = encrypted_bytes || 16-byte auth tag
+plaintext = b'sensitive data'
+ciphertext = aead.encrypt(nonce, plaintext, aad)
+
+# 5. DECRYPT → verifies tag before returning. Raises InvalidTag if tampered with.
+recovered = aead.decrypt(nonce, ciphertext, aad)
+assert recovered == plaintext
+
+# 6. SERIALIZATION pattern: store (nonce || ciphertext) together, key separately.
+import base64
+token = base64.urlsafe_b64encode(nonce + ciphertext).decode()</code></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ChaCha20-Poly1305                                            -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <section id="chacha-poly" class="impl-section reveal">
+      <h2 class="text-3xl font-bold mb-4 section-heading">🌊 ChaCha20-Poly1305</h2>
+      <p class="text-sm text-slate-400 mb-6" data-en="AEAD alternative · TLS 1.3, WireGuard, Signal">AEAD alternative · TLS 1.3, WireGuard, Signal</p>
+
+      <div class="impl-card mb-6">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="📖 Context">📖 Contexte</h3>
+        <p class="text-sm text-slate-300 leading-relaxed mb-3" data-en="<strong>ChaCha20-Poly1305</strong> is the modern AEAD designed by Daniel J. Bernstein. ChaCha20 generates a keystream you XOR with the plaintext (stream cipher); Poly1305 computes the authentication tag. Built from three CPU-native operations (Add-Rotate-XOR), no lookup tables → inherently resistant to cache-timing attacks and very fast in pure software.">
+          <strong>ChaCha20-Poly1305</strong> est l'AEAD moderne conçu par Daniel J. Bernstein.
+          ChaCha20 génère un keystream qu'on XOR avec le clair (stream cipher) ; Poly1305 calcule le
+          tag d'authentification. Construit à partir de trois opérations natives CPU (Add-Rotate-XOR),
+          sans tables de lookup → naturellement résistant aux attaques timing-cache et très rapide en
+          software pur.
+        </p>
+      </div>
+
+      <div class="impl-card mb-6 ctx-box">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="🎯 When to use it">🎯 Quand l'utiliser</h3>
+        <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
+          <li data-en="Mobile / embedded / IoT (no AES-NI)">Mobile / embarqué / IoT (pas d'AES-NI)</li>
+          <li data-en="TLS 1.3, QUIC, WireGuard, OpenSSH (uses it by default)">TLS 1.3, QUIC, WireGuard, OpenSSH (par défaut)</li>
+          <li data-en="Real-time streaming (audio/video) — constant performance">Streaming temps réel (audio/vidéo) — performance constante</li>
+          <li data-en="Anywhere you want side-channel resistance without hardware help">Partout où on veut résistance side-channel sans aide matérielle</li>
+        </ul>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="impl-card pro-box">
+          <h3 class="font-semibold mb-2 text-emerald-400" data-en="✅ Advantages">✅ Avantages</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Fast without AES-NI (often >1 GB/s in software)">Rapide sans AES-NI (souvent &gt;1 Go/s software)</li>
+            <li data-en="ARX construction → cache-timing resistance">Construction ARX → résistance cache-timing</li>
+            <li data-en="No tables → minimal code (~100 lines of readable C)">Pas de tables → code minimal (~100 lignes C lisibles)</li>
+            <li data-en="Open patents, Bernstein's reference design">Brevets libres, design de référence Bernstein</li>
+            <li data-en="Standardized RFC 8439">Standardisé RFC 8439</li>
+          </ul>
+        </div>
+        <div class="impl-card con-box">
+          <h3 class="font-semibold mb-2 text-amber-400" data-en="⚠️ Disadvantages">⚠️ Inconvénients</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Slower than AES on AES-NI CPUs (server)">Plus lent qu'AES sur CPU avec AES-NI (serveur)</li>
+            <li data-en="96-bit nonce: not safe to use random nonce above ~2^32 messages">Nonce 96 bits : aléa pur risqué au-delà de ~2³² messages</li>
+            <li data-en="Less widespread in older systems / hardware accelerators">Moins répandu dans les systèmes anciens / accélérateurs matériels</li>
+          </ul>
+        </div>
+        <div class="impl-card fail-box">
+          <h3 class="font-semibold mb-2 text-red-400" data-en="💥 Known flaws / attacks">💥 Failles connues</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="<strong>Nonce reuse</strong>: complete break — XOR of 2 ciphertexts = XOR of 2 plaintexts"><strong>Réutilisation de nonce</strong> : casse totale — XOR de 2 chiffrés = XOR de 2 clairs</li>
+            <li data-en="<strong>Raw ChaCha20</strong> (without Poly1305): no integrity → trivial forgery"><strong>ChaCha20 brut</strong> (sans Poly1305) : pas d'intégrité → forgery triviale</li>
+            <li data-en="<strong>Grover (quantum)</strong>: 128-bit quantum security (like AES-256)"><strong>Grover (quantique)</strong> : 128 bits de sécurité quantique (comme AES-256)</li>
+            <li data-en="No known practical break on the full primitive in 2026">Aucune cassure pratique connue sur la primitive complète en 2026</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3" data-en="💻 Production code (Python)">💻 Code de production (Python)</h3>
+      <pre><code>from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
+import os
+
+key   = ChaCha20Poly1305.generate_key()   # 256 bits
+nonce = os.urandom(12)                    # 96 bits — keep unique per key
+aead  = ChaCha20Poly1305(key)
+
+ct = aead.encrypt(nonce, b'payload', associated_data=b'header')
+pt = aead.decrypt(nonce, ct, associated_data=b'header')
+
+# For random nonces in high-volume scenarios, prefer XChaCha20-Poly1305
+# (192-bit nonce, no collision worry):
+# pip install pynacl
+from nacl.secret import SecretBox
+box = SecretBox(key)
+encrypted = box.encrypt(b'payload')     # 192-bit nonce auto-managed, no collision risk
+recovered = box.decrypt(encrypted)</code></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- RSA-OAEP + RSA-PSS                                           -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <section id="rsa" class="impl-section reveal">
+      <h2 class="text-3xl font-bold mb-4 section-heading">🔑 RSA-OAEP &amp; RSA-PSS</h2>
+      <p class="text-sm text-slate-400 mb-6" data-en="Asymmetric · still dominant in certificates and legacy systems">Asymétrique · encore dominant dans les certificats et systèmes legacy</p>
+
+      <div class="impl-card mb-6">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="📖 Context">📖 Contexte</h3>
+        <p class="text-sm text-slate-300 leading-relaxed mb-3" data-en='<strong>RSA</strong> is the most widely deployed asymmetric algorithm. Today we use it via <strong>two safe paddings</strong>: <strong>OAEP</strong> for encryption (avoids replays and known weaknesses of "textbook RSA") and <strong>PSS</strong> for signature (more robust than the old PKCS#1 v1.5). Used in TLS certificates, JWT, S/MIME, code signing, SSH.'>
+          <strong>RSA</strong> est l'algorithme asymétrique le plus largement déployé. On l'utilise
+          aujourd'hui avec <strong>deux paddings sûrs</strong> : <strong>OAEP</strong> pour le
+          chiffrement (évite les rejeux et faiblesses connues du "RSA brut") et <strong>PSS</strong>
+          pour la signature (plus robuste que l'ancien PKCS#1 v1.5). Utilisé dans les certificats TLS,
+          les JWT, S/MIME, signature de code, SSH.
+        </p>
+        <p class="text-sm text-slate-300 leading-relaxed" data-en="<strong>Never use raw RSA</strong> (without padding): a long list of devastating attacks (Bleichenbacher, Coppersmith, Manger…).">
+          <strong>Ne JAMAIS utiliser RSA brut</strong> (sans padding) : une longue liste d'attaques
+          dévastatrices (Bleichenbacher, Coppersmith, Manger…).
+        </p>
+      </div>
+
+      <div class="impl-card mb-6 ctx-box">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="🎯 When to use it">🎯 Quand l'utiliser</h3>
+        <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
+          <li data-en="X.509 certificates (still widely required)">Certificats X.509 (encore très demandés)</li>
+          <li data-en="JWT signing in interop scenarios (alternative to ECDSA/Ed25519)">Signature JWT en interopérabilité (alternative à ECDSA/Ed25519)</li>
+          <li data-en="Encrypted email (PGP/GPG, S/MIME)">E-mail chiffré (PGP/GPG, S/MIME)</li>
+          <li data-en="Legacy systems where ECC isn't supported">Systèmes legacy où ECC n'est pas supporté</li>
+          <li data-en="When you absolutely need decades-old library support">Quand il faut absolument du support des bibliothèques anciennes</li>
+        </ul>
+        <p class="text-xs text-slate-400 mt-3" data-en="💡 For new projects, prefer Ed25519 (signature) and X25519 (key exchange) — smaller, faster, simpler.">
+          💡 Pour un nouveau projet, préfère <strong>Ed25519</strong> (signature) et <strong>X25519</strong>
+          (échange de clé) — plus petits, plus rapides, plus simples.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="impl-card pro-box">
+          <h3 class="font-semibold mb-2 text-emerald-400" data-en="✅ Advantages">✅ Avantages</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Universal support (every crypto library)">Support universel (toutes bibliothèques)</li>
+            <li data-en="Battle-tested for 47 years">Éprouvé depuis 47 ans</li>
+            <li data-en="Standardized: PKCS#1, X.509, JWS">Normalisé : PKCS#1, X.509, JWS</li>
+            <li data-en="Easy public-key infrastructure deployment">Déploiement PKI bien établi</li>
+          </ul>
+        </div>
+        <div class="impl-card con-box">
+          <h3 class="font-semibold mb-2 text-amber-400" data-en="⚠️ Disadvantages">⚠️ Inconvénients</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Slow (~1000× slower than AES)">Lent (~1000× plus lent qu'AES)</li>
+            <li data-en="Big keys: 3072 bits = NIST minimum since 2024">Clés grosses : 3072 bits = minimum NIST depuis 2024</li>
+            <li data-en="Big signatures (256-384 bytes)">Signatures grosses (256-384 octets)</li>
+            <li data-en="Complex to implement safely (padding, side-channels)">Complexe à implémenter sûrement (padding, side-channels)</li>
+            <li data-en="Can only encrypt small messages (key size − overhead)">Ne peut chiffrer que de petits messages (taille clé − overhead)</li>
+          </ul>
+        </div>
+        <div class="impl-card fail-box">
+          <h3 class="font-semibold mb-2 text-red-400" data-en="💥 Known flaws / attacks">💥 Failles connues</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="<strong>Bleichenbacher (1998)</strong>: PKCS#1 v1.5 padding oracle → server private key recovery"><strong>Bleichenbacher (1998)</strong> : oracle de padding PKCS#1 v1.5 → récupération clé privée serveur</li>
+            <li data-en="<strong>ROBOT (2017)</strong>: Bleichenbacher revival on F5, Citrix, Cisco"><strong>ROBOT (2017)</strong> : résurgence Bleichenbacher sur F5, Citrix, Cisco</li>
+            <li data-en="<strong>Coppersmith</strong>: small e + same m → recovery"><strong>Coppersmith</strong> : petit e + même m → récupération</li>
+            <li data-en="<strong>ROCA (CVE-2017-15361)</strong>: weak Infineon TPM/smartcard keys"><strong>ROCA (CVE-2017-15361)</strong> : clés faibles Infineon TPM/smartcard</li>
+            <li data-en="<strong>Manger (2001)</strong>: timing attack on OAEP decryption"><strong>Manger (2001)</strong> : attaque timing sur OAEP déchiffrement</li>
+            <li data-en="<strong>Shor (quantum)</strong>: instant break of any RSA key"><strong>Shor (quantique)</strong> : cassure instantanée de toute clé RSA</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3" data-en="💻 Production code (Python)">💻 Code de production (Python)</h3>
+      <pre><code>from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.primitives import hashes, serialization
+
+# === Key generation (slow: ~1s for 3072 bits) ===
+priv = rsa.generate_private_key(public_exponent=65537, key_size=3072)
+pub  = priv.public_key()
+
+# === Asymmetric encryption with OAEP-SHA256 ===
+# Max plaintext size for 3072-bit key: ~318 bytes. Usually used to wrap an AES key.
+session_key = os.urandom(32)
+ciphertext = pub.encrypt(
+    session_key,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+    )
+)
+recovered = priv.decrypt(ciphertext, padding.OAEP(
+    mgf=padding.MGF1(algorithm=hashes.SHA256()),
+    algorithm=hashes.SHA256(),
+    label=None))
+
+# === Signature with PSS (preferred over PKCS#1 v1.5 in 2026) ===
+signature = priv.sign(
+    b"message to sign",
+    padding.PSS(
+        mgf=padding.MGF1(hashes.SHA256()),
+        salt_length=padding.PSS.MAX_LENGTH
+    ),
+    hashes.SHA256()
+)
+pub.verify(
+    signature, b"message to sign",
+    padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH),
+    hashes.SHA256()
+)
+
+# === Serialization (PEM, encrypted) ===
+pem_priv = priv.private_bytes(
+    serialization.Encoding.PEM,
+    serialization.PrivateFormat.PKCS8,
+    serialization.BestAvailableEncryption(b"strong_passphrase")
+)</code></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- X25519 + Ed25519                                             -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <section id="x25519" class="impl-section reveal">
+      <h2 class="text-3xl font-bold mb-4 section-heading">🪜 X25519 + Ed25519</h2>
+      <p class="text-sm text-slate-400 mb-6" data-en="Modern asymmetric · Signal, WireGuard, SSH, TLS 1.3 default">Asymétrique moderne · Signal, WireGuard, SSH, TLS 1.3 par défaut</p>
+
+      <div class="impl-card mb-6">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="📖 Context">📖 Contexte</h3>
+        <p class="text-sm text-slate-300 leading-relaxed mb-3" data-en='<strong>X25519</strong> performs Diffie-Hellman key exchange on the Curve25519 elliptic curve. <strong>Ed25519</strong> is the matching signature scheme (EdDSA). Both are based on the same curve published by Daniel J. Bernstein in 2006 — designed with "nothing-up-my-sleeve" constants, side-channel resistant by construction, ultra-fast.'>
+          <strong>X25519</strong> effectue un échange de clés Diffie-Hellman sur la courbe elliptique
+          Curve25519. <strong>Ed25519</strong> est le schéma de signature associé (EdDSA). Les deux
+          reposent sur la même courbe publiée par Daniel J. Bernstein en 2006 — conçue avec des
+          constantes "nothing-up-my-sleeve", résistante aux side-channels par construction, ultra-rapide.
+        </p>
+        <p class="text-sm text-slate-300 leading-relaxed" data-en="Why this combo dominates in 2026: 32-byte keys (vs RSA's 384), 64-byte signatures (vs RSA's 384), simple to use safely, faster than RSA by 10-100×. Used by Signal, WhatsApp, WireGuard, SSH, Git commit signing, Tor v3 onion services.">
+          Pourquoi ce duo domine en 2026 : clés de 32 octets (vs 384 pour RSA), signatures de 64 octets
+          (vs 384 pour RSA), simple à utiliser sûrement, 10-100× plus rapide que RSA. Utilisé par
+          Signal, WhatsApp, WireGuard, SSH, signature de commits Git, services onion Tor v3.
+        </p>
+      </div>
+
+      <div class="impl-card mb-6 ctx-box">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="🎯 When to use it">🎯 Quand l'utiliser</h3>
+        <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
+          <li data-en="<strong>Default choice for any new project</strong> needing asymmetric crypto"><strong>Choix par défaut pour tout nouveau projet</strong> nécessitant de l'asymétrique</li>
+          <li data-en="X25519: key exchange (replaces DH)">X25519 : échange de clés (remplace DH)</li>
+          <li data-en="Ed25519: digital signatures (replaces RSA-PSS, ECDSA)">Ed25519 : signatures numériques (remplace RSA-PSS, ECDSA)</li>
+          <li data-en="Public-key infrastructure for SSH, Git, JWT">Infrastructure clé publique pour SSH, Git, JWT</li>
+          <li data-en="E2EE messaging (Signal Protocol = X25519 + Ed25519 + AES-GCM/ChaCha20)">Messagerie E2EE (Signal Protocol = X25519 + Ed25519 + AES-GCM/ChaCha20)</li>
+        </ul>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="impl-card pro-box">
+          <h3 class="font-semibold mb-2 text-emerald-400" data-en="✅ Advantages">✅ Avantages</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Tiny keys (32 bytes) &amp; signatures (64 bytes)">Clés (32 o) et signatures (64 o) minuscules</li>
+            <li data-en="10-100× faster than RSA-3072">10-100× plus rapide que RSA-3072</li>
+            <li data-en="Deterministic signatures (no risky randomness at signing)">Signatures déterministes (pas d'aléa risqué à la signature)</li>
+            <li data-en="Side-channel resistant by construction (Montgomery ladder)">Résistant side-channel par construction (Montgomery ladder)</li>
+            <li data-en="Transparent constants (no NSA suspicion)">Constantes transparentes (pas de suspicion NSA)</li>
+          </ul>
+        </div>
+        <div class="impl-card con-box">
+          <h3 class="font-semibold mb-2 text-amber-400" data-en="⚠️ Disadvantages">⚠️ Inconvénients</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="X25519 is NOT authenticated (combine with signature)">X25519 n'est PAS authentifié (combiner avec signature)</li>
+            <li data-en="Not yet supported by all corporate PKIs / TPMs">Pas encore supporté par tous les PKI/TPM corporate</li>
+            <li data-en="Distinguish X25519 (ECDH) vs Ed25519 (signature) — easy mix-up">Distinguer X25519 (ECDH) vs Ed25519 (signature) — confusion facile</li>
+            <li data-en="Web Crypto API support recent (2023-2024)">Support Web Crypto API récent (2023-2024)</li>
+          </ul>
+        </div>
+        <div class="impl-card fail-box">
+          <h3 class="font-semibold mb-2 text-red-400" data-en="💥 Known flaws / attacks">💥 Failles connues</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="<strong>No known crack</strong> on the primitive itself in 2026"><strong>Aucune cassure</strong> connue sur la primitive elle-même en 2026</li>
+            <li data-en="<strong>Bad implementations</strong>: missing clamping → small-subgroup attacks"><strong>Mauvaises implémentations</strong> : oubli du clamping → attaques small-subgroup</li>
+            <li data-en="<strong>Bad RNG</strong> on ephemeral keys → key recovery (cf. PS3 ECDSA disaster)"><strong>Mauvais RNG</strong> sur clé éphémère → récupération de clé (cf. PS3 ECDSA disaster)</li>
+            <li data-en="<strong>Shor (quantum)</strong>: breaks ECDH and EdDSA → hybrid migration with Kyber/Dilithium"><strong>Shor (quantique)</strong> : casse ECDH et EdDSA → migration hybride avec Kyber/Dilithium</li>
+            <li data-en="<strong>Twist attacks</strong>: only if implementation doesn't follow the spec"><strong>Twist attacks</strong> : seulement si implémentation non conforme à la spec</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3" data-en="💻 Production code (Python)">💻 Code de production (Python)</h3>
+      <pre><code>from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives import hashes
+
+# === ECDH key exchange with X25519 ===
+alice = X25519PrivateKey.generate()
+bob   = X25519PrivateKey.generate()
+
+# Each party computes the shared secret using the other's public key
+shared_alice = alice.exchange(bob.public_key())
+shared_bob   = bob.exchange(alice.public_key())
+assert shared_alice == shared_bob
+
+# ALWAYS derive a usable key via HKDF — never use raw DH output
+session_key = HKDF(
+    algorithm=hashes.SHA256(),
+    length=32,
+    salt=None,                          # or a unique per-session salt
+    info=b'app-name session-key v1'     # context binding
+).derive(shared_alice)
+
+# Now use session_key with AES-GCM or ChaCha20-Poly1305 to encrypt messages.
+
+# === Digital signature with Ed25519 ===
+sk = Ed25519PrivateKey.generate()
+signature = sk.sign(b"hello world")      # 64 bytes, deterministic
+sk.public_key().verify(signature, b"hello world")
+# Raises InvalidSignature on bad signature or tampered message.</code></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- Hybrid E2E                                                   -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <section id="hybrid" class="impl-section reveal">
+      <h2 class="text-3xl font-bold mb-4 section-heading" data-en="🤝 End-to-end hybrid encryption">🤝 Chiffrement hybride E2E</h2>
+      <p class="text-sm text-slate-400 mb-6" data-en="The real-world pattern · what PGP, TLS, age, Signal all do under the hood">Le pattern du monde réel · ce que PGP, TLS, age, Signal font sous le capot</p>
+
+      <div class="impl-card mb-6">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="📖 Context">📖 Contexte</h3>
+        <p class="text-sm text-slate-300 leading-relaxed mb-3" data-en="Asymmetric is slow and limited (~318 bytes per RSA-3072 OAEP). Symmetric is fast but requires shared keys. <strong>Hybrid encryption</strong> combines them: generate a random symmetric key, encrypt the message with it (fast), then encrypt that key with the recipient's public key. The recipient decrypts the symmetric key, then decrypts the message.">
+          L'asymétrique est lent et limité (~318 octets par RSA-3072 OAEP). Le symétrique est rapide
+          mais nécessite des clés partagées. Le <strong>chiffrement hybride</strong> combine les deux :
+          on génère une clé symétrique aléatoire, on chiffre le message avec (rapide), puis on chiffre
+          cette clé avec la clé publique du destinataire. Le destinataire déchiffre la clé symétrique,
+          puis déchiffre le message.
+        </p>
+        <p class="text-sm text-slate-300 leading-relaxed" data-en="<strong>Bonus with ECDH</strong>: ephemeral keys give you <em>forward secrecy</em> — even if the recipient's long-term key leaks later, past messages stay safe.">
+          <strong>Bonus avec ECDH</strong> : des clés éphémères donnent la <em>forward secrecy</em> —
+          même si la clé long-terme du destinataire fuit plus tard, les messages passés restent sûrs.
+        </p>
+      </div>
+
+      <div class="impl-card mb-6 ctx-box">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="🎯 When to use it">🎯 Quand l'utiliser</h3>
+        <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
+          <li data-en="Encrypting a file/message for one specific recipient (only their public key is needed)">Chiffrer un fichier/message pour un destinataire précis (seule sa clé publique suffit)</li>
+          <li data-en="End-to-end messaging (Signal, WhatsApp do this per message)">Messagerie end-to-end (Signal, WhatsApp font ça par message)</li>
+          <li data-en="Encrypting documents in the cloud (you don't know who'll decrypt when)">Chiffrer documents dans le cloud (on ne sait pas qui déchiffrera quand)</li>
+          <li data-en="age, PGP, S/MIME, TLS handshake — all follow this pattern">age, PGP, S/MIME, handshake TLS — tous suivent ce pattern</li>
+        </ul>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="impl-card pro-box">
+          <h3 class="font-semibold mb-2 text-emerald-400" data-en="✅ Advantages">✅ Avantages</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Speed of symmetric + flexibility of asymmetric">Vitesse du symétrique + flexibilité de l'asymétrique</li>
+            <li data-en="No need to share a secret in advance">Aucun secret pré-partagé requis</li>
+            <li data-en="Forward secrecy with ephemeral DH">Forward secrecy avec DH éphémère</li>
+            <li data-en="Multi-recipient: encrypt the key for N recipients separately">Multi-destinataires : chiffrer la clé pour N destinataires</li>
+          </ul>
+        </div>
+        <div class="impl-card con-box">
+          <h3 class="font-semibold mb-2 text-amber-400" data-en="⚠️ Disadvantages">⚠️ Inconvénients</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="More complex than pure symmetric (more steps to get wrong)">Plus complexe que symétrique pur (plus d'étapes à rater)</li>
+            <li data-en="Requires distributing/validating public keys reliably (PKI problem)">Nécessite distribuer/valider des clés publiques (problème PKI)</li>
+            <li data-en="Not authenticated by default: needs signature or signing key">Non authentifié par défaut : nécessite signature ou clé de signature</li>
+          </ul>
+        </div>
+        <div class="impl-card fail-box">
+          <h3 class="font-semibold mb-2 text-red-400" data-en="💥 Known flaws / attacks">💥 Failles connues</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="<strong>EFAIL (2018)</strong>: PGP/S-MIME malleability if no auth"><strong>EFAIL (2018)</strong> : malléabilité PGP/S-MIME si pas d'auth</li>
+            <li data-en="<strong>MITM on public keys</strong>: distribute / fingerprint properly"><strong>MITM sur clés publiques</strong> : distribuer / vérifier l'empreinte correctement</li>
+            <li data-en="<strong>Padding oracle</strong> if you mix RSA-PKCS#1v1.5 with old TLS"><strong>Padding oracle</strong> si on mélange RSA-PKCS#1v1.5 et vieux TLS</li>
+            <li data-en="<strong>Bad KDF</strong>: never use raw DH output as encryption key"><strong>Mauvais KDF</strong> : ne jamais utiliser la sortie DH brute comme clé</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3" data-en="💻 Production code (Python)">💻 Code de production (Python)</h3>
+      <pre><code>"""
+Complete pattern: Alice encrypts a message for Bob, who has only published an
+X25519 public key. Bob can decrypt with his private key.
+"""
+from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey, X25519PublicKey
+from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives import hashes, serialization
+import os
+
+def encrypt_for(recipient_pub_bytes: bytes, message: bytes) -> bytes:
+    # 1. Generate an EPHEMERAL X25519 key — basis of forward secrecy
+    eph = X25519PrivateKey.generate()
+    eph_pub = eph.public_key().public_bytes(
+        serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+
+    # 2. ECDH with recipient's public key → shared 32-byte secret
+    recipient_pub = X25519PublicKey.from_public_bytes(recipient_pub_bytes)
+    shared = eph.exchange(recipient_pub)
+
+    # 3. HKDF to derive the actual encryption key
+    key = HKDF(hashes.SHA256(), 32, None, b'hybrid v1').derive(shared)
+
+    # 4. AEAD encryption with a fresh random nonce
+    nonce = os.urandom(12)
+    ct = ChaCha20Poly1305(key).encrypt(nonce, message, associated_data=None)
+
+    # 5. Final payload: ephemeral pubkey || nonce || ciphertext
+    return eph_pub + nonce + ct
+
+def decrypt_for(priv: X25519PrivateKey, payload: bytes) -> bytes:
+    eph_pub = X25519PublicKey.from_public_bytes(payload[:32])
+    nonce   = payload[32:44]
+    ct      = payload[44:]
+    shared  = priv.exchange(eph_pub)
+    key     = HKDF(hashes.SHA256(), 32, None, b'hybrid v1').derive(shared)
+    return ChaCha20Poly1305(key).decrypt(nonce, ct, associated_data=None)
+
+# Test
+bob = X25519PrivateKey.generate()
+bob_pub = bob.public_key().public_bytes(
+    serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+payload = encrypt_for(bob_pub, b"Hello Bob, from Alice")
+print(decrypt_for(bob, payload))   # b'Hello Bob, from Alice'</code></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- Argon2 password hashing                                      -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <section id="argon2" class="impl-section reveal">
+      <h2 class="text-3xl font-bold mb-4 section-heading" data-en="🔐 Password hashing — Argon2">🔐 Hash de mots de passe — Argon2</h2>
+      <p class="text-sm text-slate-400 mb-6" data-en="OWASP/IETF 2026 standard · ALWAYS use, never sha256(pw)">Standard OWASP/IETF 2026 · TOUJOURS utiliser, jamais sha256(pw)</p>
+
+      <div class="impl-card mb-6">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="📖 Context">📖 Contexte</h3>
+        <p class="text-sm text-slate-300 leading-relaxed mb-3" data-en='Storing passwords in plain text or with a simple hash (SHA-256) is a fatal mistake. <strong>Argon2id</strong> is the modern password hashing standard, designed to be <strong>slow on purpose</strong> and <strong>memory-hard</strong> — frustrating GPU/ASIC brute-force attacks.'>
+          Stocker un mot de passe en clair ou avec un hash simple (SHA-256) est une faute grave.
+          <strong>Argon2id</strong> est le standard moderne de hachage de mot de passe, conçu pour
+          être <strong>lent à dessein</strong> et <strong>coûteux en mémoire</strong> — frustrant les
+          attaques brute-force par GPU/ASIC.
+        </p>
+        <p class="text-sm text-slate-300 leading-relaxed" data-en="<strong>Critical principle</strong>: each user gets a unique random salt, mixed into the hash, so two users with the same password get different hashes (defeats rainbow tables).">
+          <strong>Principe critique</strong> : chaque utilisateur reçoit un sel aléatoire unique mélangé
+          au hash, pour que deux utilisateurs avec le même mot de passe aient des hashes différents
+          (défait les rainbow tables).
+        </p>
+      </div>
+
+      <div class="impl-card mb-6 ctx-box">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="🎯 When to use it">🎯 Quand l'utiliser</h3>
+        <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
+          <li data-en="ANY password storage (web app login, OS, password manager)"><strong>TOUT</strong> stockage de mot de passe (login web, OS, password manager)</li>
+          <li data-en="Deriving an encryption key FROM a password (file encryption)">Dériver une clé de chiffrement DEPUIS un mot de passe (chiffrement de fichier)</li>
+          <li data-en="Replacing legacy: bcrypt is OK, PBKDF2 is minimum, sha256() is forbidden">Remplacer le legacy : bcrypt OK, PBKDF2 minimum, sha256() interdit</li>
+        </ul>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="impl-card pro-box">
+          <h3 class="font-semibold mb-2 text-emerald-400" data-en="✅ Advantages">✅ Avantages</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Winner of PHC (Password Hashing Competition) 2015">Gagnant du PHC (Password Hashing Competition) 2015</li>
+            <li data-en="Memory-hard: GPU/ASIC ineffective">Memory-hard : GPU/ASIC inefficaces</li>
+            <li data-en="Configurable: time / memory / parallelism">Configurable : temps / mémoire / parallélisme</li>
+            <li data-en="Auto salt + auto algorithm versioning in the hash">Sel automatique + versioning algorithme intégré au hash</li>
+            <li data-en="Migrating-friendly: check_needs_rehash">Migration facile : check_needs_rehash</li>
+          </ul>
+        </div>
+        <div class="impl-card con-box">
+          <h3 class="font-semibold mb-2 text-amber-400" data-en="⚠️ Disadvantages">⚠️ Inconvénients</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Slow by design: ~100ms per login (this is the goal)">Lent par design : ~100ms par login (c'est le but)</li>
+            <li data-en="Memory cost: ~64 MiB per login → calibrate per server">Coût mémoire : ~64 MiB par login → calibrer par serveur</li>
+            <li data-en="Requires a tuned library (argon2-cffi)">Requiert une lib bien tunée (argon2-cffi)</li>
+          </ul>
+        </div>
+        <div class="impl-card fail-box">
+          <h3 class="font-semibold mb-2 text-red-400" data-en="💥 Known flaws / attacks">💥 Failles connues</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="<strong>sha256(pw)</strong> alone: GPU brute force at 100 billion h/s → instant break"><strong>sha256(pw)</strong> seul : brute force GPU à 100 milliards h/s → cassure instantanée</li>
+            <li data-en="<strong>MD5/SHA1 + salt</strong>: still GPU-fast → 10^9 h/s on RTX 4090"><strong>MD5/SHA1 + sel</strong> : reste rapide GPU → 10^9 h/s sur RTX 4090</li>
+            <li data-en="<strong>Argon2i vs Argon2d</strong>: Argon2i alone has 2016 attacks → use Argon2id"><strong>Argon2i vs Argon2d</strong> : Argon2i seul a des attaques 2016 → utiliser Argon2id</li>
+            <li data-en="<strong>Misconfigured</strong>: too-low cost → no real protection (e.g. PBKDF2 with 1000 iterations)"><strong>Mal configuré</strong> : coût trop faible → pas de vraie protection (ex: PBKDF2 1000 iter)</li>
+            <li data-en="<strong>No pepper</strong> + DB leak: attackers can brute-force any single password"><strong>Pas de pepper</strong> + leak DB : attaquants brute-forcent n'importe quel mot de passe</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3" data-en="💻 Production code (Python)">💻 Code de production (Python)</h3>
+      <pre><code># pip install argon2-cffi
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
+
+# OWASP 2024 parameters (adjust based on RAM/CPU budget per login)
+ph = PasswordHasher(
+    time_cost=3,         # 3 iterations
+    memory_cost=64*1024, # 64 MiB
+    parallelism=4,       # 4 threads
+    hash_len=32,
+    salt_len=16,
+)
+
+# === SIGNUP ===
+hashed = ph.hash("my_strong_password")
+# → store `hashed` in DB. It contains: algorithm, params, salt, hash.
+#   No need for a separate salt field.
+# Example: $argon2id$v=19$m=65536,t=3,p=4$<salt>$<hash>
+
+# === LOGIN ===
+try:
+    ph.verify(hashed, "my_strong_password")     # OK
+    # Auto-upgrade if cost parameters have evolved
+    if ph.check_needs_rehash(hashed):
+        new_hash = ph.hash("my_strong_password")
+        # update DB with new_hash
+except VerifyMismatchError:
+    pass    # wrong password — return generic error, don't reveal "user exists"
+
+# === BONUS: pepper (stored separately from DB, in env or HSM) ===
+import hmac, hashlib, os
+PEPPER = os.environ['APP_PEPPER'].encode()  # 32+ random bytes, never in DB
+def hash_with_pepper(password: str) -> str:
+    peppered = hmac.new(PEPPER, password.encode(), hashlib.sha256).hexdigest()
+    return ph.hash(peppered)</code></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- HMAC / HKDF                                                  -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <section id="hmac" class="impl-section reveal">
+      <h2 class="text-3xl font-bold mb-4 section-heading">🧬 HMAC &amp; HKDF</h2>
+      <p class="text-sm text-slate-400 mb-6" data-en="Authentication + key derivation · everywhere">Authentification + dérivation de clé · partout</p>
+
+      <div class="impl-card mb-6">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="📖 Context">📖 Contexte</h3>
+        <p class="text-sm text-slate-300 leading-relaxed mb-3" data-en="<strong>HMAC</strong> (Hash-based Message Authentication Code) authenticates a message using a shared secret key: the receiver can verify integrity AND origin (same key used). Standardized by RFC 2104, immune to the length-extension attacks that plague raw hashes.">
+          <strong>HMAC</strong> (Hash-based Message Authentication Code) authentifie un message avec
+          une clé secrète partagée : le destinataire peut vérifier l'intégrité ET l'origine (même clé
+          utilisée). Standardisé par RFC 2104, immunisé contre les attaques de length-extension qui
+          affligent les hashes bruts.
+        </p>
+        <p class="text-sm text-slate-300 leading-relaxed" data-en="<strong>HKDF</strong> (HMAC-based Key Derivation Function) derives multiple cryptographic keys from one secret. Critical use case: after an ECDH key exchange, never use the raw output — always pass it through HKDF first.">
+          <strong>HKDF</strong> (HMAC-based Key Derivation Function) dérive plusieurs clés
+          cryptographiques à partir d'un secret. Cas critique : après un échange ECDH, ne jamais
+          utiliser la sortie brute — toujours la passer à HKDF d'abord.
+        </p>
+      </div>
+
+      <div class="impl-card mb-6 ctx-box">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="🎯 When to use it">🎯 Quand l'utiliser</h3>
+        <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
+          <li data-en="HMAC: API request signing (HMAC-SHA256), webhook authentication, cookie integrity">HMAC : signature de requêtes API (HMAC-SHA256), webhooks, intégrité cookies</li>
+          <li data-en="HMAC: JWT HS256 algorithm">HMAC : algorithme HS256 de JWT</li>
+          <li data-en="HKDF: deriving an encryption key from a DH shared secret">HKDF : dériver une clé de chiffrement depuis un secret partagé DH</li>
+          <li data-en="HKDF: deriving multiple keys from one master (encryption + MAC + IV-seed)">HKDF : dériver plusieurs clés depuis un maître (chiffrement + MAC + IV-seed)</li>
+        </ul>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="impl-card pro-box">
+          <h3 class="font-semibold mb-2 text-emerald-400" data-en="✅ Advantages">✅ Avantages</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Very fast (just hashing)">Très rapide (juste du hash)</li>
+            <li data-en="Universal support (every library, every language)">Support universel (toute lib, tout langage)</li>
+            <li data-en="No length-extension attack (unlike SHA-256 bare)">Pas de length-extension (contrairement à SHA-256 nu)</li>
+            <li data-en="Provably secure under standard hash assumptions">Sécurité prouvée sous hypothèses standard du hash</li>
+          </ul>
+        </div>
+        <div class="impl-card con-box">
+          <h3 class="font-semibold mb-2 text-amber-400" data-en="⚠️ Disadvantages">⚠️ Inconvénients</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Symmetric: no non-repudiation (anyone with the key can forge)">Symétrique : pas de non-répudiation (qui a la clé peut forger)</li>
+            <li data-en="Key distribution problem unsolved">Le problème de distribution de clé reste</li>
+            <li data-en="HMAC tag must be compared in constant time">Comparaison du tag HMAC en temps constant obligatoire</li>
+          </ul>
+        </div>
+        <div class="impl-card fail-box">
+          <h3 class="font-semibold mb-2 text-red-400" data-en="💥 Known flaws / attacks">💥 Failles connues</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="<strong>Naive comparison (==)</strong>: timing attack → use hmac.compare_digest"><strong>Comparaison naïve (==)</strong> : timing attack → utiliser hmac.compare_digest</li>
+            <li data-en="<strong>HMAC-MD5</strong>: still broken, avoid for new designs"><strong>HMAC-MD5</strong> : encore cassé, à éviter dans les nouveaux designs</li>
+            <li data-en="<strong>Length-extension</strong>: never use raw SHA-256(secret||message); use HMAC"><strong>Length-extension</strong> : jamais SHA-256(secret||message) brut ; utiliser HMAC</li>
+            <li data-en="<strong>HKDF without info</strong>: collisions across usage contexts"><strong>HKDF sans info</strong> : collisions entre contextes d'usage</li>
+            <li data-en="<strong>Reused HKDF output</strong> across encryption + MAC: vulnerability"><strong>Sortie HKDF réutilisée</strong> chiffrement + MAC : vulnérabilité</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3" data-en="💻 Production code (Python)">💻 Code de production (Python)</h3>
+      <pre><code>from cryptography.hazmat.primitives import hashes, hmac
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+import secrets
+
+# === HMAC-SHA256 ===
+key = secrets.token_bytes(32)
+h = hmac.HMAC(key, hashes.SHA256())
+h.update(b"message to authenticate")
+tag = h.finalize()           # 32 bytes
+
+# Verification (uses CONSTANT-TIME comparison automatically)
+h2 = hmac.HMAC(key, hashes.SHA256())
+h2.update(b"message to authenticate")
+try:
+    h2.verify(tag)           # Raises InvalidSignature if bad
+    # OK
+except Exception:
+    pass                     # bad MAC — reject
+
+# === HKDF (extract-then-expand) ===
+shared = secrets.token_bytes(32)      # e.g. ECDH output
+keys = HKDF(
+    algorithm=hashes.SHA256(),
+    length=64,                         # request 64 bytes
+    salt=b"optional salt",             # per-session unique if possible
+    info=b"context info per usage"     # binds the derivation to a specific use
+).derive(shared)
+key_enc, key_mac = keys[:32], keys[32:]   # 2 independent derived keys
+
+# IMPORTANT: never compare MAC tags with `==` — leaks timing.
+# In stdlib Python: secrets.compare_digest(tag1, tag2)</code></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- JWT Ed25519                                                  -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <section id="jwt" class="impl-section reveal">
+      <h2 class="text-3xl font-bold mb-4 section-heading" data-en="🪪 Ed25519-signed JWT (EdDSA)">🪪 JWT signé Ed25519 (EdDSA)</h2>
+      <p class="text-sm text-slate-400 mb-6" data-en="Modern API authentication">Authentification d'API moderne</p>
+
+      <div class="impl-card mb-6">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="📖 Context">📖 Contexte</h3>
+        <p class="text-sm text-slate-300 leading-relaxed" data-en="<strong>JWT</strong> (JSON Web Token) is a token format that contains claims (user_id, expiration, scope, etc.) signed by the server. The recipient verifies the signature with the public key — no DB round-trip per request. Three signature algorithms compete: HS256 (HMAC, shared secret), RS256 (RSA, asymmetric), EdDSA (Ed25519). EdDSA is the modern choice: safer, faster, smaller signatures.">
+          <strong>JWT</strong> (JSON Web Token) est un format de token qui contient des claims
+          (user_id, expiration, scope, etc.) signés par le serveur. Le destinataire vérifie la
+          signature avec la clé publique — pas d'aller-retour BDD à chaque requête. Trois algorithmes
+          de signature se disputent : HS256 (HMAC, secret partagé), RS256 (RSA, asymétrique), EdDSA
+          (Ed25519). EdDSA est le choix moderne : plus sûr, plus rapide, signatures plus petites.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="impl-card pro-box">
+          <h3 class="font-semibold mb-2 text-emerald-400" data-en="✅ Advantages">✅ Avantages</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Stateless: no server-side session storage">Stateless : pas de stockage côté serveur</li>
+            <li data-en="EdDSA: 64-byte signatures, very fast">EdDSA : signatures 64 octets, très rapide</li>
+            <li data-en="Self-contained: claims + signature in one token">Auto-contenu : claims + signature en un token</li>
+            <li data-en="Standardized: RFC 7519, RFC 8037 (EdDSA)">Standardisé : RFC 7519, RFC 8037 (EdDSA)</li>
+          </ul>
+        </div>
+        <div class="impl-card con-box">
+          <h3 class="font-semibold mb-2 text-amber-400" data-en="⚠️ Disadvantages">⚠️ Inconvénients</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Revocation is hard (need a blocklist)">Révocation difficile (nécessite une blocklist)</li>
+            <li data-en="Don't put sensitive data in claims (signed but not encrypted)">Ne pas mettre de données sensibles dans les claims (signé mais pas chiffré)</li>
+            <li data-en="Tokens leak in URLs / logs">Les tokens fuient dans URLs / logs</li>
+          </ul>
+        </div>
+        <div class="impl-card fail-box">
+          <h3 class="font-semibold mb-2 text-red-400" data-en="💥 Known flaws / attacks">💥 Failles connues</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en='<strong>alg=none</strong>: famous attack, lib accepts unsigned tokens'><strong>alg=none</strong> : attaque célèbre, lib accepte token non-signé</li>
+            <li data-en="<strong>alg confusion (HS256/RS256)</strong>: lib uses public key as HMAC secret"><strong>Confusion alg (HS256/RS256)</strong> : lib utilise clé publique comme secret HMAC</li>
+            <li data-en="<strong>kid path traversal</strong>: ../../etc/passwd as kid"><strong>kid path traversal</strong> : ../../etc/passwd en kid</li>
+            <li data-en="<strong>No 'exp' check</strong>: eternal tokens"><strong>Pas de check 'exp'</strong> : tokens éternels</li>
+            <li data-en="<strong>Weak RS256 keys</strong> (< 2048 bits): forgery"><strong>Clés RS256 faibles</strong> (&lt; 2048 bits) : forgery</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3" data-en="💻 Production code (Python)">💻 Code de production (Python)</h3>
+      <pre><code># pip install pyjwt cryptography
+import jwt
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives import serialization
+import time
+
+sk = Ed25519PrivateKey.generate()
+pem_priv = sk.private_bytes(
+    serialization.Encoding.PEM,
+    serialization.PrivateFormat.PKCS8,
+    serialization.NoEncryption())
+pem_pub = sk.public_key().public_bytes(
+    serialization.Encoding.PEM,
+    serialization.PublicFormat.SubjectPublicKeyInfo)
+
+# === ISSUE token ===
+token = jwt.encode(
+    {
+        "sub": "user_42",
+        "iat": int(time.time()),
+        "exp": int(time.time()) + 3600,    # 1 hour
+        "scope": ["read:profile"],
+    },
+    pem_priv,
+    algorithm="EdDSA")
+
+# === VERIFY token ===
+claims = jwt.decode(
+    token,
+    pem_pub,
+    algorithms=["EdDSA"],     # ⚠ NEVER accept ['none'] or default to anything!
+    options={"require": ["exp", "sub"]})
+# Raises if signature bad, exp expired, claims missing.</code></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- File streaming encryption                                    -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <section id="file" class="impl-section reveal">
+      <h2 class="text-3xl font-bold mb-4 section-heading" data-en="📦 Streaming file encryption">📦 Chiffrement de fichier streaming</h2>
+      <p class="text-sm text-slate-400 mb-6" data-en="For big files (GB) without exhausting RAM">Pour gros fichiers (Go) sans exploser la RAM</p>
+
+      <div class="impl-card mb-6">
+        <h3 class="font-semibold mb-3 text-brand-500" data-en="📖 Context">📖 Contexte</h3>
+        <p class="text-sm text-slate-300 leading-relaxed" data-en="A 5 GB file can't be loaded entirely in RAM. The solution: encrypt in <strong>chunks</strong>, with a unique nonce per chunk (derived from a counter), and an authentication tag per chunk. The last chunk is marked so an attacker can't truncate the file silently.">
+          Un fichier de 5 Go ne tient pas en RAM. Solution : chiffrer par <strong>chunks</strong>, avec
+          un nonce unique par chunk (dérivé d'un counter), et un tag d'authentification par chunk. Le
+          dernier chunk est marqué pour qu'un attaquant ne puisse pas tronquer silencieusement le fichier.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="impl-card pro-box">
+          <h3 class="font-semibold mb-2 text-emerald-400" data-en="✅ Advantages">✅ Avantages</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Constant memory (chunk size)">Mémoire constante (taille chunk)</li>
+            <li data-en="Random access (seek to chunk N possible)">Accès aléatoire (seek au chunk N possible)</li>
+            <li data-en="Per-chunk integrity (corruption detection)">Intégrité par chunk (détection corruption)</li>
+            <li data-en="Truncation protection (last-chunk marker)">Anti-troncature (marqueur dernier chunk)</li>
+          </ul>
+        </div>
+        <div class="impl-card con-box">
+          <h3 class="font-semibold mb-2 text-amber-400" data-en="⚠️ Disadvantages">⚠️ Inconvénients</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="Per-chunk tag (16 bytes) overhead → +0.02% on 64 KiB chunks">Overhead tag par chunk (16 o) → +0.02% sur chunks 64 KiB</li>
+            <li data-en="Custom format = no standard tool can read">Format custom = aucun outil standard ne sait lire</li>
+            <li data-en="Reorder attack possible if chunks not bound to position">Attaque par réordonnancement possible si chunks non liés à leur position</li>
+          </ul>
+        </div>
+        <div class="impl-card fail-box">
+          <h3 class="font-semibold mb-2 text-red-400" data-en="💥 Known flaws / attacks">💥 Failles connues</h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li data-en="<strong>No counter binding</strong>: attacker reorders chunks"><strong>Pas de binding counter</strong> : attaquant réordonne les chunks</li>
+            <li data-en="<strong>No last-chunk marker</strong>: attacker truncates"><strong>Pas de marqueur dernier chunk</strong> : attaquant tronque</li>
+            <li data-en="<strong>Per-chunk fresh nonce without counter</strong>: collision risk over many GB">Nonce frais par chunk sans counter : risque collision sur Go</li>
+            <li data-en="<strong>Recommended</strong>: use age (https://age-encryption.org), don't reinvent">Recommandé : utiliser age (https://age-encryption.org), ne pas réinventer</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3" data-en="💻 Production code (Python)">💻 Code de production (Python)</h3>
+      <pre><code>from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
+import os, struct
+
+CHUNK   = 64 * 1024     # 64 KiB per chunk
+TAG_LEN = 16
+
+def encrypt_file(in_path: str, out_path: str, master_key: bytes):
+    base_nonce = os.urandom(8)    # 8 fixed bytes + 4 counter bytes = 12-byte nonce
+    aead = ChaCha20Poly1305(master_key)
+    with open(in_path, 'rb') as fi, open(out_path, 'wb') as fo:
+        fo.write(base_nonce)
+        counter = 0
+        while True:
+            chunk = fi.read(CHUNK)
+            if not chunk:
+                break
+            nonce = base_nonce + struct.pack('>I', counter)
+            # AAD binds: "is this the last chunk?" → prevents truncation
+            is_last = b'\x01' if len(chunk) < CHUNK else b'\x00'
+            ct = aead.encrypt(nonce, chunk, associated_data=is_last)
+            fo.write(struct.pack('>I', len(ct)) + ct)
+            counter += 1
+
+def decrypt_file(in_path: str, out_path: str, master_key: bytes):
+    aead = ChaCha20Poly1305(master_key)
+    with open(in_path, 'rb') as fi, open(out_path, 'wb') as fo:
+        base_nonce = fi.read(8)
+        counter = 0
+        while True:
+            header = fi.read(4)
+            if not header:
+                break
+            (ct_len,) = struct.unpack('>I', header)
+            ct = fi.read(ct_len)
+            nonce = base_nonce + struct.pack('>I', counter)
+            is_last = b'\x01' if (ct_len - TAG_LEN) < CHUNK else b'\x00'
+            fo.write(aead.decrypt(nonce, ct, associated_data=is_last))
+            counter += 1</code></pre>
+    </section>
+
+    <section class="reveal text-center pt-10">
+      <p class="text-slate-400 text-sm" data-en="To go deeper:">Pour aller plus loin :</p>
+      <div class="mt-4 flex flex-wrap justify-center gap-3 text-sm">
+        <a href="cryptosystemes.html" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 rounded-lg" data-en="📚 Full catalogue">📚 Catalogue complet</a>
+        <a href="maths.html" class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg" data-en="🧮 Math">🧮 Maths</a>
+        <a href="glossaire.html" class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg" data-en="📖 Glossary">📖 Glossaire</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/i18n.js"></script>
+</body>
+</html>
